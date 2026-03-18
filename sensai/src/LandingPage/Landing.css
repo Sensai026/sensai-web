@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brain-purple: #a67cc2;
+  --color-brain-orange: #e99d72;
+  --color-monitor-mint: #9cd6b7;
+  --color-leaf-dark: #16572a;
+}
+
+@utility landing-container {
+  /* En móviles el padding es menor (p-4), en escritorio aumenta (md:p-8) */
+  @apply min-h-screen bg-white text-slate-800 font-sans p-4 md:p-0;
+}
+
+@utility btn-primary {
+  /* El botón es más pequeño en móvil para que no ocupe toda la pantalla */
+  @apply bg-brain-orange text-white px-6 py-3 md:px-8 md:py-4 rounded-2xl md:rounded-3xl 
+         font-bold hover:brightness-110 transition-all shadow-lg text-base md:text-lg cursor-pointer;
+}
+
+@utility btn-secondary {
+  @apply bg-white text-leaf-dark px-6 py-3 md:px-8 md:py-4 rounded-2xl md:rounded-3xl 
+         font-bold hover:bg-gray-100 transition-all border border-monitor-mint/50 
+         text-base md:text-lg cursor-pointer;
+}
+
+@utility module-card {
+  /* Ajustamos el padding para que en pantallas pequeñas no se vea apretado */
+  @apply bg-white p-5 md:p-8 rounded-[2rem] shadow-lg border border-monitor-mint/30 
+         hover:shadow-xl transition-all hover:-translate-y-1 h-full;
+}
+
+@utility section-highlight {
+  /* Bordes más suaves en móvil */
+  @apply bg-brain-purple/10 p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] 
+         shadow-xl border border-brain-purple/30;
+}

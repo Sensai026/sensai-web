@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brain-purple: #a67cc2;
+  --color-brain-orange: #e99d72;
+  --color-monitor-mint: #9cd6b7;
+  --color-leaf-dark: #16572a;
+}

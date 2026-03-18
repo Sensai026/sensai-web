@@ -1,0 +1,35 @@
+@import "../../index.css";
+
+@utility dashboard-layout {
+  /* Un fondo un poco más cálido que combine con el lila y menta */
+  @apply min-h-screen bg-slate-50 p-4 md:p-8;
+}
+
+@utility user-badge {
+  /* Añadimos un borde sutil lila a la insignia del usuario */
+  @apply flex items-center gap-4 bg-white p-2 pr-6 rounded-full shadow-sm border border-brain-purple/20;
+}
+
+@utility module-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10;
+}
+
+@utility module-card-dash {
+  /* La tarjeta ahora tiene un borde que se vuelve lila al pasar el mouse */
+  @apply bg-white p-8 rounded-[2.5rem] shadow-md border border-gray-100 
+         hover:shadow-xl hover:-translate-y-2 hover:border-brain-purple/40 
+         transition-all duration-300 cursor-pointer 
+         flex flex-col items-center text-center;
+}
+
+@utility icon-container {
+  /* El icono ahora inicia con un fondo lila muy suave y cambia a lila intenso en hover */
+  @apply mb-4 w-16 h-16 flex items-center justify-center rounded-2xl 
+         bg-brain-purple/10 text-brain-purple 
+         group-hover:bg-brain-purple group-hover:text-white transition-all duration-300;
+}
+
+@utility module-indicator {
+  /* La barrita decorativa inferior ahora es lila */
+  @apply mt-6 w-10 h-1 bg-brain-purple/30 group-hover:w-20 group-hover:bg-brain-purple transition-all rounded-full;
+}

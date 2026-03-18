@@ -1,0 +1,40 @@
+.community-layout { display: flex; flex-direction: column; height: 100vh; background: #f0f7f4; }
+.community-header { padding: 1rem; display: flex; items-center: center; gap: 1rem; background: white; border-bottom: 1px solid #ddd; }
+.community-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.comm-msg { padding: 0.5rem 1rem; border-radius: 1rem; max-width: 70%; }
+.comm-msg.mine { align-self: flex-end; background: #e99d72; color: white; border-bottom-right-radius: 0; }
+.comm-msg.others { align-self: flex-start; background: white; border-bottom-left-radius: 0; border: 1px solid #ddd; }
+
+.msg-user { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 2px; color: #666; }
+.mine .msg-user { color: #ffe0d0; }
+
+.community-input-area { padding: 1rem; display: flex; gap: 0.5rem; background: white; }
+.community-input-area input { flex: 1; border: 1px solid #ddd; padding: 0.7rem; border-radius: 2rem; outline: none; }
+
+.forum-rules {
+  background: #fff4ef; /* Un tono muy suave derivado de tu naranja */
+  padding: 12px 20px;
+  border-bottom: 1px solid #e99d7230;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rules-list {
+  display: flex;
+  gap: 15px;
+  margin-top: 4px;
+}
+
+.rules-list li {
+  font-size: 11px;
+  color: #71442e;
+  font-weight: 500;
+  list-style: none;
+}
+
+/* Ajuste para que los mensajes no se peguen a las reglas */
+.community-messages {
+  padding-top: 10px;
+}

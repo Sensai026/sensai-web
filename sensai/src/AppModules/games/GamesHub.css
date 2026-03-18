@@ -1,0 +1,35 @@
+@import "../../index.css";
+
+@utility games-hub-layout {
+  @apply min-h-screen bg-slate-50 p-6 md:p-12;
+}
+
+@utility hub-header {
+  @apply max-w-6xl mx-auto mb-12;
+}
+
+@utility back-btn-hub {
+  @apply flex items-center gap-2 text-slate-400 hover:text-slate-800 
+         font-bold uppercase text-xs tracking-widest transition-colors mb-8;
+}
+
+@utility games-grid {
+  @apply max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+/* ELIMINAMOS 'group' y los 'group-hover' de aquí */
+@utility game-option-card {
+  @apply relative bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl 
+         transition-all duration-300 cursor-pointer border border-gray-100 
+         flex flex-col items-center text-center;
+}
+
+/* ELIMINAMOS 'group-hover' de aquí */
+@utility game-icon-wrapper {
+  @apply w-20 h-20 rounded-2xl flex items-center justify-center mb-4 
+         transition-transform duration-300;
+}
+
+@utility hub-footer {
+  @apply max-w-6xl mx-auto mt-20 pt-8 border-t border-slate-200 text-center;
+}

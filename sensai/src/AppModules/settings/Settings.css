@@ -1,0 +1,25 @@
+@reference "../../index.css";
+
+.settings-card {
+  /* Cambié leaf-light/10 por el valor rgba equivalente */
+  @apply bg-white p-5 rounded-3xl border-2 border-[#E8F5E9] shadow-sm;
+}
+
+.settings-select {
+  /* Cambié leaf-dark por su verde oscuro */
+  @apply w-full p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 font-bold text-[#2D4F1E] focus:outline-none focus:border-[#a67cc2] transition-all;
+}
+
+.depth-btn {
+  @apply p-3 rounded-2xl border-2 border-gray-100 text-sm font-bold text-gray-400 transition-all hover:bg-gray-50;
+}
+
+.depth-btn.active {
+  /* Cambié brain-purple por el púrpura del logo */
+  @apply border-[#a67cc2] bg-[#a67cc2]/10 text-[#a67cc2];
+}
+
+.save-btn {
+  /* Cambié leaf-dark por el verde oscuro */
+  @apply w-full p-4 rounded-3xl bg-[#2D4F1E] text-white font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50;
+}
