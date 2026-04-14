@@ -13,7 +13,7 @@ export default function MemoryGame({ user, onBack }) {
   const [lockBoard, setLockBoard] = useState(false);
   const [popup, setPopup] = useState({ show: false, text: "" });
 
-  const startGame = () => {
+  const startGame = () => { 
     const selectedLevelCards = LEVELS[level];
     const combinedCards = [...selectedLevelCards, ...selectedLevelCards]
       .sort(() => Math.random() - 0.5)
