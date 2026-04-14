@@ -7,7 +7,9 @@ import Auth from './Auth/Auth'
 import Chat from './AppModules/chat/Chat' 
 import Settings from './AppModules/settings/Settings'
 import GamesModule from './AppModules/games/GamesModule'
+import ExercisesModule from './AppModules/exercises/ExercisesModule';
 import Community from './AppModules/community/Community';
+
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -66,9 +68,14 @@ export default function App() {
     return <Community user={user} onBack={() => setView('dashboard')} />;
   }
 
-  // Módulo de Juegos (Ahora usa el GamesModule como HUB)
+  // Módulo de Juegos 
   if (view === 'games') {
     return <GamesModule user={user} onBack={() => setView('dashboard')} />;
+  }
+
+    // --- Módulo de Ejercicios ---
+  if (view === 'exercises') {
+    return <ExercisesModule user={user} onBack={() => setView('dashboard')} />;
   }
 
   // --- 3. VISTA POR DEFECTO (DASHBOARD) ---

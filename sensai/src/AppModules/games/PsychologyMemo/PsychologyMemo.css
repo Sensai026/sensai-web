@@ -1,0 +1,61 @@
+/* src/AppModules/games/PsychologyMemo/PsychologyMemo.css */
+@import "../../../index.css";
+
+.psycho-game-layout {
+  @apply min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8;
+}
+
+.psycho-card {
+  @apply w-[80px] h-[80px] md:w-[110px] md:h-[110px] relative cursor-pointer;
+  perspective: 1000px;
+}
+
+.psycho-card-inner {
+  @apply w-full h-full relative transition-transform duration-500;
+  transform-style: preserve-3d;
+}
+
+/* Estado volteado */
+.psycho-card.is-flipped .psycho-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Base para ambas caras */
+.psycho-card-face {
+  @apply absolute inset-0 flex items-center justify-center rounded-2xl text-3xl shadow-sm;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* LOMO (Cara frontal cuando está cerrada) */
+.card-front {
+  background-color: #ffffff !important; /* Blanco puro */
+  color: #2c62a5 !important;            /* Color del icono (Slate 400) */
+  
+  /* Centrado */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  
+  /* Definición física de la carta */
+  border-radius: 1.25rem; /* rounded-2xl */
+  border: 2px solid #f1f5f9 !important; /* Borde sutil para que se vea sobre el fondo */
+  
+  /* Sombra suave para dar elevación */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05) !important;
+  
+  /* Posicionamiento */
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden !important;
+  z-index: 2;
+}
+/* CONTENIDO (Cara trasera cuando se voltea) */
+.card-back {
+  @apply bg-brain-purple text-white;
+  transform: rotateY(180deg);
+}
+
+.is-matched .card-back {
+  @apply bg-green-500; 
+}

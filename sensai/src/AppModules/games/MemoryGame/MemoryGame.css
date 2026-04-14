@@ -21,18 +21,20 @@
 }
 
 @utility game-board-container {
-  /* Usamos un valor arbitrario [perspective:1000px] */
-  @apply grid gap-4 justify-center [perspective:1000px] mx-auto;
+  /* Reducimos el gap de 4 a 3 o 2 para que estén más juntas */
+  @apply grid gap-3 justify-center mx-auto w-full;
 }
 
 @utility memory-card {
-  /* 1. Eliminamos transform-style-3d (que suele dar error en v4 si no se configura)
-     2. Usamos clases estándar para la transición
-  */
-  @apply w-[85px] h-[85px] md:w-[100px] md:h-[100px] rounded-2xl bg-white 
+/* Ajustamos el tamaño para que sea más consistente */
+  @apply w-[75px] h-[75px] md:w-[110px] md:h-[110px] rounded-2xl bg-white 
          shadow-sm border-2 border-slate-100 flex items-center justify-center 
          text-3xl md:text-4xl cursor-pointer transition-all duration-500 
-         hover:shadow-xl hover:-translate-y-1;
+         hover:shadow-md hover:-translate-y-1;
+  
+  /* Agregamos un patrón de puntos sutil para el lomo */
+  background-image: radial-gradient(#f1f5f9 2px, transparent 2px);
+  background-size: 15px 15px;
 }
 
 @utility memory-card-flipped {

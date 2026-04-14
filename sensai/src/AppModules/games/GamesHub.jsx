@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Brain, Puzzle, Gamepad2 } from 'lucide-react';
+import { ArrowLeft, Brain, Puzzle, Gamepad2, Type, Layers, Compass} from 'lucide-react';
 import './GamesHub.css';
 
 const GameCard = ({ title, description, icon: Icon, color, onClick }) => (
@@ -33,11 +33,39 @@ export default function GamesHub({ onSelectGame, onBack }) {
       color: '#a5d6a7' 
     },
     {
+      id: 'psycho-memo',
+      title: 'Memorama Cognitivo',
+      description: 'Estimula la atención y memoria a corto plazo con niveles progresivos.',
+      icon: Gamepad2,
+      color: '#8b5cf6'
+    },
+    {
+      id: 'hidden-word', // Nuevo ID para Palabra Oculta
+      title: 'Palabra Oculta',
+      description: 'Fortalece tu léxico y agilidad mental descubriendo conceptos psicológicos.',
+      icon: Type, 
+      color: '#60a5fa' // Un azul vibrante
+    },
+    {
+      id: 'tetris',
+      title: 'Arquitectura Mental',
+      description: 'Mejora tu toma de decisiones y planificación espacial organizando estructuras.',
+      icon: Layers,
+      color: '#3877ff'
+    },
+    {
       id: 'puzzle',
       title: 'Rompecabezas Mental',
       description: 'Próximamente: Organiza tus pensamientos de forma visual.',
       icon: Puzzle,
       color: '#fbbf24' 
+    },
+    {
+      id: 'mission-brain',
+      title: 'Cerebro en Misión',
+      description: 'Viaja por diferentes mundos y conquista tus pensamientos.',
+      icon: Compass,
+      color: '#4f46e5'
     }
   ];
 

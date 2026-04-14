@@ -25,7 +25,7 @@ const ModuleCard = ({ id, icon: Icon, title, description, onSelect }) => (
 export default function Dashboard({ user, onLogout, onModuleSelect = () => {} }) {
   const modules = [
     { id: 'chat', icon: MessageCircle, title: "Chat IA", description: "Acompañamiento emocional en tiempo real con IA ética." },
-    { id: 'ejercicios', icon: Activity, title: "Ejercicios", description: "Regulación emocional y descarga cognitiva personalizada." },
+    { id: 'exercises', icon: Activity, title: "Ejercicios", description: "Regulación emocional y descarga cognitiva personalizada." },
     { id: 'info', icon: Layout, title: "Infografías", description: "Aprende sobre tus procesos mentales de forma visual." },
     { 
       id: 'games', // Usamos 'games' para que coincida con nuestro GamesModule

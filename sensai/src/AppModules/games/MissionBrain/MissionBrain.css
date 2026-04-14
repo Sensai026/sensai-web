@@ -1,0 +1,105 @@
+/* src/AppModules/games/MissionBrain/MissionBrain.css */
+@import "../../../index.css";
+
+.mission-layout {
+  @apply min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8;
+}
+
+.mission-header {
+  @apply w-full max-w-3xl flex items-center justify-between mb-8 bg-white p-6 rounded-3xl shadow-sm border border-slate-100;
+}
+
+.skills-badge {
+  @apply flex items-center gap-2 bg-brain-purple/10 text-brain-purple px-4 py-2 rounded-xl font-black text-xs uppercase;
+}
+
+.mission-container {
+  @apply w-full max-w-2xl space-y-6;
+}
+
+.mission-intro {
+  @apply text-center mb-8;
+}
+
+.worlds-grid {
+  @apply grid gap-4;
+}
+
+.world-card {
+  @apply flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-100 shadow-sm 
+         transition-all hover:scale-[1.02] hover:shadow-md text-left;
+}
+
+.world-card.completed {
+  @apply border-green-100 bg-green-50/30;
+}
+
+.world-number {
+  @apply text-xs font-black text-slate-300 mr-4;
+}
+
+.world-info h3 {
+  @apply font-bold text-slate-800;
+}
+
+.world-info p {
+  @apply text-xs text-slate-400 font-medium uppercase tracking-widest;
+}
+
+/* Juego Activo */
+.progress-bar-container {
+  @apply w-full h-2 bg-slate-200 rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full bg-brain-purple transition-all duration-500;
+}
+
+.quest-card {
+  @apply bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden;
+}
+
+.quest-header {
+  @apply flex items-center gap-2 text-xs font-bold text-slate-400 mb-6 uppercase tracking-tighter;
+}
+
+.quest-text {
+  @apply text-xl font-bold text-slate-800 mb-8 leading-tight;
+}
+
+.options-stack {
+  @apply space-y-3;
+}
+
+.option-btn {
+  @apply w-full text-left p-4 rounded-2xl bg-slate-50 border border-slate-100 font-medium 
+         text-slate-700 transition-all hover:bg-brain-purple hover:text-white;
+}
+
+.feedback-toast {
+  @apply mt-6 p-4 rounded-xl text-center font-bold text-sm animate-bounce;
+}
+
+.feedback-toast.success { @apply bg-green-100 text-green-600; }
+.feedback-toast.error { @apply bg-red-100 text-red-600; }
+
+.skill-unlocked-tag {
+  @apply bg-brain-purple text-white px-6 py-2 rounded-full font-black text-xl mt-4 shadow-lg shadow-brain-purple/20;
+}
+
+.skills-list {
+  @apply space-y-4 text-left bg-slate-50 p-6 rounded-3xl;
+}
+
+.skill-item {
+  @apply flex items-center gap-3 font-bold text-slate-700;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
