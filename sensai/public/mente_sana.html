@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mente Clara — Ejercicios cognitivos y bienestar mental</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#DCF5EA; --bg2:#D4E8F8; --surf:#FFFFFF; --surf2:#F2FAF6; --surf3:#E8F8F2;
+  --b1:#7BC9A8; --b2:#5AB88E;
+  --t1:#062A1F; --t2:#134536; --t3:#3A7560;
+  --sage:#0A7A62; --sage-m:#059669; --sage-l:#5EEAD4; --sage-bg:#CFFAEA; --sage-tx:#044E3F;
+  --indigo:#4338CA; --indigo-m:#6366F1; --indigo-l:#A5B4FC; --indigo-bg:#EEF2FF; --indigo-tx:#1E1B4B;
+  --amber:#C2410C; --amber-m:#EA580C; --amber-l:#FDBA74; --amber-bg:#FFEDD5; --amber-tx:#7C2D12;
+  --sky:#0369A1; --sky-l:#7DD3FC; --sky-bg:#E0F2FE; --sky-tx:#0C4A6E;
+  --lav:#7C3AED; --lav-bg:#EDE9FE; --rose:#DB2777; --rose-bg:#FCE7F3;
+  --ok:#047857; --ok-bg:#A7F3D0; --ok-l:#34D399;
+  --err:#B91C1C; --err-bg:#FEE2E2; --err-l:#F87171;
+  --soft:#5B7A6E;
+  --r4:8px; --r8:12px; --r12:16px; --r16:20px; --r24:28px; --r32:36px; --r40:44px; --rpill:99px;
+  --sh1:0 4px 14px rgba(6,60,45,.1); --sh2:0 8px 28px rgba(6,60,45,.12); --sh3:0 16px 48px rgba(6,60,45,.16);
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+html{min-height:100%;scroll-behavior:smooth}
+body{min-height:100%;margin:0;font-family:'DM Sans',sans-serif;font-size:18px;color:var(--t1);overflow-x:hidden;line-height:1.7;
+  background:linear-gradient(155deg,#D4F4E8 0%,#C8E8F8 28%,#EDE9FE 55%,#FCE7F3 78%,#FFF7ED 100%);
+  display:flex;justify-content:center;position:relative}
+body::before,body::after{content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:0;opacity:.5;animation:floatOrb 24s ease-in-out infinite}
+body::before{width:min(460px,85vw);height:min(460px,85vw);background:radial-gradient(circle,rgba(52,211,153,.4) 0%,transparent 68%);top:-10%;left:-14%;animation-delay:-5s}
+body::after{width:min(400px,78vw);height:min(400px,78vw);background:radial-gradient(circle,rgba(129,140,248,.38) 0%,transparent 68%);bottom:-8%;right:-12%;animation-delay:-11s}
+@keyframes floatOrb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(14px,-20px) scale(1.05)}}
+#app{width:100%;max-width:960px;padding:0 1.35rem;position:relative;z-index:1}
+#app::before{content:'';position:fixed;width:min(280px,50vw);height:min(280px,50vw);border-radius:50%;pointer-events:none;z-index:0;opacity:.42;top:38%;right:8%;animation:floatOrb 19s ease-in-out infinite -7s;
+  background:radial-gradient(circle,rgba(251,207,232,.55) 0%,transparent 70%)}
+
+/* NAV */
+#nav{position:sticky;top:0;z-index:200;background:rgba(228,237,232,.92);backdrop-filter:blur(18px);
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:1.15rem 0;
+  border-bottom:1px solid transparent;transition:border-color .25s var(--ease)}
+#nav.shadow{border-color:var(--b1);box-shadow:var(--sh1)}
+.nav-spacer{min-width:1px}
+.logo{grid-column:2;font-family:'Outfit',sans-serif;font-size:1.55rem;font-weight:800;color:var(--sage);letter-spacing:-.03em;text-align:center}
+.logo b{color:var(--indigo);font-weight:900}
+#back-btn{display:none;grid-column:3;justify-self:end;align-items:center;gap:8px;padding:12px 26px;border-radius:var(--rpill);
+  border:2px solid var(--b2);background:var(--surf);font-family:'Outfit',sans-serif;
+  font-size:.95rem;font-weight:700;color:var(--t2);cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s,background .2s,border-color .2s;
+  box-shadow:var(--sh1)}
+#back-btn:hover{background:var(--sage-bg);border-color:var(--sage);color:var(--sage-tx);transform:translateY(-2px);box-shadow:var(--sh2)}
+#back-btn:active{transform:translateY(0)}
+.pbar{height:3px;background:var(--b1);overflow:hidden;display:none}
+.pbar-fill{height:100%;width:0%;background:var(--sage);transition:width .5s}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .38s cubic-bezier(.22,1,.36,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* HOME */
+.hero{text-align:center;padding:3rem 1rem 2.25rem}
+.hero-tag{display:inline-block;padding:8px 24px;border-radius:var(--rpill);background:var(--sage-bg);
+  color:var(--sage-tx);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem;box-shadow:var(--sh1)}
+.hero h1{font-family:'Outfit',sans-serif;font-size:clamp(2.15rem,6.8vw,3.4rem);font-weight:900;
+  line-height:1.12;letter-spacing:-.035em;margin-bottom:1.1rem;
+  background:linear-gradient(92deg,#C62828 0%,#F57C00 18%,#F9A825 36%,#2E7D32 54%,#1565C0 72%,#6A1B9A 88%,#00838F 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:none}
+.hero h1 span{background:linear-gradient(92deg,#0D6B58,#1565C0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:1.2rem;color:var(--t2);line-height:1.88;max-width:560px;margin:0 auto 2.25rem}
+
+.stats-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.scard{background:linear-gradient(180deg,var(--surf),var(--surf2));border:2.5px solid var(--b1);border-radius:var(--r32);
+  padding:1.35rem 1.75rem;text-align:center;min-width:108px;box-shadow:var(--sh2)}
+.scard-num{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:900;color:var(--sage);display:block;line-height:1;margin-bottom:.25rem}
+.scard-label{font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.09em}
+
+.lvl-section{margin-bottom:2rem}
+.lvl-hdr{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+.lvl-tag{padding:7px 20px;border-radius:var(--rpill);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;white-space:nowrap;font-family:'Outfit',sans-serif}
+.lt-easy{background:var(--sage-bg);color:var(--sage-tx)}
+.lt-mid{background:var(--indigo-bg);color:var(--indigo-tx)}
+.lt-hard{background:var(--amber-bg);color:var(--amber-tx)}
+.lvl-line{flex:1;height:1.5px;background:var(--b1)}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px}
+.pcard{background:linear-gradient(165deg,var(--surf) 0%,var(--surf2) 100%);border:2.5px solid var(--b1);border-radius:var(--r40);
+  padding:2rem 1.75rem;cursor:pointer;transition:transform .28s var(--ease),box-shadow .28s,border-color .22s;box-shadow:var(--sh2);position:relative;overflow:hidden}
+.pcard::after{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(167,243,208,.35),rgba(191,219,254,.3));opacity:0;transition:opacity .22s}
+.pcard:hover{transform:translateY(-6px);box-shadow:var(--sh3);border-color:var(--sage-l)}
+.pcard:hover::after{opacity:1}
+.pcard:active{transform:scale(.98) translateY(-2px)}
+.pcard-ico{display:flex;align-items:center;justify-content:center;margin-bottom:1.15rem;position:relative;z-index:1;min-height:88px}
+.pcard-emoji{font-size:3.75rem;line-height:1;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.08));transition:transform .28s var(--ease),filter .28s}
+.pcard:hover .pcard-emoji{transform:scale(1.1) translateY(-3px);filter:drop-shadow(0 8px 18px rgba(6,80,60,.12))}
+.pcard-title{font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:800;color:var(--t1);margin-bottom:.5rem;position:relative;z-index:1}
+.pcard-desc{font-size:.95rem;color:var(--t2);line-height:1.65;position:relative;z-index:1}
+.pcard-done{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;
+  background:var(--sage);display:none;align-items:center;justify-content:center;z-index:2}
+.pcard-done svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pcard.solved .pcard-done{display:flex}
+.pcard.solved{border-color:var(--sage-l)}
+
+/* PUZZLE SCREEN */
+.puz-hdr{padding:1.85rem 0 .75rem}
+.puz-lvl-tag{display:inline-block;padding:7px 20px;border-radius:var(--rpill);font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem;font-family:'Outfit',sans-serif;box-shadow:var(--sh1)}
+.puz-title{font-family:'Outfit',sans-serif;font-size:clamp(1.65rem,5vw,2.35rem);font-weight:900;
+  color:var(--t1);letter-spacing:-.03em;margin-bottom:.75rem;line-height:1.15}
+.puz-desc{font-size:1.14rem;color:var(--t2);line-height:1.85;max-width:700px}
+
+.p-hint-wrap{margin:1rem 0 1.25rem}
+.btn-tool{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;padding:16px 28px;border-radius:var(--rpill);
+  border:2.5px solid var(--b2);background:var(--surf);font-family:'Outfit',sans-serif;font-size:1.02rem;font-weight:700;color:var(--t2);
+  cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s,background .2s,border-color .2s;box-shadow:var(--sh1);margin-right:.6rem;margin-bottom:.5rem}
+.btn-tool:hover{background:var(--sky-bg);border-color:var(--sky);color:var(--sky-tx);transform:translateY(-2px);box-shadow:var(--sh2)}
+.btn-tool-hint{border-color:var(--sage-l);background:var(--sage-bg);color:var(--sage-tx)}
+.btn-tool-hint:hover{background:var(--sage);border-color:var(--sage);color:#fff}
+
+.hint,.hint-collapsible{background:var(--sky-bg);border:2px solid var(--sky-l);border-radius:var(--r16);
+  padding:1.15rem 1.4rem;font-size:1.02rem;color:var(--sky-tx);line-height:1.75;margin:.75rem 0 0;box-shadow:var(--sh1)}
+.hint-p{margin:0}
+.hint-collapsible{display:none;opacity:0;transform:translateY(-6px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.hint-collapsible.is-visible{display:block;opacity:1;transform:translateY(0);animation:fadeUp .4s var(--ease) both}
+
+.puz-toolbar{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.25rem 0 1rem;padding-bottom:1rem;border-bottom:1px solid var(--b1)}
+.puz-footer-actions{margin-top:1.25rem;padding-top:.25rem}
+
+.puz-body{background:linear-gradient(180deg,var(--surf) 0%,var(--surf2) 100%);border:2.5px solid var(--b1);border-radius:var(--r40);
+  padding:2.25rem 2rem;box-shadow:var(--sh2);margin:.75rem 0}
+@media(max-width:560px){.puz-body{padding:1.5rem 1.2rem}}
+
+.submit-btn{width:100%;padding:1.35rem 1.6rem;border-radius:var(--rpill);border:none;
+  background:linear-gradient(135deg,var(--sage),var(--sage-m));color:#fff;font-family:'Outfit',sans-serif;font-size:1.18rem;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 28px rgba(13,107,88,.35);transition:transform .2s var(--ease),box-shadow .2s,filter .2s;letter-spacing:.02em;margin-top:.35rem}
+.submit-btn:hover{filter:brightness(1.06);transform:translateY(-3px);box-shadow:0 10px 34px rgba(13,107,88,.42)}
+.submit-btn:active{transform:translateY(-1px)}
+.submit-btn:disabled{background:var(--t3);box-shadow:none;transform:none;cursor:not-allowed;filter:none}
+
+.rbox{border-radius:var(--r16);padding:1.35rem 1.5rem;margin-top:1rem;
+  font-size:1.02rem;line-height:1.78;display:none;animation:fadeUp .4s var(--ease) both;box-shadow:var(--sh1)}
+.rbox.ok{background:var(--ok-bg);border:2px solid var(--ok-l);color:var(--ok)}
+.rbox.fail{background:var(--err-bg);border:2px solid var(--err-l);color:var(--err)}
+.rbox.soft{background:var(--surf2);border:2px solid var(--b2);color:var(--t2)}
+.rbox-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem;display:block;margin-bottom:.5rem;letter-spacing:-.02em}
+.rbox-body{margin:.25rem 0 .5rem}
+.rbox-lead{margin:0 0 .75rem;color:inherit;opacity:.95}
+.rbox-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.1rem}
+.btn-secondary{padding:13px 24px;border-radius:var(--rpill);border:2px solid var(--b2);background:var(--surf);
+  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;color:var(--t2);cursor:pointer;
+  transition:transform .2s var(--ease),background .2s,border-color .2s;box-shadow:var(--sh1)}
+.btn-secondary:hover{background:var(--surf2);border-color:var(--sage);color:var(--sage-tx);transform:translateY(-2px)}
+.btn-teach{padding:13px 24px;border-radius:var(--rpill);border:2px solid var(--indigo-l);background:var(--indigo-bg);
+  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;color:var(--indigo-tx);cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s}
+.btn-teach:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.progressive-hint{margin-top:1rem;padding:1rem 1.15rem;border-radius:var(--r12);background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.06)}
+.progressive-hint.ph-strong{background:var(--surf);border-color:var(--sky-l)}
+.ph-tag{display:inline-block;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--sky);margin-bottom:.35rem;font-family:'Outfit',sans-serif}
+.ph-body{font-size:.98rem;color:var(--t2);line-height:1.7}
+.rbox-spoiler{margin-top:1rem}
+.spoiler-card{padding:1.15rem;border-radius:var(--r12);background:var(--surf);border:2px dashed var(--b2);font-size:.98rem;color:var(--t2);line-height:1.75}
+
+/* ═══ SHARED COMPONENTS ═══ */
+.sec-label{font-size:.78rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.11em;margin-bottom:.75rem}
+
+.opts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px;margin:.85rem 0}
+.opt{padding:16px 10px;border-radius:var(--r16);border:2px solid var(--b1);background:var(--surf2);
+  font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:700;color:var(--t2);cursor:pointer;
+  transition:transform .2s var(--ease),border-color .2s,background .2s,box-shadow .2s;text-align:center;min-height:58px;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh1)}
+.opt:hover{border-color:var(--indigo);color:var(--indigo-tx);background:var(--indigo-bg);transform:translateY(-2px);box-shadow:var(--sh2)}
+.opt.sel{border-color:var(--indigo);background:var(--indigo-bg);color:var(--indigo-tx)}
+
+.mcq{display:flex;flex-direction:column;gap:12px;margin:.85rem 0}
+.mcq-btn{padding:18px 22px;border-radius:var(--r16);border:2px solid var(--b1);background:var(--surf2);
+  font-size:1.02rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s var(--ease);
+  text-align:left;line-height:1.65;font-family:'DM Sans',sans-serif;box-shadow:var(--sh1)}
+.mcq-btn:hover{border-color:var(--indigo);background:var(--indigo-bg);color:var(--indigo-tx);transform:translateY(-2px)}
+.mcq-btn.sel{border-color:var(--indigo);background:var(--indigo-bg);color:var(--indigo-tx);font-weight:600}
+
+.act-btn{padding:14px 26px;border-radius:var(--r12);border:2px solid var(--b2);background:var(--surf);
+  font-family:'Outfit',sans-serif;font-size:.98rem;font-weight:700;color:var(--t1);cursor:pointer;transition:all .2s var(--ease);box-shadow:var(--sh1)}
+.act-btn:hover{border-color:var(--sage);background:var(--sage-bg);color:var(--sage-tx);transform:translateY(-2px)}
+.act-btn.prim{background:var(--sage);border-color:var(--sage);color:#fff}
+.act-btn.prim:hover{background:var(--sage-m)}
+.act-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ═══ P1 RIVER ═══ */
+.river-wrap{display:grid;grid-template-columns:1fr 76px 1fr;border-radius:var(--r24);overflow:hidden;min-height:300px}
+.rbank{background:#C8E8C8;padding:1rem .75rem;display:flex;flex-direction:column;align-items:center;gap:8px}
+.rbank-lbl{font-size:.68rem;font-weight:700;color:#1E4E22;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem;text-align:center}
+.rwater{background:#4080C0;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:.5rem}
+.rwaves{position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0,transparent 12px,rgba(255,255,255,.12) 12px,rgba(255,255,255,.12) 14px);animation:wv 2s linear infinite}
+@keyframes wv{to{transform:translateY(14px)}}
+.entity{background:#fff;border:2.5px solid #90C090;border-radius:var(--r12);padding:9px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+  transition:all .18s;user-select:none;font-size:1.7rem;min-width:58px;text-align:center}
+.entity:hover{border-color:var(--sage);transform:scale(1.07)}
+.entity.in-boat{border-color:var(--sage);background:var(--sage-bg)}
+.entity em{font-size:.65rem;font-weight:700;color:#1E4E22;font-style:normal}
+.boat-zone{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px}
+.boat-body{width:58px;background:#E8C060;border:2.5px solid #C89830;border-radius:0 0 18px 18px;
+  min-height:44px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px;
+  font-size:1.3rem;cursor:pointer;padding:4px;transition:all .2s}
+.boat-body:hover{transform:scale(1.06)}
+.cross-arrow{background:rgba(255,255,255,.95);border:none;border-radius:var(--rpill);padding:10px 16px;
+  font-size:.82rem;font-weight:700;color:#1A4080;cursor:pointer;z-index:2;transition:all .2s var(--ease);box-shadow:var(--sh1)}
+.cross-arrow:hover{background:#fff}
+.cross-arrow:disabled{opacity:.4;cursor:not-allowed}
+.river-msg{text-align:center;padding:.6rem;border-radius:var(--r12);margin-top:.75rem;font-size:.9rem;font-weight:600}
+.river-msg.safe{background:var(--sage-bg);color:var(--sage-tx)}
+.river-msg.danger{background:var(--err-bg);color:var(--err)}
+.river-msg.win{background:var(--ok-bg);color:var(--ok)}
+
+/* ═══ P2 SWITCHES ═══ */
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:1rem}
+.sw-card{background:var(--surf2);border:2.5px solid var(--b1);border-radius:var(--r24);
+  padding:1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.9rem;
+  cursor:pointer;transition:all .2s;user-select:none}
+.sw-card:hover{border-color:var(--amber);background:var(--amber-bg)}
+.sw-card.on{background:var(--amber-bg);border-color:var(--amber-l)}
+.sw-name{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--t2)}
+.sw-timer{font-size:.78rem;color:var(--t3);font-weight:600;min-height:18px}
+.tog-track{width:68px;height:34px;border-radius:17px;background:var(--b1);position:relative;transition:background .25s}
+.sw-card.on .tog-track{background:var(--amber)}
+.tog-thumb{position:absolute;top:5px;left:5px;width:24px;height:24px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.22);transition:transform .25s}
+.sw-card.on .tog-thumb{transform:translateX(34px)}
+.enter-btn{display:block;margin:.65rem auto 1.1rem;padding:15px 38px;border-radius:var(--rpill);
+  border:2px solid var(--sage);background:var(--sage-bg);font-family:'Outfit',sans-serif;
+  font-size:1.02rem;font-weight:700;color:var(--sage-tx);cursor:pointer;transition:all .2s var(--ease);box-shadow:var(--sh1)}
+.enter-btn:hover{background:var(--sage);color:#fff;transform:translateY(-2px);box-shadow:var(--sh2)}
+.enter-btn:disabled{border-color:var(--b1);background:var(--surf2);color:var(--t3);cursor:not-allowed}
+.bulb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:1rem 0}
+.bulb-card{background:var(--surf2);border:2.5px solid var(--b1);border-radius:var(--r24);
+  padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;
+  cursor:pointer;transition:all .2s;user-select:none}
+.bulb-card.picked{border-color:var(--indigo);background:var(--indigo-bg)}
+.bulb-glow{width:76px;height:76px;border-radius:50%;background:linear-gradient(180deg,#ECEFF1,#CFD8DC);display:flex;align-items:center;justify-content:center;transition:all .35s var(--ease)}
+.bulb-emoji{font-size:2.85rem;line-height:1;display:block}
+.bulb-card.on .bulb-glow{background:linear-gradient(180deg,#FFFDE7,#FFF59D);box-shadow:0 0 22px rgba(255,220,80,.55)}
+.bulb-card.on .bulb-emoji{filter:drop-shadow(0 0 12px rgba(255,200,40,.75))}
+.bulb-card.warm .bulb-glow{background:linear-gradient(180deg,#FFF3E0,#FFCC80);box-shadow:0 0 16px rgba(255,160,60,.35)}
+.bulb-card.warm .bulb-emoji{filter:drop-shadow(0 0 8px rgba(255,140,60,.5))}
+.bulb-card.off .bulb-glow{background:linear-gradient(180deg,#ECEFF1,#B0BEC5)}
+.bulb-card.off .bulb-emoji{filter:grayscale(.2);opacity:.9}
+.bulb-name{font-weight:700;font-size:.98rem;color:var(--t2)}
+.bulb-state{font-size:.82rem;color:var(--t3);line-height:1.35}
+.assign-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:.75rem}
+.assign-cell{background:var(--surf2);border:2px dashed var(--b1);border-radius:var(--r12);
+  padding:.6rem;text-align:center;font-size:.8rem;color:var(--t3);cursor:pointer;
+  transition:all .15s;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.assign-cell.filled{background:var(--indigo-bg);border:2px solid var(--indigo-l);color:var(--indigo-tx);font-weight:700}
+.assign-cell-lbl{font-size:.65rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+
+/* ═══ P3 BAGS ═══ */
+.bags-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1rem}
+@media(max-width:420px){.bags-grid{grid-template-columns:repeat(4,1fr)}}
+.bag{aspect-ratio:1;border-radius:var(--r16);background:var(--surf2);border:2.5px solid var(--b1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.7rem;gap:2px;transition:all .18s;user-select:none}
+.bag:hover{border-color:var(--amber-m);transform:translateY(-3px);box-shadow:var(--sh2)}
+.bag.sel{background:var(--amber-bg);border-color:var(--amber);box-shadow:var(--sh2)}
+.bag .bn{font-size:.72rem;font-weight:700;color:var(--t2);font-family:'Outfit',sans-serif}
+.bag .bc{font-size:.62rem;color:var(--t3)}
+.digi-scale{background:#0D1E14;border-radius:var(--r24);padding:1.5rem;text-align:center;margin:.75rem 0}
+.digi-lbl{font-size:.65rem;font-weight:700;color:#3A7050;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.4rem}
+.digi-val{font-family:'Courier New',monospace;font-size:3.2rem;font-weight:800;color:#00FF80;
+  letter-spacing:.08em;min-height:3.8rem;display:flex;align-items:center;justify-content:center;
+  text-shadow:0 0 24px rgba(0,255,128,.3)}
+.digi-sub{font-size:.72rem;color:#2E6040;margin-top:.3rem}
+
+/* ═══ P5 MARBLES ═══ */
+.marble-layout{display:flex;flex-direction:column;gap:1.25rem}
+.scale-container{background:var(--surf3);border-radius:var(--r24);padding:1rem;border:2px solid var(--b1)}
+.scale-svg-holder{display:flex;justify-content:center;margin-bottom:.5rem}
+.scale-svg-holder svg{width:100%;max-width:500px;height:auto}
+.pans-selector{display:grid;grid-template-columns:1fr 80px 1fr;gap:8px;align-items:stretch}
+.pan-drop{background:var(--surf);border:2.5px dashed var(--b2);border-radius:var(--r16);
+  min-height:90px;padding:.7rem;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;
+  transition:all .2s;cursor:pointer}
+.pan-drop.active-pan{border-color:var(--sage);border-style:solid;background:var(--sage-bg)}
+.pan-lbl{font-size:.68rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;width:100%;margin-bottom:3px}
+.pan-center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.weigh-btn{padding:12px 10px;border-radius:var(--r16);border:2.5px solid var(--sage);background:var(--sage-bg);
+  font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;color:var(--sage-tx);
+  cursor:pointer;transition:all .15s;white-space:nowrap;width:88px;text-align:center}
+.weigh-btn:hover{background:var(--sage);color:#fff}
+.weigh-btn:disabled{border-color:var(--b1);background:var(--surf2);color:var(--t3);cursor:not-allowed}
+.weigh-uses{font-size:.72rem;color:var(--t3);text-align:center;font-weight:600}
+.scale-verdict{text-align:center;font-size:.95rem;font-weight:700;min-height:26px;color:var(--sage-tx);padding:.25rem}
+.marble-pool-area{background:var(--surf3);border:2px solid var(--b1);border-radius:var(--r24);padding:1.1rem}
+.marble-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mrb{width:64px;height:64px;border-radius:50%;cursor:pointer;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:1px;font-family:'Outfit',sans-serif;
+  user-select:none;transition:all .2s;border:3px solid transparent;box-shadow:var(--sh1)}
+.marble-ico{font-size:1.55rem;line-height:1}
+.marble-num{font-size:.88rem;font-weight:800;line-height:1}
+.mrb.pool{background:var(--indigo-bg);border-color:var(--indigo-l);color:var(--indigo-tx)}
+.mrb.pool:hover{transform:scale(1.18);box-shadow:var(--sh3);border-color:var(--indigo)}
+.mrb.inL{background:var(--sage-bg);border-color:var(--sage-l);color:var(--sage-tx)}
+.mrb.inR{background:var(--amber-bg);border-color:var(--amber-l);color:var(--amber-tx)}
+.mrb.used{opacity:.3;cursor:default;transform:none!important}
+.pan-target-label{font-size:.78rem;font-weight:700;color:var(--t3);text-align:center}
+.history-section{display:flex;flex-direction:column;gap:10px}
+.hist-row{background:var(--surf3);border:1.5px solid var(--b1);border-radius:var(--r16);padding:.9rem 1rem}
+.hist-title{font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.hist-pans{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.hist-pan{display:flex;flex-wrap:wrap;gap:4px}
+.hmrb{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:800;font-family:'Outfit',sans-serif}
+.hmrb.L{background:var(--sage-bg);color:var(--sage-tx);border:2px solid var(--sage-l)}
+.hmrb.R{background:var(--amber-bg);color:var(--amber-tx);border:2px solid var(--amber-l)}
+.hist-result{text-align:center;font-size:.8rem;font-weight:700;color:var(--t2)}
+
+/* ═══ P6 DOORS ═══ */
+.doors-wrap{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+.door{flex:1;min-width:120px;max-width:190px;height:190px;border-radius:var(--r24) var(--r24) var(--r8) var(--r8);
+  border:3px solid var(--indigo-l);background:var(--indigo-bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;transition:all .22s;user-select:none;position:relative}
+.door:hover:not(.revealed):not(.done){transform:translateY(-7px);box-shadow:var(--sh3);border-color:var(--indigo)}
+.door.chosen{border-color:var(--indigo);box-shadow:0 0 0 4px var(--indigo-l)}
+.door.revealed{background:var(--surf3);border-color:var(--b1);cursor:default;transform:none}
+.door.winner-door{background:var(--amber-bg);border-color:var(--amber)}
+.door-num{font-family:'Outfit',sans-serif;font-size:3rem;font-weight:900;color:var(--indigo-m);line-height:1}
+.door-ico{font-size:3.5rem;line-height:1}
+.door-lbl{font-size:.85rem;font-weight:700;color:var(--t2);margin-top:.3rem}
+.door-knob{width:12px;height:12px;border-radius:50%;background:var(--amber);position:absolute;right:16px;top:50%}
+.monty-msg{background:var(--sky-bg);border:2px solid var(--sky-l);border-radius:var(--r16);
+  padding:.9rem 1.1rem;font-size:.92rem;color:var(--sky-tx);text-align:center;line-height:1.6;margin:.75rem 0}
+.monty-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:.75rem 0}
+.monty-btn{flex:1;min-width:148px;padding:16px 20px;border-radius:var(--r16);border:2px solid var(--b2);
+  background:var(--surf);font-family:'Outfit',sans-serif;font-size:1.02rem;font-weight:700;
+  color:var(--t2);cursor:pointer;transition:all .2s var(--ease);text-align:center;box-shadow:var(--sh1)}
+.monty-btn:hover{border-color:var(--indigo);background:var(--indigo-bg);color:var(--indigo-tx);transform:translateY(-2px)}
+
+/* ═══ P7 JUGS ═══ */
+.jugs-visual{display:flex;gap:2.5rem;justify-content:center;align-items:flex-end;padding:1rem .5rem}
+.jug-outer{position:relative;border-radius:4px 4px 10px 10px;border:3px solid var(--sky);
+  background:rgba(255,255,255,.7);overflow:hidden;cursor:default}
+.jug-fill{position:absolute;bottom:0;left:0;right:0;background:rgba(16,96,160,.22);transition:height .4s ease;border-radius:0 0 8px 8px}
+.jug-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:800;color:var(--sky-tx);z-index:1}
+.jug-bottom-lbl{text-align:center;margin-top:.5rem;font-size:.85rem;font-weight:700;color:var(--t2)}
+.jug-cap-lbl{font-size:.72rem;color:var(--t3)}
+.jug-btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px;margin:.9rem 0}
+.jug-btn{padding:14px 12px;border-radius:var(--r12);border:2px solid var(--b2);background:var(--surf2);
+  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;color:var(--t2);cursor:pointer;transition:all .2s var(--ease);text-align:center;box-shadow:var(--sh1)}
+.jug-btn:hover{border-color:var(--sky);background:var(--sky-bg);color:var(--sky-tx);transform:translateY(-2px)}
+.jug-log{font-size:.8rem;color:var(--t3);text-align:center;margin:.4rem 0;min-height:20px}
+
+/* ═══ P8 PIRATES ═══ */
+.pirates-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-bottom:1.1rem}
+.pir-card{background:var(--surf2);border:2.5px solid var(--b1);border-radius:var(--r16);
+  padding:.9rem .7rem;text-align:center;min-width:94px;flex:1;max-width:130px}
+.pir-card.cap{background:var(--amber-bg);border-color:var(--amber-l)}
+.pir-ico{font-size:2rem;display:block;margin-bottom:.35rem}
+.pir-name{font-size:.78rem;font-weight:700;color:var(--t2);font-family:'Outfit',sans-serif}
+.pir-vote{font-size:.68rem;color:var(--t3);margin-top:.2rem}
+.prop-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:1rem 0}
+.prop-col{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.prop-col label{font-size:.7rem;font-weight:700;color:var(--t3);font-family:'Outfit',sans-serif}
+.prop-input{width:100%;padding:10px 4px;border-radius:var(--r8);border:2.5px solid var(--b1);
+  background:var(--surf);font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;
+  color:var(--t1);text-align:center;transition:border-color .15s}
+.prop-input:focus{outline:none;border-color:var(--amber)}
+.total-row{text-align:center;font-size:.9rem;font-weight:600;color:var(--t2);margin:.25rem 0}
+
+/* ═══ P12 BRIDGE ═══ */
+.bridge-wrap{display:grid;grid-template-columns:1fr 88px 1fr;border-radius:var(--r24);overflow:hidden;min-height:260px}
+.br-bank{background:#C8E8C8;padding:.9rem .7rem;display:flex;flex-direction:column;align-items:center;gap:8px}
+.br-bank-lbl{font-size:.68rem;font-weight:700;color:#1E4E22;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.2rem;text-align:center}
+.br-center{background:#C8B090;border-left:3px solid #9A8060;border-right:3px solid #9A8060;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:.75rem .5rem}
+.br-person{background:#fff;border:2.5px solid #90C090;border-radius:var(--r16);padding:12px 10px;
+  font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;color:var(--t2);
+  cursor:pointer;transition:all .2s var(--ease);user-select:none;text-align:center;width:92px;
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+.br-lbl{display:block;line-height:1.25;margin-top:4px}
+.br-person:hover:not(.gone){border-color:var(--sage);background:var(--sage-bg);color:var(--sage-tx)}
+.br-person.sel{background:var(--sage-bg);border-color:var(--sage);color:var(--sage-tx)}
+.br-person.gone{opacity:.18;cursor:default}
+.br-timer{font-family:'Outfit',sans-serif;font-size:2.4rem;font-weight:900;color:var(--sage-tx);text-align:center;transition:color .3s}
+.br-timer.warn{color:var(--err)}
+.br-cross-btn{padding:9px 8px;border-radius:var(--r8);border:2px solid var(--sage-l);background:var(--sage-bg);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:700;color:var(--sage-tx);cursor:pointer;transition:all .15s;width:76px;text-align:center}
+.br-cross-btn:hover{background:var(--sage);color:#fff;border-color:var(--sage)}
+.br-cross-btn:disabled{opacity:.35;cursor:not-allowed}
+.br-log{font-size:.78rem;color:var(--t3);line-height:1.7;text-align:center;margin:.5rem 0;min-height:20px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .pgrid{grid-template-columns:repeat(2,1fr)}
+  .river-wrap{grid-template-columns:1fr 60px 1fr}
+  .bridge-wrap{grid-template-columns:1fr 72px 1fr}
+  .doors-wrap{gap:9px}
+  .door{min-width:90px;height:155px}
+  .jugs-visual{gap:1.5rem}
+  .prop-row{gap:5px}
+  .prop-input{font-size:1rem}
+}
+@media(max-width:420px){
+  #app{padding:0 .5rem}
+  .pcard{padding:1rem}
+  .mrb{width:46px;height:46px;font-size:.9rem}
+}
+.riv-wrap-scene{border-radius:var(--r24);overflow:hidden;box-shadow:var(--sh2)}
+.entity-riv{background:linear-gradient(180deg,#fff,#F0FDF4);border:3px solid #6BCB8F;border-radius:var(--r24);padding:14px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .22s var(--ease),box-shadow .22s;min-width:104px;box-shadow:var(--sh1)}
+.entity-riv:hover{transform:scale(1.07);box-shadow:var(--sh2)}
+.entity-riv.in-boat{border-color:var(--sage);background:var(--sage-bg)}
+.entity-riv em{font-size:.78rem;font-weight:800;color:#1E4E22;font-style:normal;font-family:'Outfit',sans-serif}
+.entity-emoji{font-size:3.25rem;line-height:1;display:block;user-select:none}
+.boat-illus{width:100px;background:linear-gradient(180deg,#E8C088,#C9956C);border:3px solid #9A6B2E;border-radius:0 0 26px 26px;
+  min-height:58px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;cursor:pointer;padding:8px;transition:transform .22s var(--ease);box-shadow:inset 0 -4px 0 rgba(0,0,0,.1)}
+.boat-illus:hover{transform:scale(1.06)}
+.boat-empty-emoji{font-size:2.6rem!important}
+.boat-pass{display:inline-flex;vertical-align:middle}
+.boat-pass .entity-emoji{font-size:2.5rem}
+.rbank{background:linear-gradient(180deg,#B8E6C0,#8FD4A0)!important;padding:1.1rem .85rem!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:10px!important}
+.rwater{background:linear-gradient(180deg,#4A9FD8,#2A7FB8)!important;position:relative!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:space-evenly!important;padding:.5rem!important}
+.scale-container.p5-pulse{animation:scaleNudge .85s var(--ease)}
+@keyframes scaleNudge{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}60%{transform:translateY(2px)}}
+.jug-outer.jug-slosh .jug-fill{animation:jugSlosh .6s ease}
+@keyframes jugSlosh{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.03)}}
+.sw-knob{width:44px;height:44px;border-radius:50%;background:linear-gradient(145deg,#ECEFF1,#B0BEC5);border:3px solid #78909C;margin:.35rem auto;transition:transform .25s var(--ease)}
+.sw-card.on .sw-knob{background:linear-gradient(145deg,#FFF9C4,#FDD835);border-color:#F9A825;box-shadow:0 0 16px rgba(255,200,0,.35)}
+.bag-adv{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;margin:1rem 0}
+.bag-slot{background:var(--surf2);border:2px solid var(--b1);border-radius:var(--r16);padding:12px;text-align:center;box-shadow:var(--sh1)}
+.bag-slot-top{font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;color:var(--t1);margin-bottom:8px}
+.bag-coin-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0}
+.bag-coin-btn{width:46px;height:46px;border-radius:var(--r16);border:2.5px solid var(--b2);background:var(--surf);font-size:1.45rem;font-weight:800;cursor:pointer;transition:all .2s;line-height:1}
+.bag-coin-btn:hover{background:var(--amber-bg);border-color:var(--amber)}
+.bag-stat{font-size:.82rem;color:var(--t3);line-height:1.5}
+.bag-stat strong{color:var(--t2)}
+.digi-summary{margin-top:12px;padding:12px;border-radius:var(--r12);background:rgba(0,255,128,.06);font-size:.9rem;color:#2E6040;text-align:left;line-height:1.55}
+.br-lantern-emoji{font-size:2.35rem;line-height:1;display:inline-block;vertical-align:middle;filter:drop-shadow(0 2px 8px rgba(255,180,40,.45));animation:lanternBob 3.2s ease-in-out infinite}
+.br-bank-lbl .br-lantern-emoji{font-size:1.65rem;margin-left:6px}
+@keyframes lanternBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.bridge-wrap.br-cross-flash{animation:brCrossPulse .7s var(--ease)}
+@keyframes brCrossPulse{0%,100%{box-shadow:inset 0 0 0 rgba(255,200,100,0)}45%{box-shadow:inset 0 0 24px rgba(255,200,100,.25)}}
+.wise-emoji-hat{font-size:2.75rem;line-height:1;margin:0 auto 8px;display:block}
+.wise-emoji-person{font-size:3rem;line-height:1;display:block;margin:.35rem auto}
+.bag-overview{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:.85rem 0;padding:12px 14px;background:var(--lav-bg);border:2px solid var(--indigo-l);border-radius:var(--r24);font-size:.88rem;font-weight:600;color:var(--indigo-tx);line-height:1.5}
+.bag-overview span{opacity:.95}
+.bag-slot-top-emoji{font-size:1.85rem;margin-right:6px;vertical-align:middle}
+.br-fig-emoji{font-size:2.6rem;line-height:1;display:block}
+/* Ocultar la fila de estadísticas según tu solicitud */
+.stats-row {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <nav id="nav">
+    <div class="nav-spacer" aria-hidden="true"></div>
+    <div class="logo">Mente <b>Clara</b></div>
+    <button type="button" id="back-btn" onclick="goHome()">Volver</button>
+  </nav>
+  <div class="pbar" id="pbar"><div class="pbar-fill" id="pbar-fill"></div></div>
+
+  <!-- HOME -->
+  <div class="screen active" id="s-home">
+    <div class="hero">
+      <div class="hero-tag">Salud mental · Cognición</div>
+      <h1>Entrena tu <span>lógica</span> y concentración</h1>
+      <p>12 ejercicios cognitivos únicos de razonamiento. Cada uno estimula tu mente con calma y curiosidad, a tu ritmo.</p>
+    </div>
+    <div class="stats-row">
+      <div class="scard"><span class="scard-num" id="st-total">0/12</span><span class="scard-label">Ejercicios hechos</span></div>
+      <div class="scard"><span class="scard-num" id="st-easy" style="color:var(--sage)">0/4</span><span class="scard-label">Fácil</span></div>
+      <div class="scard"><span class="scard-num" id="st-mid" style="color:var(--indigo)">0/4</span><span class="scard-label">Intermedio</span></div>
+      <div class="scard"><span class="scard-num" id="st-hard" style="color:var(--amber)">0/4</span><span class="scard-label">Difícil</span></div>
+    </div>
+    <div class="lvl-section">
+      <div class="lvl-hdr"><div class="lvl-tag lt-easy">Fácil</div><div class="lvl-line"></div></div>
+      <div class="pgrid">
+        <div class="pcard" onclick="openPuzzle('p1')" id="card-p1"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🐺</span></span><div class="pcard-title">El río peligroso</div><div class="pcard-desc">Cruza al lobo, la cabra y la col sin que nadie se coma a nadie.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p2')" id="card-p2"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">💡</span></span><div class="pcard-title">Interruptores y focos</div><div class="pcard-desc">3 switches, 3 focos en cuarto cerrado. Entras una sola vez.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p3')" id="card-p3"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🪙</span></span><div class="pcard-title">Las bolsas de monedas</div><div class="pcard-desc">10 bolsas, una con monedas falsas. Báscula digital, un solo uso.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p4')" id="card-p4"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🕯️</span></span><div class="pcard-title">Las dos velas</div><div class="pcard-desc">Vela A=60 min, Vela B=90 min. Mide exactamente 45 minutos.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+      </div>
+    </div>
+    <div class="lvl-section">
+      <div class="lvl-hdr"><div class="lvl-tag lt-mid">Intermedio</div><div class="lvl-line"></div></div>
+      <div class="pgrid">
+        <div class="pcard" onclick="openPuzzle('p5')" id="card-p5"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">⚖️</span></span><div class="pcard-title">Las 9 canicas</div><div class="pcard-desc">Una canica pesa más. Báscula de dos platos, máximo 2 pesadas.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p6')" id="card-p6"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🚪</span></span><div class="pcard-title">El dilema de las puertas</div><div class="pcard-desc">Elige una puerta, el presentador abre una. ¿Cambias o te quedas?</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p7')" id="card-p7"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🫙</span></span><div class="pcard-title">Las jarras de agua</div><div class="pcard-desc">Jarra 3L y jarra 5L. Mide exactamente 4 litros.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p8')" id="card-p8"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🏴‍☠️</span></span><div class="pcard-title">Los 5 piratas</div><div class="pcard-desc">El capitán propone el reparto de 100 monedas. ¿Qué propone para sobrevivir?</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+      </div>
+    </div>
+    <div class="lvl-section">
+      <div class="lvl-hdr"><div class="lvl-tag lt-hard">Difícil</div><div class="lvl-line"></div></div>
+      <div class="pgrid">
+        <div class="pcard" onclick="openPuzzle('p9')" id="card-p9"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🍷</span></span><div class="pcard-title">El vino envenenado</div><div class="pcard-desc">1000 botellas, una envenenada. 10 prisioneros, una sola ronda.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p10')" id="card-p10"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🛡️</span></span><div class="pcard-title">El mentiroso y el verdadero</div><div class="pcard-desc">Dos guardianes, una pregunta. ¿Cuál camino tomar?</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p11')" id="card-p11"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🎓</span></span><div class="pcard-title">Los 3 sabios</div><div class="pcard-desc">Cada sabio ve los sombreros ajenos. ¿Quién puede saber el color del propio?</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+        <div class="pcard" onclick="openPuzzle('p12')" id="card-p12"><span class="pcard-ico"><span class="pcard-emoji" aria-hidden="true">🌉</span></span><div class="pcard-title">El puente y la linterna</div><div class="pcard-desc">4 personas: 1, 2, 5, 10 min. Solo 17 min antes del colapso.</div><div class="pcard-done"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUZZLE SCREEN -->
+  <div class="screen" id="s-puzzle">
+    <div class="puz-hdr">
+      <div class="puz-lvl-tag" id="p-tag">Fácil</div>
+      <div class="puz-title" id="p-title"></div>
+      <p class="puz-desc" id="p-desc"></p>
+    </div>
+    <div class="p-hint-wrap">
+      <button type="button" class="btn-tool btn-tool-hint" id="btn-toggle-hint" onclick="toggleExerciseHint()" aria-expanded="false">Ver pista</button>
+      <div class="hint hint-collapsible" id="p-hint" role="region" aria-label="Pista del ejercicio"></div>
+    </div>
+    <div class="puz-body" id="p-body"></div>
+    <div class="puz-toolbar">
+      <button type="button" class="btn-tool" onclick="resetCurrentPuzzle()">Reiniciar ejercicio</button>
+      <button type="button" class="btn-tool" onclick="goHome()">Volver al inicio</button>
+    </div>
+    <div class="puz-footer-actions">
+      <button type="button" class="submit-btn" id="p-submit" onclick="checkCurrent()">Comprobar</button>
+      <div class="rbox" id="p-result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CORE STATE & NAVIGATION
+// ═══════════════════════════════════════════════════════
+var solved={}, cur=null, PS={}, wrongAttempts={}, _spoilHtml='';
+
+function goHome(){
+  if(PS && PS.swTimer){ clearInterval(PS.swTimer); PS.swTimer=null; }
+  document.getElementById('s-puzzle').classList.remove('active');
+  document.getElementById('s-home').classList.add('active');
+  document.getElementById('back-btn').style.display='none';
+  document.getElementById('pbar').style.display='none';
+  updateStats();
+}
+
+function toggleExerciseHint(){
+  var h=el('p-hint');
+  var btn=el('btn-toggle-hint');
+  var open=!h.classList.contains('is-visible');
+  h.classList.toggle('is-visible',open);
+  btn.setAttribute('aria-expanded',open?'true':'false');
+  btn.textContent=open?'Ocultar pista':'Ver pista';
+}
+
+function resetCurrentPuzzle(){
+  if(!cur||!PUZZLES[cur]) return;
+  if(PS && PS.swTimer){ clearInterval(PS.swTimer); PS.swTimer=null; }
+  wrongAttempts[cur]=0;
+  el('p-result').style.display='none';
+  el('p-submit').disabled=false;
+  PS={};
+  PUZZLES[cur].init();
+}
+
+function closeFeedback(){
+  el('p-result').style.display='none';
+}
+
+function revealFullExplanation(){
+  var slot=el('r-spoiler');
+  if(!slot) return;
+  slot.style.display='block';
+  slot.innerHTML='<div class="spoiler-card">'+_spoilHtml+'</div>';
+  slot.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function openPuzzle(id){
+  if(PS && PS.swTimer){ clearInterval(PS.swTimer); PS.swTimer=null; }
+  cur=id; PS={};
+  wrongAttempts[id]=0;
+  document.getElementById('s-home').classList.remove('active');
+  document.getElementById('s-puzzle').classList.add('active');
+  document.getElementById('back-btn').style.display='flex';
+  document.getElementById('pbar').style.display='block';
+  document.getElementById('p-result').style.display='none';
+  document.getElementById('p-submit').disabled=false;
+  updateStats();
+  var m=PUZZLES[id];
+  var tag=document.getElementById('p-tag');
+  tag.textContent=m.level;
+  tag.style.background=m.tagBg; tag.style.color=m.tagColor;
+  document.getElementById('p-title').textContent=m.title;
+  document.getElementById('p-desc').textContent=m.desc;
+  var ph=el('p-hint');
+  ph.innerHTML='<p class="hint-p">'+m.hint+'</p>';
+  ph.classList.remove('is-visible');
+  var tb=el('btn-toggle-hint');
+  if(tb){tb.textContent='Ver pista';tb.setAttribute('aria-expanded','false');}
+  m.init();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResult(ok,text,meta){
+  meta=meta||{};
+  var b=el('p-result');
+  if(ok){
+    solved[cur]=true;
+    wrongAttempts[cur]=0;
+    updateStats();
+    b.className='rbox ok';
+    b.style.display='block';
+    b.innerHTML='<span class="rbox-title">¡Buen razonamiento!</span><div class="rbox-body"><p class="rbox-lead" style="margin-bottom:.65rem;color:inherit;opacity:.98">Tu mente está trabajando muy bien.</p>'+text+'</div>'+
+      '<div class="rbox-actions"><button type="button" class="btn-secondary" onclick="goHome()">Volver al inicio</button></div>';
+    el('p-submit').disabled=true;
+    b.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return;
+  }
+  if(meta.soft){
+    b.className='rbox soft';
+    b.style.display='block';
+    b.innerHTML='<span class="rbox-title">Sigue explorando</span><div class="rbox-body">'+text+'</div>'+
+      '<div class="rbox-actions"><button type="button" class="btn-secondary" onclick="closeFeedback()">Entendido</button></div>';
+    b.scrollIntoView({behavior:'smooth',block:'nearest'});
+    return;
+  }
+  wrongAttempts[cur]=(wrongAttempts[cur]||0)+1;
+  var n=wrongAttempts[cur];
+  _spoilHtml=meta.spoiler!=null?meta.spoiler:text;
+  var P=PUZZLES[cur];
+  var h1=P.hint1||'', h2=P.hint2||'';
+  var parts=['<span class="rbox-title">Intenta de nuevo</span>',
+    '<p class="rbox-lead">Estás cerca. Respira, ajusta tu estrategia y prueba otra vez cuando quieras. Aquí no hay prisa.</p>'];
+  if(n>=1&&h1) parts.push('<div class="progressive-hint"><span class="ph-tag">Pista</span><div class="ph-body">'+h1+'</div></div>');
+  if(n>=2&&h2) parts.push('<div class="progressive-hint ph-strong"><span class="ph-tag">Pista extra</span><div class="ph-body">'+h2+'</div></div>');
+  parts.push('<div class="rbox-actions">'+
+    '<button type="button" class="btn-secondary" onclick="closeFeedback()">Intentar de nuevo</button>'+
+    '<button type="button" class="btn-secondary" onclick="resetCurrentPuzzle()">Reiniciar ejercicio</button>');
+  if(n>=3) parts.push('<button type="button" class="btn-teach" onclick="revealFullExplanation()">Ver explicación completa</button>');
+  parts.push('</div><div class="rbox-spoiler" id="r-spoiler" style="display:none"></div>');
+  b.className='rbox fail';
+  b.style.display='block';
+  b.innerHTML=parts.join('');
+  b.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function updateStats(){
+  var t=Object.keys(solved).length;
+  var e=['p1','p2','p3','p4'].filter(function(p){return solved[p]}).length;
+  var m=['p5','p6','p7','p8'].filter(function(p){return solved[p]}).length;
+  var h=['p9','p10','p11','p12'].filter(function(p){return solved[p]}).length;
+  document.getElementById('st-total').textContent=t+'/12';
+  document.getElementById('st-easy').textContent=e+'/4';
+  document.getElementById('st-mid').textContent=m+'/4';
+  document.getElementById('st-hard').textContent=h+'/4';
+  document.getElementById('pbar-fill').style.width=(t/12*100)+'%';
+  ['p1','p2','p3','p4','p5','p6','p7','p8','p9','p10','p11','p12'].forEach(function(p){
+    var c=document.getElementById('card-'+p);
+    if(c) c.classList.toggle('solved',!!solved[p]);
+  });
+}
+
+function checkCurrent(){ if(PUZZLES[cur]) PUZZLES[cur].check(); }
+
+function el(id){return document.getElementById(id);}
+function body(){return el('p-body');}
+
+window.addEventListener('scroll',function(){
+  el('nav').classList.toggle('shadow',window.scrollY>8);
+});
+
+// ═══════════════════════════════════════════════════════
+// PUZZLE IMPLEMENTATIONS
+// ═══════════════════════════════════════════════════════
+
+// ─── P1: RIVER CROSSING ───────────────────────────────
+function p1Pic(e){
+  var m={wolf:'🐺',goat:'🐐',cabbage:'🥬',farmer:'🧑‍🌾'};
+  return '<span class="entity-emoji" aria-hidden="true">'+(m[e]||'❓')+'</span>';
+}
+function p1Init(){
+  PS={
+    left:['wolf','goat','cabbage','farmer'],
+    right:[],boat:[],boatSide:'left',moves:0,gameOver:false
+  };
+  p1Draw();
+}
+
+function p1Draw(){
+  var s=PS;
+  var names={wolf:'Lobo',goat:'Cabra',cabbage:'Col',farmer:'Granjero'};
+  function chips(arr){
+    return arr.map(function(e){
+      var inBoat=s.boat.indexOf(e)>=0;
+      var cls='entity-riv'+(inBoat?' in-boat':'');
+      return '<div class="'+cls+'" onclick="p1Select(\''+e+'\')">'+p1Pic(e)+'<em>'+names[e]+'</em></div>';
+    }).join('');
+  }
+  var boatInner=s.boat.length?s.boat.map(function(e){return '<span class="boat-pass">'+p1Pic(e)+'</span>';}).join(''):'<span class="entity-emoji boat-empty-emoji" aria-hidden="true">🛶</span>';
+  var status=p1CheckSafe();
+  body().innerHTML=
+    '<div class="river-wrap riv-wrap-scene">'+
+      '<div class="rbank"><div class="rbank-lbl">'+(s.boatSide==='left'?'◀ Orilla (bote)':'Orilla izquierda')+'</div><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">'+chips(s.left)+'</div></div>'+
+      '<div class="rwater"><div class="rwaves"></div>'+
+        '<div class="boat-zone">'+
+          '<div class="boat-illus" onclick="p1Cross()" title="Clic para cruzar">'+boatInner+'</div>'+
+          '<button type="button" class="cross-arrow" onclick="p1Cross()">'+(s.boatSide==='left'?'→':'←')+' Cruzar</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="rbank"><div class="rbank-lbl">'+(s.boatSide==='right'?'Orilla (bote) ▶':'Orilla derecha')+'</div><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">'+chips(s.right)+'</div></div>'+
+    '</div>'+
+    '<div class="river-msg '+(status.win?'win':status.safe?'safe':'danger')+'">'+status.msg+'</div>'+
+    '<p style="font-size:.85rem;color:var(--t3);text-align:center;margin-top:.65rem">Toca una figura para subir o bajar del bote · Toca el bote para cruzar · Movimientos: '+s.moves+'</p>';
+}
+
+function p1Select(e){
+  var s=PS; if(s.gameOver) return;
+  var currentBank=s.boatSide==='left'?s.left:s.right;
+  if(currentBank.indexOf(e)<0) return;
+  var idx=s.boat.indexOf(e);
+  if(idx>=0){
+    s.boat.splice(idx,1);
+    currentBank.push(e);
+  } else {
+    if(e==='farmer'){
+      if(s.boat.indexOf('farmer')<0){
+        currentBank.splice(currentBank.indexOf('farmer'),1);
+        s.boat.push('farmer');
+      }
+    } else {
+      if(s.boat.indexOf('farmer')<0) return;
+      if(s.boat.length>=2) return;
+      currentBank.splice(currentBank.indexOf(e),1);
+      s.boat.push(e);
+    }
+  }
+  p1Draw();
+}
+
+function p1Cross(){
+  var s=PS; if(s.gameOver) return;
+  if(s.boat.indexOf('farmer')<0){
+    var fromB=s.boatSide==='left'?s.left:s.right;
+    if(fromB.indexOf('farmer')>=0){fromB.splice(fromB.indexOf('farmer'),1);s.boat.push('farmer');}
+    else return;
+  }
+  var from=s.boatSide==='left'?s.left:s.right;
+  var to=s.boatSide==='left'?s.right:s.left;
+  s.boat.forEach(function(e){var i=from.indexOf(e);if(i>=0)from.splice(i,1);to.push(e);});
+  s.boat=[]; s.boatSide=s.boatSide==='left'?'right':'left'; s.moves++;
+  var st=p1CheckSafe();
+  if(!st.safe){s.gameOver=true;showResult(false,'',{
+    spoiler:'<p>Algo salió mal en la orilla: '+st.msg+'</p><p>Puedes usar <strong>Reiniciar ejercicio</strong> para empezar de nuevo con calma.</p>'
+  });p1Draw();return;}
+  if(s.right.length===4){showResult(true,'¡Cruzaste a todos sin incidentes en '+s.moves+' movimientos! La solución óptima usa 7 viajes: llevas la cabra, vuelves, llevas el lobo, regresas con la cabra, llevas la col, vuelves y finalmente llevas la cabra.');p1Draw();return;}
+  p1Draw();
+}
+
+function p1CheckSafe(){
+  var s=PS;
+  function bankCheck(arr){
+    var hasFarmer=arr.indexOf('farmer')>=0;
+    if(hasFarmer) return {safe:true,msg:''};
+    if(arr.indexOf('wolf')>=0&&arr.indexOf('goat')>=0) return {safe:false,msg:'¡El lobo se comió a la cabra!'};
+    if(arr.indexOf('goat')>=0&&arr.indexOf('cabbage')>=0) return {safe:false,msg:'¡La cabra se comió la col!'};
+    return {safe:true,msg:''};
+  }
+  var lr=bankCheck(s.left); if(!lr.safe) return lr;
+  var rr=bankCheck(s.right); if(!rr.safe) return rr;
+  if(s.right.length===4) return {safe:true,win:true,msg:'¡Todos en la orilla derecha! 🎉'};
+  return {safe:true,msg:'Todo en orden — '+s.moves+' movimiento'+(s.moves===1?'':'s')};
+}
+
+function p1Check(){
+  if(PS.right&&PS.right.length===4){showResult(true,'¡Excelente deducción! Lograste cruzar a todos sanos y salvos.');return;}
+  showResult(false,'Cuando todos estén en la orilla de destino, pulsa Comprobar. El bote lleva al granjero y como máximo un acompañante.',{soft:true});
+}
+
+// ─── P2: SWITCHES (temperatura simulada por tiempo encendido) ────────────────────
+var P2_WARM_AFTER_SEC=2;
+
+function p2Init(){
+  PS={switches:[false,false,false],entered:false,answer:[null,null,null],swTime:[0,0,0],wasEverOn:[false,false,false],swTimer:null};
+  p2Draw();
+}
+
+function p2EverOnCount(){
+  var s=PS,n=0; for(var i=0;i<3;i++) if(s.wasEverOn[i]) n++; return n;
+}
+function p2BulbVisualStates(){
+  var s=PS;
+  var everC=p2EverOnCount();
+  var out=[];
+  for(var i=0;i<3;i++){
+    if(s.switches[i]) out[i]='on';
+    else if(everC>=2&&s.wasEverOn[i]&&s.swTime[i]>=P2_WARM_AFTER_SEC) out[i]='warm';
+    else out[i]='off';
+  }
+  return out;
+}
+
+function p2Draw(){
+  var s=PS;
+  var names=['Interruptor A','Interruptor B','Interruptor C'];
+  var b=body();
+  if(!s.entered){
+    b.innerHTML=
+      '<p style="font-size:1rem;color:var(--t2);text-align:center;margin-bottom:1.1rem;line-height:1.65">Configura los interruptores antes de entrar. <strong>Solo entras al cuarto una vez.</strong> El tiempo que un foco estuvo encendido antes de apagarlo deja calor residual.</p>'+
+      '<div class="sw-grid">'+
+        [0,1,2].map(function(i){
+          return '<div class="sw-card'+(s.switches[i]?' on':'')+'" onclick="p2Toggle('+i+')">'+
+            '<div class="sw-name">'+names[i]+'</div>'+
+            '<div class="sw-knob" aria-hidden="true"></div>'+
+            '<div class="tog-track"><div class="tog-thumb"></div></div>'+
+            '<div class="sw-timer">'+(s.switches[i]?('Luz ON · '+s.swTime[i]+' s en esta sesión'):'Apagado')+
+              (s.wasEverOn[i]&&!s.switches[i]?'<br><span style="opacity:.85">Acumuló '+s.swTime[i]+' s encendido antes de entrar</span>':'')+
+            '</div>'+
+          '</div>';
+        }).join('')+
+      '</div>'+
+      '<button type="button" class="enter-btn" id="p2-enter" onclick="p2Enter()">Entrar al cuarto →</button>';
+  } else {
+    var states=p2BulbVisualStates();
+    var everC=p2EverOnCount();
+    var stateLabels={
+      on:'💡 Encendido (luz y calor)',
+      warm:'Apagado pero tibio (estuvo encendido ≥'+P2_WARM_AFTER_SEC+'s; solo si usaste 2+ interruptores)',
+      off:everC<=1?'❄️ Frío (apagado — no hay calor residual con un solo interruptor)':'❄️ Frío (apagado o sin calor suficiente)'
+    };
+    b.innerHTML=
+      '<p style="font-size:1.05rem;color:var(--t2);text-align:center;margin-bottom:.95rem;line-height:1.65">Observa cada foco 💡: la luz y el tacto reflejan lo que hiciste antes de entrar. Si solo usaste un interruptor, verás como mucho <strong>un foco encendido</strong> y los demás <strong>fríos</strong>.</p>'+
+      '<div class="bulb-grid">'+
+        [0,1,2].map(function(i){
+          return '<div class="bulb-card '+states[i]+'">'+
+            '<div class="bulb-glow"><span class="bulb-emoji" aria-hidden="true">💡</span></div>'+
+            '<div class="bulb-name">Foco '+(i+1)+'</div>'+
+            '<div class="bulb-state">'+stateLabels[states[i]]+'</div>'+
+          '</div>';
+        }).join('')+
+      '</div>'+
+      '<p class="sec-label" style="margin-top:.85rem">Asigna qué foco corresponde a cada interruptor (toca cada celda)</p>'+
+      '<div class="assign-grid">'+
+        [0,1,2].map(function(i){
+          return '<div>'+
+            '<div class="assign-cell-lbl">'+names[i]+'</div>'+
+            '<div class="assign-cell'+(s.answer[i]!==null?' filled':'')+'" onclick="p2CycleAssign('+i+')">'+
+              (s.answer[i]!==null?'Foco '+(s.answer[i]+1):'Tocar para asignar')+
+            '</div>'+
+          '</div>';
+        }).join('')+
+      '</div>';
+  }
+}
+
+function p2Toggle(i){
+  if(PS.entered) return;
+  var on=!PS.switches[i];
+  PS.switches[i]=on;
+  if(on) PS.wasEverOn[i]=true;
+  if(PS.swTimer) clearInterval(PS.swTimer);
+  PS.swTimer=setInterval(function(){
+    for(var j=0;j<3;j++) if(PS.switches[j]) PS.swTime[j]++;
+    p2Draw();
+  },1000);
+  p2Draw();
+}
+
+function p2Enter(){
+  if(PS.swTimer) clearInterval(PS.swTimer);
+  PS.swTimer=null;
+  PS.entered=true; PS.answer=[null,null,null];
+  p2Draw();
+}
+
+function p2CycleAssign(sw){
+  var used=PS.answer.filter(function(v,i){return i!==sw&&v!==null;});
+  var cur=PS.answer[sw];
+  var next=(cur===null)?0:cur+1;
+  while(next<=2&&used.indexOf(next)>=0) next++;
+  PS.answer[sw]=(next>2)?null:next;
+  p2Draw();
+}
+
+function p2Check(){
+  var s=PS;
+  if(!s.entered){showResult(false,'Entra al cuarto cuando quieras ver los focos; solo podrás hacerlo una vez.',{soft:true});return;}
+  if(s.answer.some(function(a){return a===null;})){showResult(false,'Toca cada celda para asignar un foco a cada interruptor antes de comprobar.',{soft:true});return;}
+  var ok=s.answer.every(function(a,i){return a===i;});
+  if(ok){showResult(true,'Cada interruptor controla su foco homónimo (A→1, B→2, C→3). <strong>Encendido</strong> = sigue recibiendo corriente. <strong>Tibio</strong> solo aparece si jugaste con <strong>varios</strong> interruptores y apagaste uno tras dejarlo encendido el tiempo suficiente. <strong>Frío</strong> = sin calor detectable.');return;}
+  showResult(false,'',{
+    spoiler:'<p>La asignación no coincide con el estado real de los focos.</p><p>Recuerda: <strong>encendido</strong> = interruptor actualmente ON; <strong>tibio</strong> = estuvo encendido y lo apagaste; <strong>frío y apagado</strong> = nunca recibió corriente. El tacto cuenta la historia.</p>'
+  });
+}
+
+// ─── P3: COIN BAGS (elegir cuántas monedas de cada bolsa) ───────────────────
+function p3Init(){
+  PS={falseBag:Math.floor(Math.random()*10),taken:[0,0,0,0,0,0,0,0,0,0],weighed:false,result:null,guess:undefined,expected:null};
+  p3Draw();
+}
+
+function p3TotalTaken(){
+  return PS.taken.reduce(function(a,b){return a+b;},0);
+}
+
+function p3ExpectedWeight(){
+  var s=PS,t=0;
+  for(var i=0;i<10;i++) t+=s.taken[i]*10;
+  return t;
+}
+
+function p3ActualWeight(){
+  var s=PS,t=0;
+  for(var i=0;i<10;i++){
+    var g=(i===s.falseBag)?9:10;
+    t+=s.taken[i]*g;
+  }
+  return t;
+}
+
+function p3Draw(){
+  var s=PS;
+  var sumTake=p3TotalTaken();
+  var lines=[];
+  for(var i=0;i<10;i++){
+    var cap=i+1, t=s.taken[i], rem=cap-t;
+    lines.push(
+      '<div class="bag-slot">'+
+        '<div class="bag-slot-top"><span class="bag-slot-top-emoji" aria-hidden="true">💰</span>Bolsa '+(i+1)+'</div>'+
+        '<div class="bag-stat">Capacidad: <strong>'+cap+'</strong> moneda'+(cap>1?'s':'')+'</div>'+
+        '<div class="bag-coin-row">'+
+          '<button type="button" class="bag-coin-btn" onclick="p3Add('+i+')" '+(s.weighed||t>=cap?'disabled':'')+' title="Añadir moneda de esta bolsa">+</button>'+
+          '<span style="font-weight:800;font-size:1.35rem;min-width:2ch">'+t+'</span>'+
+          '<button type="button" class="bag-coin-btn" onclick="p3Sub('+i+')" '+(s.weighed||t<=0?'disabled':'')+' title="Quitar moneda">−</button>'+
+        '</div>'+
+        '<div class="bag-stat">Tomaste <strong>'+t+'</strong> · Quedan <strong>'+rem+'</strong></div>'+
+      '</div>'
+    );
+  }
+  var overview='<div class="bag-overview" role="status" aria-live="polite"><strong>Contador por bolsa (quedan):</strong> '+
+    [0,1,2,3,4,5,6,7,8,9].map(function(i){
+      var rem=(i+1)-s.taken[i];
+      return 'Bolsa '+(i+1)+' → <strong>'+rem+'</strong>';
+    }).join(' · ')+
+    '</div>';
+  var summary='<div class="digi-summary"><strong>Resumen:</strong> '+sumTake+' moneda'+(sumTake!==1?'s':'')+' en la muestra (todas las bolsas suman aquí)';
+  if(sumTake>0) summary+=' · Peso si todas auténticas (10g): <strong>'+p3ExpectedWeight()+' g</strong>';
+  summary+='</div>';
+
+  body().innerHTML=
+    '<p style="font-size:1rem;color:var(--t2);text-align:center;margin-bottom:1rem;line-height:1.65">Elige cuántas monedas tomas de <strong>cada</strong> bolsa (como máximo el número de la bolsa). Solo puedes <strong>pesar una vez</strong>. Las auténticas pesan 10g; las falsas, 9g.</p>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:.5rem 0">'+
+      '<button type="button" class="act-btn" onclick="p3PresetClassic()" '+(s.weighed?'disabled':'')+'>Clásico: 1+2+3+…+10</button>'+
+      '<button type="button" class="act-btn" onclick="p3ClearTaken()" '+(s.weighed?'disabled':'')+'>Vaciar selección</button>'+
+    '</div>'+
+    overview+
+    '<div class="bag-adv">'+lines.join('')+'</div>'+
+    summary+
+    '<div class="digi-scale">'+
+      '<div class="digi-lbl">Báscula digital — un solo uso</div>'+
+      '<div class="digi-val">'+(s.weighed?(s.result+' g'):'— —')+'</div>'+
+      '<div class="digi-sub">'+(s.weighed?'Pesada realizada':'Pulsa pesar cuando tu muestra esté lista')+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:12px;justify-content:center;margin:.85rem 0;flex-wrap:wrap">'+
+      '<button type="button" class="act-btn prim" onclick="p3Weigh()" '+(s.weighed||sumTake===0?'disabled':'')+'>Pesar muestra</button>'+
+    '</div>'+
+    (s.weighed?
+      '<p class="sec-label" style="text-align:center;margin:.75rem 0">¿Qué bolsa tiene las monedas falsas?</p>'+
+      '<div class="opts-grid">'+
+        [0,1,2,3,4,5,6,7,8,9].map(function(i){
+          return '<div class="opt'+(s.guess===i?' sel':'')+'" onclick="p3Guess('+i+')">'+(i+1)+'</div>';
+        }).join('')+
+      '</div>'
+    :'');
+}
+
+function p3Add(i){ if(PS.weighed) return; if(PS.taken[i]<i+1){PS.taken[i]++; p3Draw();} }
+function p3Sub(i){ if(PS.weighed) return; if(PS.taken[i]>0){PS.taken[i]--; p3Draw();} }
+function p3ClearTaken(){ if(PS.weighed) return; PS.taken=[0,0,0,0,0,0,0,0,0,0]; p3Draw(); }
+function p3PresetClassic(){
+  if(PS.weighed) return;
+  for(var i=0;i<10;i++) PS.taken[i]=i+1;
+  p3Draw();
+}
+
+function p3Weigh(){
+  var s=PS; if(s.weighed) return;
+  if(p3TotalTaken()===0){showResult(false,'Coloca al menos una moneda en la báscula antes de pesar.',{soft:true});return;}
+  s.result=p3ActualWeight();
+  s.expected=p3ExpectedWeight();
+  s.weighed=true;
+  p3Draw();
+}
+
+function p3Guess(i){ PS.guess=i; p3Draw(); }
+
+function p3Check(){
+  var s=PS;
+  if(!s.weighed){showResult(false,'Prepara tu muestra y usa la báscula una sola vez.',{soft:true});return;}
+  if(s.guess===undefined){showResult(false,'Indica qué bolsa crees que contiene las monedas falsas.',{soft:true});return;}
+  if(s.guess===s.falseBag){
+    showResult(true,'¡Exacto! La bolsa '+(s.falseBag+1)+' tiene las monedas falsas. Tu peso: <strong>'+s.result+' g</strong>. Con todo auténtico habría sido <strong>'+s.expected+' g</strong>. La diferencia de <strong>'+(s.expected-s.result)+' g</strong> encaja con tu muestra.');
+    return;
+  }
+  showResult(false,'',{
+    spoiler:'<p>La bolsa falsa era la número <strong>'+(s.falseBag+1)+'</strong>.</p><p>Compara el peso obtenido con el peso que tendría la misma muestra si todas las monedas fueran de 10g.</p>'
+  });
+}
+
+// ─── P4: CANDLES ─────────────────────────────────────
+function p4Draw(){
+  body().innerHTML=
+    '<p style="font-size:1.05rem;color:var(--t2);text-align:center;margin-bottom:1.1rem;line-height:1.75">🕯️ Vela A dura <strong>60 minutos</strong> por un extremo. 🕯️ Vela B dura <strong>90 minutos</strong> por un extremo. No tienes reloj. ¿Qué secuencia mide exactamente <strong>45 minutos</strong>?</p>'+
+    '<div class="mcq">'+
+      [
+        {id:'a',text:'Encender solo A; cuando se consuma por completo, encender B y esperar hasta que B llegue a la mitad de su vida.'},
+        {id:'b',text:'Encender A y B a la vez; cuando A se apague, esperar hasta que B se consuma del todo.'},
+        {id:'c',text:'Encender B por los dos extremos a la vez (y, si quieres, encender A con normalidad). Observar hasta que B se apague por completo.'},
+        {id:'d',text:'Encender A por ambos extremos hasta que se consuma; en ese momento encender B por un solo extremo.'},
+        {id:'e',text:'Encender A y B juntos y esperar hasta que B se consuma por completo, sin otros pasos.'},
+      ].map(function(o){
+        return '<button class="mcq-btn'+(PS.sel===o.id?' sel':'')+'" onclick="p4Sel(\''+o.id+'\')">'+o.text+'</button>';
+      }).join('')+
+    '</div>';
+}
+function p4Init(){
+  PS={sel:null};
+  p4Draw();
+}
+function p4Sel(id){PS.sel=id;p4Draw();}
+function p4Check(){
+  if(!PS.sel){showResult(false,'Elige la secuencia que creas correcta antes de comprobar.',{soft:true});return;}
+  if(PS.sel==='c'){showResult(true,'¡Perfecto! Al encender la vela B por ambos extremos simultáneamente, se consume a velocidad doble. 90 min ÷ 2 = <strong>45 minutos exactos</strong>. No importa si también enciendes A o no, B apagada marca el tiempo exacto.');return;}
+  showResult(false,'',{
+    spoiler:'<p>La opción acertada es encender la vela B por <strong>los dos extremos a la vez</strong>: se consume al doble de velocidad, así que 90 ÷ 2 = 45 minutos exactos.</p>'
+  });
+}
+
+// ─── P5: 9 MARBLES ───────────────────────────────────
+function p5Init(){
+  PS={
+    heavy:Math.floor(Math.random()*9),
+    marbles:[0,1,2,3,4,5,6,7,8].map(function(i){return{id:i,loc:'pool'};}),
+    leftPan:[],rightPan:[],
+    weighCount:0,maxWeighs:2,
+    history:[],
+    lastResult:null,
+    guess:null,
+    activePan:'left'
+  };
+  p5Draw();
+}
+
+function p5ScaleSVG(angle,leftIds,rightIds){
+  var lx=100,rx=300,py=200,beamY=130,pivotY=130;
+  var rad=angle*Math.PI/180;
+  var lEnd={x:lx*Math.cos(rad)-beamY*Math.sin(rad)+(200-lx*Math.cos(rad)+beamY*Math.sin(rad)),y:lx*Math.sin(rad)+beamY*Math.cos(rad)+(pivotY-lx*Math.sin(rad)-beamY*Math.cos(rad))};
+  var beam_lx=200+(lx-200)*Math.cos(rad)-(beamY-pivotY)*Math.sin(rad);
+  var beam_ly=pivotY+(lx-200)*Math.sin(rad)+(beamY-pivotY)*Math.cos(rad);
+  var beam_rx=200+(rx-200)*Math.cos(rad)-(beamY-pivotY)*Math.sin(rad);
+  var beam_ry=pivotY+(rx-200)*Math.sin(rad)+(beamY-pivotY)*Math.cos(rad);
+  var chain_len=60;
+  var lpx=beam_lx+chain_len*Math.sin(rad);
+  var lpy=beam_ly+chain_len*Math.cos(rad);
+  var rpx=beam_rx+chain_len*Math.sin(rad);
+  var rpy=beam_ry+chain_len*Math.cos(rad);
+  var lms=leftIds.map(function(id,i){
+    var row=Math.floor(i/3), col=i%3;
+    return '<circle cx="'+(lpx-20+col*20+10)+'" cy="'+(lpy-8-row*18)+'" r="9" fill="#1B6254" opacity=".85"/>'+
+           '<text x="'+(lpx-20+col*20+10)+'" y="'+(lpy-4-row*18)+'" text-anchor="middle" fill="white" font-size="8" font-weight="800" font-family="Outfit">'+(id+1)+'</text>';
+  }).join('');
+  var rms=rightIds.map(function(id,i){
+    var row=Math.floor(i/3), col=i%3;
+    return '<circle cx="'+(rpx-20+col*20+10)+'" cy="'+(rpy-8-row*18)+'" r="9" fill="#904800" opacity=".85"/>'+
+           '<text x="'+(rpx-20+col*20+10)+'" y="'+(rpy-4-row*18)+'" text-anchor="middle" fill="white" font-size="8" font-weight="800" font-family="Outfit">'+(id+1)+'</text>';
+  }).join('');
+  return '<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">'+
+    '<rect x="186" y="'+pivotY+'" width="10" height="100" rx="5" fill="#3A4A44"/>'+
+    '<ellipse cx="191" cy="230" rx="40" ry="10" fill="#2A3830" opacity=".35"/>'+
+    '<circle cx="191" cy="'+pivotY+'" r="10" fill="#2A3830"/>'+
+    '<g style="transform-origin:191px '+pivotY+'px;transform:rotate('+angle+'deg);transition:transform .6s cubic-bezier(.34,1.56,.64,1)">'+
+      '<rect x="91" y="'+(pivotY-4)+'" width="200" height="8" rx="4" fill="#2A3830"/>'+
+      '<line x1="100" y1="'+pivotY+'" x2="100" y2="'+(pivotY+55)+'" stroke="#2A3830" stroke-width="2"/>'+
+      '<line x1="282" y1="'+pivotY+'" x2="282" y2="'+(pivotY+55)+'" stroke="#2A3830" stroke-width="2"/>'+
+      '<ellipse cx="100" cy="'+(pivotY+58)+'" rx="38" ry="7" fill="#3A4A44"/>'+
+      '<path d="M62,'+(pivotY+55)+' Q100,'+(pivotY+72)+' 138,'+(pivotY+55)+'" fill="none" stroke="#3A4A44" stroke-width="3"/>'+
+      '<ellipse cx="282" cy="'+(pivotY+58)+'" rx="38" ry="7" fill="#3A4A44"/>'+
+      '<path d="M244,'+(pivotY+55)+' Q282,'+(pivotY+72)+' 320,'+(pivotY+55)+'" fill="none" stroke="#3A4A44" stroke-width="3"/>'+
+      lms+rms+
+    '</g>'+
+    '<text x="191" y="254" text-anchor="middle" font-size="10" fill="#698078" font-family="DM Sans" font-weight="600">Báscula de dos platos</text>'+
+  '</svg>';
+}
+
+function p5Draw(){
+  var s=PS;
+  var pool=s.marbles.filter(function(m){return m.loc==='pool';});
+  var leftPan=s.marbles.filter(function(m){return m.loc==='left';});
+  var rightPan=s.marbles.filter(function(m){return m.loc==='right';});
+  var lw=leftPan.length, rw=rightPan.length;
+  var canWeigh=lw>0&&rw>0&&s.weighCount<s.maxWeighs;
+  var angle=0;
+  if(s.lastResult==='L') angle=-14;
+  else if(s.lastResult==='R') angle=14;
+  else if(s.lastResult==='E') angle=0;
+  var verdict='';
+  if(s.lastResult==='L') verdict='<span style="color:var(--sage-tx)">⬅ Plato izquierdo más pesado</span>';
+  else if(s.lastResult==='R') verdict='<span style="color:var(--amber-tx)">Plato derecho más pesado ➡</span>';
+  else if(s.lastResult==='E') verdict='<span style="color:var(--indigo-tx)">⚖ Equilibrados — peso idéntico</span>';
+  var histHTML='';
+  if(s.history.length>0){
+    histHTML='<div class="sec-label" style="margin-top:.75rem">Historial de pesadas</div><div class="history-section">'+
+      s.history.map(function(h,i){
+        return '<div class="hist-row">'+
+          '<div class="hist-title">Pesada '+(i+1)+': '+{L:'⬅ Izquierdo pesado',R:'Derecho pesado ➡',E:'⚖ Equilibrados'}[h.result]+'</div>'+
+          '<div class="hist-pans">'+
+            '<div><div style="font-size:.68rem;font-weight:700;color:var(--t3);margin-bottom:3px">Izquierdo</div><div class="hist-pan">'+h.left.map(function(id){return '<div class="hmrb L">'+(id+1)+'</div>';}).join('')+'</div></div>'+
+            '<div style="font-size:1.2rem;text-align:center">vs</div>'+
+            '<div><div style="font-size:.68rem;font-weight:700;color:var(--t3);margin-bottom:3px">Derecho</div><div class="hist-pan">'+h.right.map(function(id){return '<div class="hmrb R">'+(id+1)+'</div>';}).join('')+'</div></div>'+
+          '</div>'+
+        '</div>';
+      }).join('')+
+    '</div>';
+  }
+  body().innerHTML=
+    '<div class="marble-layout">'+
+      '<div class="scale-container" id="p5-scale-wrap">'+
+        '<div class="scale-svg-holder">'+p5ScaleSVG(angle,leftPan.map(function(m){return m.id;}),rightPan.map(function(m){return m.id;}))+'</div>'+
+        '<div class="pans-selector">'+
+          '<div>'+
+            '<div class="pan-lbl" style="color:var(--sage-tx);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem">Plato izquierdo ('+lw+')</div>'+
+            '<div class="pan-drop'+(s.activePan==='left'?' active-pan':'')+'" onclick="p5SetPan(\'left\')" id="pan-left">'+
+              leftPan.map(function(m){return '<div class="mrb inL" onclick="p5RemoveFromPan('+m.id+',event)"><span class="marble-ico" aria-hidden="true">🔴</span><span class="marble-num">'+(m.id+1)+'</span></div>';}).join('')+
+              (lw===0?'<span style="font-size:.78rem;color:var(--t3)">Vacío — clic para activar</span>':'')+
+            '</div>'+
+          '</div>'+
+          '<div class="pan-center">'+
+            '<div style="font-size:.68rem;text-align:center;color:var(--t3);font-weight:700;margin-bottom:.3rem">'+s.weighCount+'/'+s.maxWeighs+'<br>pesadas</div>'+
+            '<button class="weigh-btn" onclick="p5Weigh()" '+(canWeigh?'':'disabled')+'>⚖ Pesar</button>'+
+            '<button class="act-btn" style="margin-top:.35rem;padding:7px 8px;font-size:.72rem;width:76px;text-align:center" onclick="p5ClearPans()">Vaciar</button>'+
+          '</div>'+
+          '<div>'+
+            '<div class="pan-lbl" style="color:var(--amber-tx);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem">Plato derecho ('+rw+')</div>'+
+            '<div class="pan-drop'+(s.activePan==='right'?' active-pan':'')+'" onclick="p5SetPan(\'right\')" id="pan-right">'+
+              rightPan.map(function(m){return '<div class="mrb inR" onclick="p5RemoveFromPan('+m.id+',event)"><span class="marble-ico" aria-hidden="true">🔴</span><span class="marble-num">'+(m.id+1)+'</span></div>';}).join('')+
+              (rw===0?'<span style="font-size:.78rem;color:var(--t3)">Vacío — clic para activar</span>':'')+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="scale-verdict">'+verdict+'</div>'+
+      '</div>'+
+      '<div class="marble-pool-area">'+
+        '<div class="sec-label">Canicas disponibles — clic para agregar al plato '+(s.activePan==='left'?'izquierdo':'derecho')+'</div>'+
+        '<div class="marble-pool">'+
+          pool.map(function(m){
+            return '<div class="mrb pool" onclick="p5AddMarble('+m.id+')"><span class="marble-ico" aria-hidden="true">🔴</span><span class="marble-num">'+(m.id+1)+'</span></div>';
+          }).join('')+
+          (pool.length===0?'<span style="font-size:.85rem;color:var(--t3)">Todas las canicas están en los platos</span>':'')+
+        '</div>'+
+      '</div>'+
+      histHTML+
+      (s.weighCount>0||s.history.length>0?
+        '<div>'+
+          '<div class="sec-label">¿Cuál canica pesa más?</div>'+
+          '<div class="opts-grid">'+
+            s.marbles.map(function(m){
+              return '<div class="opt'+(s.guess===m.id?' sel':'')+'" onclick="p5Guess('+m.id+')"><span class="marble-ico" style="font-size:1.35rem" aria-hidden="true">🔴</span> '+(m.id+1)+'</div>';
+            }).join('')+
+          '</div>'+
+        '</div>'
+      :'')+
+    '</div>';
+}
+
+function p5SetPan(pan){ PS.activePan=pan; p5Draw(); }
+function p5AddMarble(id){
+  var m=PS.marbles[id];
+  if(m.loc!=='pool') return;
+  m.loc=PS.activePan==='left'?'left':'right';
+  p5Draw();
+}
+function p5RemoveFromPan(id,e){
+  e.stopPropagation();
+  var m=PS.marbles[id];
+  if(m.loc==='left'||m.loc==='right'){ m.loc='pool'; p5Draw(); }
+}
+function p5ClearPans(){
+  PS.marbles.forEach(function(m){if(m.loc==='left'||m.loc==='right') m.loc='pool';});
+  p5Draw();
+}
+function p5Weigh(){
+  var s=PS;
+  var left=s.marbles.filter(function(m){return m.loc==='left';});
+  var right=s.marbles.filter(function(m){return m.loc==='right';});
+  if(left.length===0||right.length===0) return;
+  if(s.weighCount>=s.maxWeighs) return;
+  var lw=left.reduce(function(a,m){return a+(m.id===s.heavy?2:1);},0);
+  var rw=right.reduce(function(a,m){return a+(m.id===s.heavy?2:1);},0);
+  var result=lw>rw?'L':rw>lw?'R':'E';
+  s.lastResult=result;
+  s.history.push({left:left.map(function(m){return m.id;}),right:right.map(function(m){return m.id;}),result:result});
+  s.weighCount++;
+  left.forEach(function(m){m.loc='pool';});
+  right.forEach(function(m){m.loc='pool';});
+  p5Draw();
+  requestAnimationFrame(function(){
+    var sc=el('p5-scale-wrap');
+    if(sc){ sc.classList.remove('p5-pulse'); void sc.offsetWidth; sc.classList.add('p5-pulse'); setTimeout(function(){ sc.classList.remove('p5-pulse'); },900); }
+  });
+}
+function p5Guess(id){ PS.guess=id; p5Draw(); }
+function p5Check(){
+  var s=PS;
+  if(s.guess===null||s.guess===undefined){showResult(false,'Indica qué canica crees más pesada tras usar la báscula.',{soft:true});return;}
+  if(s.guess===s.heavy){showResult(true,'¡Correcto! La canica '+(s.heavy+1)+' es la más pesada. La estrategia óptima: divide las 9 en tres grupos de 3. Primera pesada: 3 vs 3. Si un lado baja → la pesada está ahí. Si equilibra → está en las 3 sin pesar. Segunda pesada: 1 vs 1 de ese grupo. Si un lado baja → esa es. Si equilibra → es la que dejaste fuera. Solo 2 pesadas para 9 canicas.');return;}
+  showResult(false,'',{
+    spoiler:'<p>La canica más pesada era la número <strong>'+(s.heavy+1)+'</strong>.</p><p>Con tres resultados posibles en cada pesada, conviene partir el grupo sospechoso en <strong>tercios</strong> para afinar rápido.</p>'
+  });
+}
+
+// ─── P6: MONTY HALL ──────────────────────────────────
+function p6Init(){
+  PS={winner:Math.floor(Math.random()*3),chosen:null,revealed:null,phase:0,finalChoice:null};
+  p6Draw();
+}
+
+function p6Draw(){
+  p6DrawProper();
+}
+
+function p6DrawProper(){
+  var s=PS;
+  var doorsHTML=[0,1,2].map(function(i){
+    var cls='door';
+    var inner='';
+    if(s.phase===0){
+      if(s.chosen===i) cls+=' chosen';
+      inner='<div class="door-num">'+(i+1)+'</div><div class="door-knob"></div>';
+    } else if(s.phase===1){
+      if(s.chosen===i) cls+=' chosen';
+      if(s.revealed===i){cls+=' revealed';inner='<div class="door-ico">🐐</div><div class="door-lbl">Cabra</div>';}
+      else{inner='<div class="door-num">'+(i+1)+'</div><div class="door-knob"></div>';}
+    } else {
+      cls+=' revealed';
+      if(s.winner===i) cls+=' winner-door';
+      inner='<div class="door-ico">'+(s.winner===i?'🚗':'🐐')+'</div><div class="door-lbl">'+(s.winner===i?'¡Auto!':'Cabra')+'</div>';
+      if(s.finalChoice===i&&s.winner===i) cls+=' chosen';
+    }
+    return '<div class="'+cls+'" onclick="p6Choose('+i+')" style="'+(s.phase>0&&(s.revealed===i||s.phase===2)?'cursor:default':'')+'">' + inner + '</div>';
+  }).join('');
+  var msg='',extHTML='';
+  if(s.phase===0) msg='Elige una puerta. Un auto 🚗 se esconde detrás de una. Las otras dos tienen cabras 🐐.';
+  else if(s.phase===1){
+    msg='Elegiste la puerta '+(s.chosen+1)+'. Monty abre la puerta '+(s.revealed+1)+' (cabra). ¿Cambias?';
+    var other=[0,1,2].filter(function(i){return i!==s.chosen&&i!==s.revealed;})[0];
+    extHTML='<div class="monty-btns">'+
+      '<button class="monty-btn" onclick="p6Final('+s.chosen+')">Quedarme con puerta '+(s.chosen+1)+'</button>'+
+      '<button class="monty-btn" onclick="p6Final('+other+')">Cambiar a puerta '+(other+1)+'</button>'+
+    '</div>';
+  } else {
+    msg=s.finalChoice===s.winner?'¡GANASTE el auto! 🎉':'Cabra 🐐. Cambiar da 2/3 de probabilidad de ganar, quedarse solo 1/3.';
+  }
+  body().innerHTML='<div class="monty-msg" style="display:block">'+msg+'</div><div class="doors-wrap">'+doorsHTML+'</div>'+extHTML;
+}
+
+function p6Choose(i){
+  var s=PS; if(s.phase!==0) return;
+  s.chosen=i;
+  var goats=[0,1,2].filter(function(d){return d!==s.winner&&d!==i;});
+  s.revealed=goats[Math.floor(Math.random()*goats.length)];
+  s.phase=1;
+  p6DrawProper();
+}
+function p6Final(i){
+  var s=PS; if(s.phase!==1) return;
+  s.finalChoice=i; s.phase=2;
+  p6DrawProper();
+}
+function p6Check(){
+  var s=PS;
+  if(s.phase<2){showResult(false,'Elige una puerta, espera la revelación y decide si cambias o te quedas; luego pulsa Comprobar.',{soft:true});return;}
+  var changed=s.finalChoice!==s.chosen;
+  if(changed){showResult(true,(s.finalChoice===s.winner?'¡Y ganaste! ':'Esta ronda no ganaste, pero ')+'tomaste la decisión estadísticamente óptima. <strong>Cambiar de puerta da 2/3 de probabilidad de ganar</strong> (vs 1/3 si te quedas). Al inicio, 2 de cada 3 autos están en las puertas que no elegiste. Monty revela información que consolida esa probabilidad en la puerta restante.');return;}
+  showResult(false,'',{
+    spoiler:(s.finalChoice===s.winner?'<p>Aunque el premio salió en tu puerta, la estrategia más sólida a largo plazo es otra.</p>':'')+
+      '<p>La opción con <strong>mayor probabilidad de acierto</strong> suele ser <strong>cambiar</strong> tras la revelación: tu puerta inicial conserva 1/3; la otra cerrada concentra 2/3.</p>'
+  });
+}
+
+// ─── P7: JUGS ────────────────────────────────────────
+function p7Init(){
+  PS={j3:0,j5:0,steps:0,won:false};
+  p7Draw();
+}
+function p7Draw(){
+  var s=PS;
+  var h3=Math.round((s.j3/3)*100),h5=Math.round((s.j5/5)*100);
+  body().innerHTML=
+    '<div class="jugs-visual">'+
+      '<div class="jug-wrap">'+
+        '<div class="jug-outer" id="jug-slosh-3" style="width:80px;height:110px"><div class="jug-fill" style="height:'+h3+'%"></div><div class="jug-val">'+s.j3+'L</div></div>'+
+        '<div class="jug-bottom-lbl">🫙 Jarra de 3L</div><div class="jug-cap-lbl">💧 Cap: 3 litros</div>'+
+      '</div>'+
+      '<div class="jug-wrap">'+
+        '<div class="jug-outer" id="jug-slosh-5" style="width:100px;height:150px"><div class="jug-fill" style="height:'+h5+'%"></div><div class="jug-val">'+s.j5+'L</div></div>'+
+        '<div class="jug-bottom-lbl">🫙 Jarra de 5L</div><div class="jug-cap-lbl">💧 Cap: 5 litros</div>'+
+      '</div>'+
+    '</div>'+
+    (s.j5===4||s.j3===4?'<div style="background:var(--ok-bg);border:2px solid var(--ok-l);border-radius:var(--r16);padding:.9rem;text-align:center;font-family:Outfit,sans-serif;font-weight:800;color:var(--ok);margin:.75rem 0">¡Tienes exactamente 4L en la jarra de '+(s.j5===4?'5':'3')+'L! 🎉</div>':'')+
+    '<div class="jug-btns">'+
+      '<button class="jug-btn" onclick="p7A(\'fill3\')">Llenar jarra 3L</button>'+
+      '<button class="jug-btn" onclick="p7A(\'fill5\')">Llenar jarra 5L</button>'+
+      '<button class="jug-btn" onclick="p7A(\'empty3\')">Vaciar jarra 3L</button>'+
+      '<button class="jug-btn" onclick="p7A(\'empty5\')">Vaciar jarra 5L</button>'+
+      '<button class="jug-btn" onclick="p7A(\'3to5\')">Verter 3L → 5L</button>'+
+      '<button class="jug-btn" onclick="p7A(\'5to3\')">Verter 5L → 3L</button>'+
+    '</div>'+
+    '<div class="jug-log">Pasos: '+s.steps+' | Estado: [3L: '+s.j3+'L] [5L: '+s.j5+'L]</div>';
+}
+function p7A(act){
+  var s=PS;
+  var j3b=s.j3,j5b=s.j5;
+  if(act==='fill3')s.j3=3; else if(act==='fill5')s.j5=5;
+  else if(act==='empty3')s.j3=0; else if(act==='empty5')s.j5=0;
+  else if(act==='3to5'){var p=Math.min(s.j3,5-s.j5);s.j5+=p;s.j3-=p;}
+  else if(act==='5to3'){var p2=Math.min(s.j5,3-s.j3);s.j3+=p2;s.j5-=p2;}
+  var ch3=s.j3!==j3b,ch5=s.j5!==j5b;
+  s.steps++;p7Draw();
+  requestAnimationFrame(function(){
+    function slosh(id){
+      var e=el(id); if(!e) return;
+      e.classList.remove('jug-slosh'); void e.offsetWidth; e.classList.add('jug-slosh');
+      setTimeout(function(){ e.classList.remove('jug-slosh'); },650);
+    }
+    if(ch3) slosh('jug-slosh-3');
+    if(ch5) slosh('jug-slosh-5');
+  });
+}
+function p7Check(){
+  var s=PS;
+  if(s.j5===4||s.j3===4){showResult(true,'¡Perfecto! Mediste 4L en '+s.steps+' pasos. La solución clásica: <strong>Llena 3L → vierte en 5L → llena 3L → vierte en 5L (caben 2L más) → quedan 1L en 3L → vacía 5L → vierte el 1L → llena 3L → vierte en 5L → tienes 4L.</strong> Son 8 pasos.');return;}
+  showResult(false,'Sigue combinando llenados, vaciados y trasvases hasta tener exactamente cuatro litros en una sola jarra.',{soft:true});
+}
+
+// ─── P8: PIRATES ─────────────────────────────────────
+function p8Init(){
+  PS={proposal:[null,null,null,null,null]};
+  body().innerHTML=
+    '<p style="font-size:.9rem;color:var(--t2);line-height:1.75;margin-bottom:.9rem">5 piratas (P1=más antiguo, P5=más nuevo) deben repartir <strong>100 monedas</strong>. P1 propone un reparto. Si <strong>≥ 50% vota a favor</strong>, se acepta. Si no, P1 muere y P2 propone. Todos son <strong>perfectamente racionales</strong>: primero prefieren vivir, luego más oro, luego matar a otro si da igual.</p>'+
+    '<div class="pirates-row">'+
+      [['👑','P1 (Tú, capitán)','cap'],['🦜','P2',''],['⚔️','P3',''],['🗺️','P4',''],['💀','P5','']].map(function(p,i){
+        return '<div class="pir-card '+p[2]+'"><span class="pir-ico">'+p[0]+'</span><div class="pir-name">'+p[1]+'</div></div>';
+      }).join('')+
+    '</div>'+
+    '<p class="sec-label">¿Cuántas monedas propones para cada pirata? (total=100)</p>'+
+    '<div class="prop-row">'+
+      ['P1 (tú)','P2','P3','P4','P5'].map(function(n,i){
+        return '<div class="prop-col"><label>'+n+'</label>'+
+          '<input class="prop-input" type="number" min="0" max="100" value="" placeholder="0" id="pp'+i+'" oninput="p8Update()">'+
+        '</div>';
+      }).join('')+
+    '</div>'+
+    '<div class="total-row">Total: <strong id="p8-total">0</strong> / 100 monedas</div>';
+}
+function p8Update(){
+  var t=0;
+  for(var i=0;i<5;i++){var v=parseInt(document.getElementById('pp'+i).value)||0;PS.proposal[i]=v;t+=v;}
+  el('p8-total').textContent=t;
+}
+function p8Check(){
+  var p=PS.proposal;
+  var t=p.reduce(function(a,b){return a+(b||0);},0);
+  if(t!==100){showResult(false,'La suma de monedas debe ser exactamente 100 (ahora sumas '+t+').',{soft:true});return;}
+  if(p[0]===98&&p[2]===1&&p[4]===1&&p[1]===0&&p[3]===0){showResult(true,'¡Brillante análisis! P1:98, P2:0, P3:1, P4:0, P5:1. Razonando hacia atrás: con 2 piratas, P4 propone 100,0 y gana solo. Entonces P3 con 3 piratas ofrece 1 a P5 (mejor que 0) y se queda 99. P2 con 4 piratas ofrece 1 a P4 (que obtendría 0 si P2 muere). P1 necesita 2 votos: ofrece 1 a P3 (que obtendría 0) y 1 a P5 (que obtendría 0). ¡P1 se queda 98!');return;}
+  showResult(false,'',{
+    spoiler:'<p>Una reparto viable que maximiza la supervivencia del capitán es: P1 conserva 98, P2 y P4 reciben 0, P3 y P5 reciben 1 moneda cada uno.</p><p>Se obtiene razonando <strong>hacia atrás</strong> desde dos piratas hasta cinco.</p>'
+  });
+}
+
+// ─── P9: POISONED WINE ───────────────────────────────
+function p9Render(){
+  body().innerHTML=
+    '<p style="font-size:.9rem;color:var(--t2);line-height:1.75;margin-bottom:1rem">Tienes <strong>1000 botellas</strong>. Una está envenenada. El veneno tarda 24h. Tienes <strong>10 prisioneros</strong>. Mañana es la fiesta. ¿Cómo identificas <em>cuál</em> botella en una sola ronda de pruebas?</p>'+
+    '<div class="mcq">'+
+      [
+        {id:'a',text:'Repartir las botellas en grupos iguales entre los 10 prisioneros y observar quién enferma.'},
+        {id:'b',text:'Codificar el número de cada botella en binario (10 cifras). Cada prisionero prueba un subconjunto según un bit asignado; el patrón de síntomas identifica una botella.'},
+        {id:'c',text:'Probar botellas de una en una en días sucesivos hasta localizar la envenenada.'},
+        {id:'d',text:'Formar 10 grupos de 10 botellas; un prisionero por grupo; quedarte solo con el grupo sospechoso.'},
+      ].map(function(o){
+        return '<button class="mcq-btn'+(PS.sel===o.id?' sel':'')+'" onclick="p9Sel(\''+o.id+'\')">'+o.text+'</button>';
+      }).join('')+
+    '</div>'+
+    '<p class="sec-label" style="margin-top:1rem">¿Cuántas botellas puede identificar este método con exactamente 10 prisioneros?</p>'+
+    '<div style="display:flex;align-items:center;gap:10px;margin:.5rem 0">'+
+      '<input type="number" style="flex:1;padding:12px 16px;border-radius:var(--r12);border:2px solid var(--b1);background:var(--surf);font-family:Outfit,sans-serif;font-size:1.3rem;font-weight:700;color:var(--t1);text-align:center" placeholder="?" id="p9-num" oninput="PS.numAnswer=this.value">'+
+      '<span style="font-size:.9rem;color:var(--t2);white-space:nowrap">botellas máximo</span>'+
+    '</div>';
+  el('p9-num').value=PS.numAnswer||'';
+}
+function p9Init(){
+  PS={sel:null,numAnswer:''};
+  p9Render();
+}
+function p9Sel(id){
+  var inp=el('p9-num');
+  if(inp) PS.numAnswer=inp.value;
+  PS.sel=id;
+  p9Render();
+}
+function p9Check(){
+  if(!PS.sel){showResult(false,'Elige el enfoque que consideres adecuado y, si aplica, completa el número.',{soft:true});return;}
+  if(PS.sel!=='b'){showResult(false,'',{
+    spoiler:'<p>El método eficaz usa <strong>codificación binaria</strong>: cada prisionero representa un bit; con 10 bits se distinguen muchas botellas en una sola ronda.</p>'
+  });return;}
+  if(parseInt(PS.numAnswer)!==1024){showResult(false,'',{
+    spoiler:'<p>Con el método binario y 10 prisioneros, el máximo de botellas distinguibles en una ronda es 2<sup>10</sup> = <strong>1024</strong>.</p>'
+  });return;}
+  showResult(true,'¡Perfecto! Con 10 prisioneros (10 bits binarios) puedes identificar hasta <strong>2¹⁰ = 1024 botellas</strong>. Cada prisionero es un bit. Los que mueran forman el número binario exacto de la botella envenenada. Ejemplo: si mueren P1, P3, P9 → la botella es 1+4+256 = botella 261.');
+}
+
+// ─── P10: LIAR / TRUTH ───────────────────────────────
+function p10Init(){
+  PS={sel:null};
+  body().innerHTML=
+    '<div style="display:flex;gap:1.5rem;justify-content:center;align-items:flex-end;padding:1rem 0;flex-wrap:wrap">'+
+      '<div style="background:var(--sage-bg);border:2.5px solid var(--sage-l);border-radius:var(--r24);padding:1.15rem 1.6rem;text-align:center;min-width:118px"><div style="font-size:2.85rem">✨</div><div style="font-size:.88rem;font-weight:700;color:var(--sage-tx);margin-top:.35rem">Camino A<br><span style="font-size:.74rem;color:var(--sage)">¿Salvación?</span></div></div>'+
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:.55rem"><div style="font-size:2.6rem">🧍</div><div style="font-size:.76rem;font-weight:700;color:var(--t3)">Tú</div>'+
+        '<div style="display:flex;gap:16px;margin-top:.55rem">'+
+          '<div style="background:var(--surf2);border:2.5px solid var(--b1);border-radius:var(--r24);padding:.85rem 1.05rem;text-align:center;cursor:default"><div style="font-size:2.85rem;line-height:1">🛡️</div><div style="font-size:.78rem;font-weight:700;color:var(--t2);margin-top:.25rem">Guardián 1</div></div>'+
+          '<div style="background:var(--surf2);border:2.5px solid var(--b1);border-radius:var(--r24);padding:.85rem 1.05rem;text-align:center;cursor:default"><div style="font-size:2.85rem;line-height:1">🛡️</div><div style="font-size:.78rem;font-weight:700;color:var(--t2);margin-top:.25rem">Guardián 2</div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="background:var(--err-bg);border:2.5px solid var(--err-l);border-radius:var(--r24);padding:1.15rem 1.6rem;text-align:center;min-width:118px"><div style="font-size:2.85rem">💀</div><div style="font-size:.88rem;font-weight:700;color:var(--err);margin-top:.35rem">Camino B<br><span style="font-size:.74rem">¿Perdición?</span></div></div>'+
+    '</div>'+
+    '<p class="sec-label" style="margin:.75rem 0 .4rem">Un guardián siempre dice la verdad, el otro siempre miente. No sabes cuál es cuál. Una pregunta. ¿Cuál eliges?</p>'+
+    '<div class="mcq">'+
+      [
+        {id:'a',text:'Preguntar directamente: “¿Cuál de los dos caminos lleva a la salvación?”'},
+        {id:'b',text:'Preguntar: “¿Eres tú el guardián que siempre dice la verdad?”'},
+        {id:'c',text:'Preguntar: “¿Qué camino me indicaría el otro guardián como el de la salvación?” y tomar el opuesto a la respuesta.'},
+        {id:'d',text:'Preguntar: “¿Qué camino tomarías tú si fueras yo?”'},
+      ].map(function(o){
+        return '<button class="mcq-btn'+(PS.sel===o.id?' sel':'')+'" onclick="p10Sel(\''+o.id+'\')">'+o.text+'</button>';
+      }).join('')+
+    '</div>';
+}
+function p10Sel(id){PS.sel=id;body().querySelectorAll('.mcq-btn').forEach(function(b,i){b.className='mcq-btn'+(PS.sel===(['a','b','c','d'][i])?' sel':'');});}
+function p10Check(){
+  if(!PS.sel){showResult(false,'Selecciona la pregunta que harías antes de comprobar.',{soft:true});return;}
+  if(PS.sel==='c'){showResult(true,'¡Impecable! La magia: si preguntas al <strong>veraz</strong>, él sabe que el mentiroso señalaría el camino incorrecto → te dice el incorrecto. Si preguntas al <strong>mentiroso</strong>, mentiría sobre lo que diría el veraz (que señalaría el correcto) → también te dice el incorrecto. En ambos casos señalan el INCORRECTO, así que tomas el opuesto. <strong>Siempre funciona.</strong>');return;}
+  showResult(false,'',{
+    spoiler:'<p>La pregunta que funciona invita a imaginar qué diría <strong>el otro guardián</strong>; la respuesta apunta al camino equivocado en ambos casos, así que eliges el contrario.</p>'
+  });
+}
+
+// ─── P11: 3 WISE MEN (configuración aleatoria) ─────────────────────────────────
+function shuffleArr(a){
+  var b=a.slice();
+  for(var i=b.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var t=b[i];b[i]=b[j];b[j]=t;
+  }
+  return b;
+}
+function p11HatWord(code){ return code==='W'?'blanco':'negro'; }
+function p11Init(){
+  var scenario=Math.random()<0.5?'threeBlack':'oneWhite';
+  var hats=scenario==='threeBlack'?['B','B','B']:shuffleArr(['B','B','W']);
+  PS={hats:hats,guess:null,scenario:scenario};
+  var names=['Sabio A','Sabio B','Sabio C'];
+  var sees=[
+    'Ve sombrero de B: <strong>'+p11HatWord(hats[1])+'</strong> · de C: <strong>'+p11HatWord(hats[2])+'</strong>',
+    'Ve sombrero de A: <strong>'+p11HatWord(hats[0])+'</strong> · de C: <strong>'+p11HatWord(hats[2])+'</strong>',
+    'Ve sombrero de A: <strong>'+p11HatWord(hats[0])+'</strong> · de B: <strong>'+p11HatWord(hats[1])+'</strong>'
+  ];
+  body().innerHTML=
+    '<p style="font-size:1.05rem;color:var(--t2);line-height:1.78;margin-bottom:.9rem">En la mesa hay <strong>tres sombreros negros y dos blancos</strong> en total. A cada sabio le colocan uno sin ver el propio. Cada uno ve solo los otros dos. ¿Quién podría saber <em>con certeza</em> el color del suyo en el primer instante? <strong>Cada nueva partida cambia la disposición.</strong></p>'+
+    '<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:1.15rem 0">'+
+      [0,1,2].map(function(i){
+        return '<div style="background:linear-gradient(180deg,var(--surf2),var(--surf));border:2.5px solid var(--b1);border-radius:var(--r32);padding:1.5rem 1.15rem;text-align:center;min-width:168px;flex:1;max-width:220px;box-shadow:var(--sh2)">'+
+          '<span class="wise-emoji-hat" aria-hidden="true">🎓</span>'+
+          '<div style="font-size:1.75rem;font-weight:900;font-family:Outfit,sans-serif;color:var(--indigo);margin:.25rem 0">?</div>'+
+          '<span class="wise-emoji-person" aria-hidden="true">🧙</span>'+
+          '<div style="font-family:Outfit,sans-serif;font-size:1.05rem;font-weight:800;color:var(--t2);margin:.4rem 0">'+names[i]+'</div>'+
+          '<div style="font-size:.9rem;color:var(--t3);line-height:1.6">'+sees[i]+'</div>'+
+        '</div>';
+      }).join('')+
+    '</div>'+
+    '<p class="sec-label" style="margin:.85rem 0 .45rem">¿Quién puede deducirlo con certeza?</p>'+
+    '<div class="opts-grid">'+
+      ['A','B','C','Ninguno'].map(function(n){
+        var v=n==='Ninguno'?'none':n;
+        return '<div class="opt'+(PS.guess===v?' sel':'')+'" onclick="p11Guess(\''+v+'\')">'+(n==='Ninguno'?'Ninguno en esta ronda':('Sabio '+n))+'</div>';
+      }).join('')+
+    '</div>';
+}
+function p11Guess(v){PS.guess=v;body().querySelectorAll('.opt').forEach(function(b,i){var vs=['A','B','C','none'];b.className='opt'+(PS.guess===vs[i]?' sel':'');});}
+function p11Check(){
+  if(!PS.guess){showResult(false,'Elige una opción antes de comprobar.',{soft:true});return;}
+  var correct;
+  if(PS.scenario==='threeBlack') correct='none';
+  else{
+    var wi=PS.hats.indexOf('W');
+    correct=(wi>=0)?['A','B','C'][wi]:'none';
+  }
+  if(PS.guess===correct){
+    if(correct==='none'){
+      showResult(true,'¡Correcto! Con <strong>tres sombreros negros</strong>, cada sabio ve dos negros: eso es compatible con llevar negro o blanco, así que nadie puede afirmar el propio color solo con esa vista.');
+    } else {
+      showResult(true,'¡Correcto! El sabio <strong>'+correct+'</strong> es quien lleva el único sombrero blanco de esta ronda: ve dos negros y, sabiendo que solo hay dos blancos en total, deduce que el suyo no puede ser negro (o el silencio previo lo delataría).');
+    }
+    return;
+  }
+  showResult(false,'',{
+    spoiler:'<p>En esta ronda la respuesta adecuada era: <strong>'+(correct==='none'?'ninguno de los tres':('sabio '+correct))+'</strong>.</p><p>Compara cuántos blancos son visibles con cuántos quedan en el montón total.</p>'
+  });
+}
+
+// ─── P12: BRIDGE ─────────────────────────────────────
+function p12Init(){
+  PS={
+    left:[0,1,2,3],right:[],center:[],
+    lantern:'left',timeUsed:0,
+    steps:[],selected:[],gameOver:false
+  };
+  p12Draw();
+}
+
+var P12_NAMES=['A (1min)','B (2min)','C (5min)','D (10min)'];
+var P12_SPEEDS=[1,2,5,10];
+
+function brFigHtml(lbl){
+  return '<span class="br-fig-emoji" aria-hidden="true">🧍</span><span class="br-lbl">'+lbl+'</span>';
+}
+function brLanternSvg(){
+  return '<span class="br-lantern-emoji" aria-hidden="true">🔦</span>';
+}
+
+function p12Draw(){
+  var s=PS;
+  var timeLeft=17-s.timeUsed;
+  body().innerHTML=
+    '<div class="br-timer'+(timeLeft<=4?' warn':'')+'">'+timeLeft+' min restantes</div>'+
+    '<div class="br-log">'+(s.steps.length>0?s.steps[s.steps.length-1]:'Selecciona 1 o 2 personas del lado con la linterna y cruza')+'</div>'+
+    '<div class="bridge-wrap">'+
+      '<div class="br-bank">'+
+        '<div class="br-bank-lbl">Inicio'+(s.lantern==='left'?brLanternSvg():'')+'</div>'+
+        s.left.map(function(i){return '<div class="br-person'+(s.selected.indexOf(i)>=0?' sel':'')+'" onclick="p12Select('+i+')">'+brFigHtml(P12_NAMES[i])+'</div>';}).join('')+
+        (s.left.length===0?'<span style="font-size:.78rem;color:var(--sage-tx);font-weight:700">¡Todos cruzaron!</span>':'')+
+      '</div>'+
+      '<div class="br-center">'+
+        '<div style="font-size:.72rem;font-weight:700;color:#6A5030;text-align:center">PUENTE</div>'+
+        '<div class="br-lantern-center" style="font-size:1.65rem;display:flex;align-items:center;justify-content:center;gap:8px">'+(s.lantern==='left'?'←':'→')+brLanternSvg()+'</div>'+
+        '<button class="br-cross-btn" onclick="p12Cross()" '+(s.selected.length===0||s.selected.length>2||s.gameOver?'disabled':'')+'>Cruzar →</button>'+
+        (s.lantern==='right'&&s.right.length>0?'<button class="br-cross-btn" style="margin-top:.3rem" onclick="p12Cross()">← Regresar</button>':'')+
+      '</div>'+
+      '<div class="br-bank">'+
+        '<div class="br-bank-lbl">'+(s.lantern==='right'?brLanternSvg():'')+'Meta</div>'+
+        s.right.map(function(i){
+          var isSelRight=s.lantern==='right'&&s.selected.indexOf(i)>=0;
+          return '<div class="br-person'+(isSelRight?' sel':'')+'" onclick="p12SelectRight('+i+')">'+brFigHtml(P12_NAMES[i])+'</div>';
+        }).join('')+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:.75rem;font-size:.8rem;color:var(--t3);text-align:center">'+
+      'Movimientos: '+s.steps.length+' | Linterna: orilla '+(s.lantern==='left'?'izquierda':'derecha')+
+    '</div>'+
+    (s.right.length===4?'<div style="background:var(--ok-bg);border:2px solid var(--ok-l);border-radius:var(--r16);padding:.9rem;text-align:center;font-family:Outfit,sans-serif;font-weight:800;color:var(--ok);margin:.75rem 0">¡Todos cruzaron en '+s.timeUsed+' minutos! '+(s.timeUsed<=17?'🎉 ¡Dentro del límite!':'⚠ Superaste 17 min.')+'</div>':'');
+}
+
+function p12Select(i){
+  var s=PS; if(s.gameOver||s.lantern!=='left') return;
+  if(!s.left.includes(i)) return;
+  var idx=s.selected.indexOf(i);
+  if(idx>=0) s.selected.splice(idx,1);
+  else if(s.selected.length<2) s.selected.push(i);
+  p12Draw();
+}
+function p12SelectRight(i){
+  var s=PS; if(s.gameOver||s.lantern!=='right') return;
+  if(!s.right.includes(i)) return;
+  var idx=s.selected.indexOf(i);
+  if(idx>=0) s.selected.splice(idx,1);
+  else if(s.selected.length<1) s.selected.push(i);
+  p12Draw();
+}
+function p12Cross(){
+  var s=PS; if(s.selected.length===0||s.gameOver) return;
+  var cost=Math.max.apply(null,s.selected.map(function(i){return P12_SPEEDS[i];}));
+  s.timeUsed+=cost;
+  var names=s.selected.map(function(i){return P12_NAMES[i].split(' ')[0];}).join('+');
+  if(s.lantern==='left'){
+    s.selected.forEach(function(i){s.left.splice(s.left.indexOf(i),1);s.right.push(i);});
+    s.steps.push('→ '+names+' cruzan ('+cost+' min) — Total: '+s.timeUsed+' min');
+    s.lantern='right';
+  } else {
+    s.selected.forEach(function(i){s.right.splice(s.right.indexOf(i),1);s.left.push(i);});
+    s.steps.push('← '+names+' regresa ('+cost+' min) — Total: '+s.timeUsed+' min');
+    s.lantern='left';
+  }
+  s.selected=[];
+  requestAnimationFrame(function(){
+    var w=document.querySelector('.bridge-wrap');
+    if(w){ w.classList.remove('br-cross-flash'); void w.offsetWidth; w.classList.add('br-cross-flash'); }
+  });
+  if(s.timeUsed>17&&s.right.length<4){
+    s.gameOver=true;
+    showResult(false,'',{
+      spoiler:'<p>Superaste los 17 minutos ('+s.timeUsed+' min).</p><p>Un plan que suma exactamente 17 min: enviar primero a los más rápidos juntos, regresar el más veloz, cruzar a los dos más lentos juntos, regresar quien equilibra tiempos y volver a cruzar los dos rápidos.</p>'
+    });
+    p12Draw(); return;
+  }
+  p12Draw();
+}
+function p12Check(){
+  var s=PS;
+  if(s.right.length!==4){showResult(false,'Cuando las cuatro personas estén en la meta dentro del tiempo, pulsa Comprobar.',{soft:true});return;}
+  if(s.timeUsed<=17){showResult(true,'¡Excelente! Cruzaste a todos en '+s.timeUsed+' minutos. La solución óptima: <strong>A+B→(2min), A←(1min), C+D→(10min), B←(2min), A+B→(2min). Total: 17 min.</strong> La clave: nunca cruzar a D solo con alguien rápido. Agrupar a los lentos juntos y usar a B como "puente" de regreso.');return;}
+  showResult(false,'',{
+    spoiler:'<p>Todos cruzaron, pero en '+s.timeUsed+' minutos, por encima de 17.</p><p>Suele ser clave <strong>agrupar a los dos más lentos</strong> en un solo cruce y elegir con cuidado quién devuelve la linterna.</p>'
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// PUZZLE REGISTRY
+// ═══════════════════════════════════════════════════════
+var PUZZLES={
+  p1:{title:'El río peligroso',level:'Fácil',tagBg:'var(--sage-bg)',tagColor:'var(--sage-tx)',
+    desc:'Debes cruzar al lobo, la cabra y la col en un bote que carga a ti y una cosa más. El lobo se come a la cabra. La cabra se come la col. ¿Cómo cruzas a todos?',
+    hint:'El lobo y la col pueden quedarse solos en una orilla. La cabra no puede quedar sola con el lobo ni con la col. A veces hace falta un viaje de vuelta.',
+    hint1:'Piensa en quién no puede quedarse a solas en una orilla con otro personaje.',
+    hint2:'Si algo falla, puedes reiniciar: a veces la solución pasa por “deshacer” un cruce y traer de vuelta a alguien.',
+    init:p1Init,check:p1Check},
+  p2:{title:'Interruptores y focos',level:'Fácil',tagBg:'var(--sage-bg)',tagColor:'var(--sage-tx)',
+    desc:'Hay 3 interruptores fuera de un cuarto cerrado. Dentro hay 3 focos (uno por interruptor). Solo puedes entrar al cuarto UNA VEZ. ¿Cómo determinas cuál interruptor controla cada foco?',
+    hint:'Antes de entrar tienes todo el tiempo del mundo con los interruptores. Dentro solo verás (y quizá sentirás) el estado de los focos una vez.',
+    hint1:'Puedes dejar un interruptor encendido un rato y apagarlo antes de entrar: eso deja “huellas” distintas en cada foco.',
+    hint2:'Además de luz o oscuridad, piensa en qué otra propiedad física cambia si un foco estuvo encendido hace poco.',
+    init:p2Init,check:p2Check},
+  p3:{title:'Las bolsas de monedas',level:'Fácil',tagBg:'var(--sage-bg)',tagColor:'var(--sage-tx)',
+    desc:'Tienes 10 bolsas. Nueve tienen monedas auténticas (10g c/u), una tiene monedas falsas (9g c/u). Puedes usar la báscula digital exactamente una vez.',
+    hint:'Puedes colocar en la báscula cantidades distintas tomadas de cada bolsa de forma ordenada. Compara el resultado con el total “ideal” si todo fuera auténtico.',
+    hint1:'Si de la bolsa 1 tomas 1 moneda, de la 2 tomas 2, y así sucesivamente, el diseño del peso esperado es muy regular.',
+    hint2:'La diferencia en gramos entre el peso ideal y el peso real apunta al número de la bolsa especial, sin necesidad de más pesadas.',
+    init:p3Init,check:p3Check},
+  p4:{title:'Las dos velas',level:'Fácil',tagBg:'var(--sage-bg)',tagColor:'var(--sage-tx)',
+    desc:'Vela A dura 60 minutos encendida por un extremo. Vela B dura 90 minutos. No tienes ningún otro instrumento. ¿Cómo mides exactamente 45 minutos?',
+    hint:'Puedes controlar cuántos extremos de cada vela están encendidos al mismo tiempo. Eso cambia la velocidad a la que se consumen.',
+    hint1:'Una misma vela encendida por los dos extremos se acaba antes que si solo arde por uno.',
+    hint2:'Pregúntate qué duración obtienes si la vela de 90 minutos se consume al doble de velocidad.',
+    init:p4Init,check:p4Check},
+  p5:{title:'Las 9 canicas',level:'Intermedio',tagBg:'var(--indigo-bg)',tagColor:'var(--indigo-tx)',
+    desc:'Tienes 9 canicas visualmente idénticas. Una pesa más que las demás. Tienes una báscula de dos platos y solo puedes usarla 2 veces. Puedes poner las canicas que quieras en cada plato. ¿Cuál canica es la más pesada?',
+    hint:'Cada pesada puede dar tres resultados: izquierda más pesada, derecha más pesada o equilibrio. Aprovéchalos por igual.',
+    hint1:'Nueve piezas se prestan a agruparse en tres montones del mismo tamaño; cada resultado de la báscula descarta ramas distintas del árbol de posibilidades.',
+    hint2:'Cuando ya acotaste a tres candidatas, una segunda comparación puede enfrentar dos entre sí y dejar la tercera al margen, o plantear otro reparto que aproveche el empate.',
+    init:p5Init,check:p5Check},
+  p6:{title:'El dilema de las puertas',level:'Intermedio',tagBg:'var(--indigo-bg)',tagColor:'var(--indigo-tx)',
+    desc:'3 puertas. Detrás de una hay un auto (premio), detrás de las otras dos hay cabras. Eliges una. El presentador (que sabe todo) abre otra puerta mostrando una cabra. ¿Cambias o te quedas? ¿Cuál es la decisión estadísticamente correcta?',
+    hint:'Tu primera elección se hizo con información limitada. Lo que ocurre después de abrir una puerta añade información nueva.',
+    hint1:'Antes de abrir nada, cada puerta tenía la misma probabilidad inicial de ocultar el premio.',
+    hint2:'Al final quedan dos cerradas, pero no son dos apuestas “nuevas” al azar: una conserva el contexto de tu primera elección y la otra concentra lo que quedó al descartar una cabra.',
+    init:p6Init,check:p6Check},
+  p7:{title:'Las jarras de agua',level:'Intermedio',tagBg:'var(--indigo-bg)',tagColor:'var(--indigo-tx)',
+    desc:'Tienes una jarra de 3 litros y una de 5 litros, sin marcas. Tienes acceso a agua ilimitada. Necesitas medir exactamente 4 litros usando solo estas dos jarras.',
+    hint:'Puedes llenar por completo, vaciar por completo o verter de una jarra a otra hasta que una se llene o la otra se vacíe.',
+    hint1:'Cada trasvase deja cantidades enteras de litros; anota mentalmente el par (pequeña, grande) tras cada paso y evita repetir el mismo estado sin propósito.',
+    hint2:'Vaciar por completo una jarra no es retroceder: a veces deja libre capacidad para que el siguiente vertido produzca un resto distinto.',
+    init:p7Init,check:p7Check},
+  p8:{title:'Los 5 piratas',level:'Intermedio',tagBg:'var(--indigo-bg)',tagColor:'var(--indigo-tx)',
+    desc:'5 piratas deben repartir 100 monedas de oro. El más antiguo (P1) propone. Votan: si al menos la mitad apoya (incluyendo a P1), se acepta. Si no, P1 muere y P2 propone. Son perfectamente racionales: prefieren vivir, luego más oro, y en empate prefieren eliminar a otro.',
+    hint:'Imagina primero qué ocurriría si solo quedaran dos piratas; luego sube a tres, cuatro y cinco.',
+    hint1:'En el extremo con pocos votantes, el proponente puede asegurarse el propio voto y fijar el resto con reglas duras.',
+    hint2:'Cada pirata más joven imagina el juego si el actual desaparece; tu propuesta debe superar o empatar ese “plan B” para quienes necesitas convencer.',
+    init:p8Init,check:p8Check},
+  p9:{title:'El vino envenenado',level:'Difícil',tagBg:'var(--amber-bg)',tagColor:'var(--amber-tx)',
+    desc:'El rey tiene 1000 botellas para su fiesta mañana. Una está envenenada (el veneno actúa en 24h). Tiene 10 prisioneros disponibles para probar vino. ¿Cómo identifica la botella exacta con una sola ronda de pruebas?',
+    hint:'Cada prisionero puede beber de muchas botellas a la vez. Al día siguiente ves un patrón de síntomas.',
+    hint1:'Piensa en asignar a cada botella un código distinto usando sí o no para cada prisionero.',
+    hint2:'Mañana cada persona solo aporta un bit de información (síntoma o no). Cuenta cuántos patrones globales distintos podrían aparecer; ese techo orienta el diseño sin fijar la fórmula exacta.',
+    init:p9Init,check:p9Check},
+  p10:{title:'El mentiroso y el verdadero',level:'Difícil',tagBg:'var(--amber-bg)',tagColor:'var(--amber-tx)',
+    desc:'Bifurcación: un camino lleva a la salvación, el otro a la perdición. Dos guardianes: uno siempre dice la verdad, el otro siempre miente. No sabes cuál es cuál. Tienes una sola pregunta para hacer a uno de ellos.',
+    hint:'Busca una pregunta donde la manipulación de la verdad y la mentira se componga de forma útil, sin saber a quién interrogas.',
+    hint1:'Una sola pregunta puede pedir una opinión indirecta: que la respuesta pase por la cabeza del otro guardián antes de llegarte.',
+    hint2:'Si la cadena “decir la verdad sobre una mentira” y “mentir sobre la verdad” producen el mismo signo final, has estabilizado el acertijo.',
+    init:p10Init,check:p10Check},
+  p11:{title:'Los 3 sabios',level:'Difícil',tagBg:'var(--amber-bg)',tagColor:'var(--amber-tx)',
+    desc:'Existen 3 sombreros negros y 2 blancos. A 3 sabios les colocaron uno en la cabeza. Cada uno ve los sombreros de los demás, pero no el propio. El primero en saber con certeza anuncia el color de su sombrero. ¿Quién puede saberlo?',
+    hint:'Razona según cuántos sombreros blancos son visibles desde cada asiento.',
+    hint1:'Si lo que ves en las otras cabezas agotara casi todo el stock disponible de un color, podrías cerrar el razonamiento en un solo paso.',
+    hint2:'El silencio inicial no es vacío: descarta la configuración más “contundente” y obliga a mirar el siguiente nivel de casos.',
+    init:p11Init,check:p11Check},
+  p12:{title:'El puente y la linterna',level:'Difícil',tagBg:'var(--amber-bg)',tagColor:'var(--amber-tx)',
+    desc:'4 personas deben cruzar un puente oscuro. Solo caben 2 a la vez y necesitan la única linterna. Velocidades: A=1min, B=2min, C=5min, D=10min. Al cruzar en pareja, van al ritmo del más lento. Tienes exactamente 17 minutos.',
+    hint:'Cada ida y vuelta suma tiempo; quien regresa con la linterna marca mucho el total.',
+    hint1:'Minimizar cuántas veces las personas más lentas pisan el puente suele importar más que acortar cada uno de sus pasos por separado.',
+    hint2:'Alterna un cruce costoso con regresos breves; evita que quien más tarda cruce solo salvo en el tramo en que es inevitable.',
+    init:p12Init,check:p12Check},
+};
+
+updateStats();
+</script>
+</body>
+</html>

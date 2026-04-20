@@ -75,8 +75,8 @@ export default function Landing({ onLogin }) {
             <Sparkles size={14} /> Acompañamiento Humano + IA
           </div>
           <h2 className="text-5xl md:text-8xl font-black text-[#16572a] tracking-tighter leading-[0.9] mb-10">
-            Tu bienestar, <br />
-            <span className="text-[#e99d72] italic underline decoration-[#9cd6b7]/40">nuestra prioridad.</span>
+            Tu mente en calma, <br />
+            <span className="text-[#e99d72] italic underline decoration-[#9cd6b7]/40">tu vida en equilibrio.</span>
           </h2>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <button onClick={onLogin} className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2">
@@ -158,7 +158,7 @@ export default function Landing({ onLogin }) {
         {/* Footer Bottom */}
         <div className="max-w-7xl mx-auto pt-10 border-t border-gray-50 text-center">
           <p className="text-gray-400 text-[10px] md:text-xs uppercase font-black tracking-[0.2em] mb-4">
-            © 2026 SENSAI | Ingeniería en Sistemas Computacionales
+            © 2026 SENSAI
           </p>
           <p className="max-w-3xl mx-auto text-[10px] text-gray-400 italic leading-relaxed">
             * SENSAI utiliza inteligencia artificial para soporte emocional. Si te encuentras en una situación de crisis o emergencia, por favor acude a los servicios de urgencias locales o contacta a un profesional certificado.

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-
 import { 
   Settings as SettingsIcon, 
   Save, 
   Languages, 
   MessageSquareText, 
   CheckCircle2, 
-  ArrowLeft 
+  ArrowLeft,
+  Download // Nuevo icono para la instalación
 } from 'lucide-react';
 
 import { saveUserSettings, getUserSettings } from '../../services/user.service';
 import './Settings.css';
 
-// 2. RECIBIMOS onBack AQUÍ:
 export default function Settings({ user, onBack }) {
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null); // Estado para la PWA
   
   const [settings, setSettings] = useState({
     lenguaje: 'neutro',
@@ -24,6 +24,13 @@ export default function Settings({ user, onBack }) {
   });
 
   useEffect(() => {
+    // Lógica para detectar si la app es instalable (PWA)
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+
     const loadData = async () => {
       if (user?.uid) {
         const data = await getUserSettings(user.uid);
@@ -31,6 +38,8 @@ export default function Settings({ user, onBack }) {
       }
     };
     loadData();
+
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, [user]);
 
   const handleSave = async () => {
@@ -48,10 +57,22 @@ export default function Settings({ user, onBack }) {
     }
   };
 
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      // Caso para iOS o navegadores que no soportan el prompt automático
+      alert("Para instalar en iPhone: pulsa el botón 'Compartir' de tu navegador y selecciona 'Añadir a pantalla de inicio'.");
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
+
   return (
     <div className="settings-container p-6 animate-in fade-in duration-500">
       <header className="flex items-center gap-3 mb-8">
-        {/* Ahora onBack funcionará correctamente */}
         <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <ArrowLeft className="text-leaf-dark" size={24} />
         </button>
@@ -62,6 +83,25 @@ export default function Settings({ user, onBack }) {
       </header>
 
       <div className="space-y-6 max-w-2xl">
+        {/* NUEVA SECCIÓN: INSTALACIÓN PWA */}
+        <section className="settings-card border-2 border-leaf-light/30 bg-leaf-light/5">
+          <div className="flex items-center gap-3 mb-4">
+            <Download className="text-leaf-dark" size={20} />
+            <h3 className="font-bold text-leaf-dark">Acceso Directo</h3>
+          </div>
+          <p className="text-sm text-gray-600 mb-4">
+            Usa SENSAI como una aplicación en tu celular para una experiencia sin distracciones y acceso inmediato.
+          </p>
+          <button 
+            onClick={handleInstallClick}
+            className="w-full py-3 bg-white border-2 border-leaf-dark text-leaf-dark font-black rounded-xl hover:bg-leaf-dark hover:text-white transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            <Download size={18} />
+            INSTALAR APLICACIÓN
+          </button>
+        </section>
+
+        {/* MODO DE LENGUAJE */}
         <section className="settings-card">
           <div className="flex items-center gap-3 mb-4">
             <Languages className="text-brain-purple" size={20} />
@@ -79,6 +119,7 @@ export default function Settings({ user, onBack }) {
           <p className="text-xs text-gray-400 mt-2 italic">Define el tono de voz que SENSAI usará contigo.</p>
         </section>
 
+        {/* PROFUNDIDAD */}
         <section className="settings-card">
           <div className="flex items-center gap-3 mb-4">
             <MessageSquareText className="text-brain-purple" size={20} />
@@ -97,10 +138,11 @@ export default function Settings({ user, onBack }) {
           </div>
         </section>
 
+        {/* BOTÓN GUARDAR */}
         <button 
           onClick={handleSave}
           disabled={loading}
-          className={`save-btn flex items-center justify-center gap-2 ${saved ? 'bg-green-500' : 'bg-leaf-dark'}`}
+          className={`save-btn flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 scale-95' : 'bg-leaf-dark'}`}
         >
           {loading ? 'Guardando...' : saved ? <><CheckCircle2 size={20}/> Ajustes Guardados</> : <><Save size={20}/> Guardar Preferencias</>}
         </button>
