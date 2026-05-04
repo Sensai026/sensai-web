@@ -58,6 +58,30 @@ export default function App() {
     return () => unsubscribe()
   }, [])
 
+const applySavedTheme = () => {
+    try {
+      // Obtenemos el tema guardado o usamos 'light' por defecto
+      const savedTheme = localStorage.getItem('sensai-theme') || 'light';
+      
+      // Aplicamos la clase al elemento raíz (html o body)
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      // Opcional: Si usas clases de Tailwind directamente
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (error) {
+      console.error("Error al cargar el tema desde LocalStorage:", error);
+    }
+  };
+
+  useEffect(() => {
+    // 2. Ejecutamos la aplicación del tema al montar la App
+    applySavedTheme();
+  }, []);
+
   const login = async () => {
     try {
       await signInWithPopup(auth, googleProvider)

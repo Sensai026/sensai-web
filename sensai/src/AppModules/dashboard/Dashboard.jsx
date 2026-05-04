@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MessageCircle, 
   Activity, 
@@ -7,8 +7,11 @@ import {
   Users, 
   Stethoscope, 
   Settings,
-  LogOut
+  LogOut,
+  Bell,
+  AlertTriangle
 } from 'lucide-react';
+import { subscribeToCrisisAlerts } from '../../services/crisis.service';
 import './Dashboard.css';
 
 const ModuleCard = ({ id, icon: Icon, title, description, onSelect }) => (
@@ -23,31 +26,87 @@ const ModuleCard = ({ id, icon: Icon, title, description, onSelect }) => (
 );
 
 export default function Dashboard({ user, onLogout, onModuleSelect = () => {} }) {
+  const [alerts, setAlerts] = useState([]);
+  const [showNotifs, setShowNotifs] = useState(false);
+
+  // Suscripción permanente a alertas de crisis en la nube
+  useEffect(() => {
+    if (user?.uid) {
+      const unsubscribe = subscribeToCrisisAlerts(user.uid, (newAlerts) => {
+        setAlerts(newAlerts);
+      });
+      return () => unsubscribe();
+    }
+  }, [user?.uid]);
+
   const modules = [
     { id: 'chat', icon: MessageCircle, title: "Chat IA", description: "Acompañamiento emocional en tiempo real con IA ética." },
     { id: 'exercises', icon: Activity, title: "Ejercicios", description: "Regulación emocional y descarga cognitiva personalizada." },
     { id: 'info', icon: Layout, title: "Infografías", description: "Aprende sobre tus procesos mentales de forma visual." },
-    { 
-      id: 'games', // Usamos 'games' para que coincida con nuestro GamesModule
-      icon: Gamepad2, 
-      title: "Juegos", 
-      description: "Retos de memoria y estimulación cognitiva para tu bienestar.",
-      color: "bg-brain-orange/10", // Si usas colores temáticos
-      textColor: "text-brain-orange"
-    },
+    { id: 'games', icon: Gamepad2, title: "Juegos", description: "Retos de memoria y estimulación cognitiva para tu bienestar." },
     { id: 'community', icon: Users, title: "Comunidad", description: "Comparte experiencias en un entorno seguro y moderado." },
     { id: 'profesionales', icon: Stethoscope, title: "Especialistas", description: "Directorio para canalización con expertos en salud mental." },
     { id: 'settings', icon: Settings, title: "Configuración", description: "Personaliza el lenguaje, tonos y temas de tu SENSAI." }
   ];
 
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout animate-fadeIn">
       <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="user-badge">
-          <img src={user?.photoURL} alt="User" className="w-12 h-12 rounded-full border-2 border-brain-purple" />
-          <div>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Bienvenido de nuevo</p>
-            <p className="text-lg font-black text-leaf-dark leading-none">{user?.displayName}</p>
+        <div className="flex items-center gap-4">
+          <div className="user-badge">
+            <img src={user?.photoURL} alt="User" className="w-12 h-12 rounded-full border-2 border-brain-purple" />
+            <div>
+              <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Bienvenido de nuevo</p>
+              <p className="text-lg font-black text-leaf-dark leading-none">{user?.displayName}</p>
+            </div>
+          </div>
+
+          {/* CONTENEDOR DE NOTIFICACIONES */}
+          <div className="relative">
+            <button 
+              className="notification-bell-container"
+              onClick={() => setShowNotifs(!showNotifs)}
+            >
+              <Bell size={24} className={alerts.length > 0 ? "text-brain-orange" : "text-gray-400"} />
+              {alerts.length > 0 && (
+                <div className="notification-badge">
+                  {alerts.length}
+                </div>
+              )}
+            </button>
+
+            {/* PANEL DESPLEGABLE */}
+            {showNotifs && (
+              <div className="notifications-panel">
+                <div className="p-4 bg-slate-50 border-b border-gray-100">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Notificaciones</p>
+                </div>
+                <div className="max-h-80 overflow-y-auto">
+                  {alerts.length === 0 ? (
+                    <div className="p-8 text-center">
+                      <p className="text-sm text-gray-400 italic">No tienes notificaciones pendientes.</p>
+                    </div>
+                  ) : (
+                    alerts.map((alert) => (
+                      <div key={alert.id} className="notif-item">
+                        <div className="flex gap-3">
+                          <div className="bg-red-100 p-2 rounded-xl h-fit">
+                            <AlertTriangle size={16} className="text-red-500" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-bold text-slate-800 leading-tight">Protocolo de Crisis</p>
+                            <p className="text-xs text-slate-500 mt-1">{alert.message}</p>
+                            <p className="text-[9px] font-black text-slate-300 mt-2 uppercase tracking-tighter">
+                              {alert.timestamp}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

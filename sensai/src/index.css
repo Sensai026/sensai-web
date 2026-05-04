@@ -1,8 +1,89 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brain-purple: #a67cc2;
-  --color-brain-orange: #e99d72;
-  --color-monitor-mint: #9cd6b7;
-  --color-leaf-dark: #16572a;
+  --color-brain-purple: var(--brain-purple);
+  --color-brain-orange: var(--brain-orange);
+  --color-monitor-mint: var(--monitor-mint);
+  --color-leaf-dark: var(--leaf-dark);
+  --color-bg-primary: var(--bg-primary);
+}
+
+:root {
+  /* 1. NATURALEZA (Original) */
+  --brain-purple: #a67cc2;
+  --brain-orange: #e99d72;
+  --monitor-mint: #9cd6b7;
+  --leaf-dark: #16572a;
+  --bg-primary: #ffffff;
+  --border: #e2e8f0;
+}
+
+/* 2. NOCHE PROFUNDA */
+[data-theme='dark'] {
+  --brain-purple: #c084fc;
+  --brain-orange: #fb923c;
+  --monitor-mint: #4ade80;
+  --leaf-dark: #f0fdf4;
+  --bg-primary: #0f172a;
+  --border: #334155;
+}
+
+/* 3. OCÉANO (Tu favorito) */
+[data-theme='ocean'] {
+  --brain-purple: #38bdf8;
+  --brain-orange: #7dd3fc;
+  --monitor-mint: #bae6fd;
+  --leaf-dark: #0c4a6e;
+  --bg-primary: #f0f9ff;
+  --border: #bae6fd;
+}
+
+/* 4. ATARDECER (Cálido/Productivo) */
+[data-theme='sunset'] {
+  --brain-purple: #be123c;
+  --brain-orange: #f59e0b;
+  --monitor-mint: #fef3c7;
+  --leaf-dark: #78350f;
+  --bg-primary: #fff7ed;
+  --border: #fed7aa;
+}
+
+/* 5. CIBERPUNK (Energético) */
+[data-theme='cyber'] {
+  --brain-purple: #ff00ff;
+  --brain-orange: #00ffff;
+  --monitor-mint: #ffff00;
+  --leaf-dark: #ffffff;
+  --bg-primary: #1a1a2e;
+  --border: #0f3460;
+}
+
+/* 6. BOSQUE (Minimalista) */
+[data-theme='forest'] {
+  --brain-purple: #3f6212;
+  --brain-orange: #a3e635;
+  --monitor-mint: #d9f99d;
+  --leaf-dark: #1a2e05;
+  --bg-primary: #f7fee7;
+  --border: #d9f99d;
+}
+
+/* 7. POTRO (Inspirado en el Atlante) */
+[data-theme='potro'] {
+  --brain-purple: #1e3a8a; /* Azul fuerte */
+  --brain-orange: #991b1b; /* Grana/Rojo */
+  --monitor-mint: #f8fafc;
+  --leaf-dark: #1e3a8a;
+  --bg-primary: #ffffff;
+  --border: #e2e8f0;
+}
+
+/* 8. LAVANDA (Calma total) */
+[data-theme='lavender'] {
+  --brain-purple: #7c3aed;
+  --brain-orange: #c4b5fd;
+  --monitor-mint: #ede9fe;
+  --leaf-dark: #4c1d95;
+  --bg-primary: #f5f3ff;
+  --border: #ddd6fe;
 }

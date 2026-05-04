@@ -33,3 +33,25 @@
 @utility hub-footer {
   @apply max-w-6xl mx-auto mt-20 pt-8 border-t border-slate-200 text-center;
 }
+.games-hub-layout {
+  @apply min-h-screen w-full bg-[var(--bg-primary)] p-6 lg:p-12 transition-colors duration-300;
+}
+
+.games-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto;
+}
+
+.game-option-card {
+  @apply bg-white p-8 rounded-3xl border-2 border-slate-100 cursor-pointer transition-all duration-300 flex flex-col items-center text-center hover:border-brain-orange hover:shadow-xl hover:-translate-y-2;
+}
+
+.game-icon-wrapper {
+  @apply p-6 rounded-2xl mb-6 flex items-center justify-center;
+}
+
+/* Ajustes para pantallas grandes */
+@media (min-width: 1024px) {
+  .hub-header {
+    @apply py-12;
+  }
+}

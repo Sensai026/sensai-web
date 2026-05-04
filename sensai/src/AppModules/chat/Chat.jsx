@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Send, Sparkles, Trash2 } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Send, 
+  Sparkles, 
+  Trash2, 
+  AlertCircle, 
+  Phone, 
+  X 
+} from 'lucide-react';
+
 import { getSensaiResponse } from '../../services/groq.service';
 import { getUserSettings } from '../../services/user.service';
 import { saveChatMessage, getChatHistory, deleteFullChatHistory } from '../../services/chat.service';
+// Importación unificada del servicio de crisis
+import { checkForCrisis, registerCrisisAlert, CRISIS_RESOURCES } from '../../services/crisis.service';
+
 import './Chat.css';
 
 export default function Chat({ user, onBack }) {
@@ -10,23 +22,20 @@ export default function Chat({ user, onBack }) {
   const [isLoading, setIsLoading] = useState(false);
   const [userSettings, setUserSettings] = useState({});
   const [messages, setMessages] = useState([]);
+  const [showCrisisModal, setShowCrisisModal] = useState(false);
 
-  // 1. Cargar preferencias e historial al iniciar
   useEffect(() => {
     const initChat = async () => {
       if (user?.uid) {
-        // Cargar ajustes del usuario (Tono, nombre, etc.)
         const settings = await getUserSettings(user.uid);
         if (settings) {
           setUserSettings({ ...settings, nombre: user.displayName?.split(' ')[0] });
         }
 
-        // Cargar historial persistente (con auto-limpieza de 7 días interna)
         const history = await getChatHistory(user.uid);
         if (history.length > 0) {
           setMessages(history);
         } else {
-          // Saludo inicial si la base de datos está vacía
           setMessages([{ 
             role: 'ai', 
             text: `Hola ${user.displayName?.split(' ')[0] || 'amigo'}, soy tu acompañante SENSAI. ¿Cómo te sientes en este momento?`,
@@ -42,23 +51,36 @@ export default function Chat({ user, onBack }) {
     if (!input.trim() || isLoading) return;
 
     const userText = input.trim();
+
+    // --- LÓGICA DE CRISIS INTEGRADA ---
+    if (checkForCrisis(userText)) {
+      // 1. Mostrar apoyo visual inmediato al usuario
+      setShowCrisisModal(true);
+      
+      // 2. Registrar en la nube para activar la campana del Dashboard
+      // No usamos 'await' aquí para no bloquear el envío del mensaje
+      registerCrisisAlert(
+        user.uid, 
+        user.displayName, 
+        `Detección automática: "${userText.substring(0, 60)}..."`
+      ).catch(err => console.error("Error al registrar alerta en nube:", err));
+    }
+    // ----------------------------------
+
     const userMsg = { 
       role: 'user', 
       text: userText, 
       timestamp: new Date().toISOString() 
     };
     
-    // Actualizar UI y limpiar input
     const updatedMessages = [...messages, userMsg];
     setMessages(updatedMessages);
     setInput('');
     setIsLoading(true);
 
-    // Guardar mensaje del usuario en Firestore (en segundo plano)
     saveChatMessage(user.uid, userMsg);
 
     try {
-      // Obtener respuesta de la IA pasando el historial y los ajustes
       const aiResponseText = await getSensaiResponse(updatedMessages, userSettings);
       
       const aiMsg = { 
@@ -67,10 +89,7 @@ export default function Chat({ user, onBack }) {
         timestamp: new Date().toISOString() 
       };
 
-      // Guardar respuesta de la IA en Firestore
       saveChatMessage(user.uid, aiMsg);
-      
-      // Actualizar UI con la respuesta de la IA
       setMessages((prev) => [...prev, aiMsg]);
     } catch (error) {
       console.error("Error en la comunicación con SENSAI:", error);
@@ -80,7 +99,7 @@ export default function Chat({ user, onBack }) {
   };
 
   const clearChat = async () => {
-    if (window.confirm("¿Estás seguro de borrar TODA tu historia con SENSAI de la base de datos? Esta acción no se puede deshacer.")) {
+    if (window.confirm("¿Estás seguro de borrar TODA tu historia con SENSAI?")) {
       const success = await deleteFullChatHistory(user.uid);
       if (success) {
         setMessages([{ 
@@ -93,7 +112,46 @@ export default function Chat({ user, onBack }) {
   };
 
   return (
-    <div className="chat-layout">
+    <div className="chat-layout relative">
+      
+      {/* MODAL DE CRISIS */}
+      {showCrisisModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl border-4 border-red-50">
+            <div className="flex justify-between items-start mb-6">
+              <div className="bg-red-100 p-3 rounded-2xl text-red-600">
+                <AlertCircle size={32} />
+              </div>
+              <button 
+                onClick={() => setShowCrisisModal(false)} 
+                className="text-gray-400 hover:bg-gray-100 p-2 rounded-full transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <h2 className="text-2xl font-black text-leaf-dark mb-4 leading-tight">No estás solo, queremos apoyarte.</h2>
+            <p className="text-gray-600 mb-8 font-medium">Tu bienestar es nuestra prioridad. Si necesitas hablar con un profesional ahora mismo, puedes llamar gratuitamente:</p>
+            
+            <div className="space-y-3">
+              <a 
+                href={`tel:${CRISIS_RESOURCES.lineaDeLaVida.numero}`} 
+                className="flex items-center justify-between bg-leaf-dark text-white p-5 rounded-2xl font-bold hover:scale-[1.02] active:scale-95 transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <Phone size={20} />
+                  <span>{CRISIS_RESOURCES.lineaDeLaVida.nombre}</span>
+                </div>
+                <span className="text-sm opacity-80">{CRISIS_RESOURCES.lineaDeLaVida.numero}</span>
+              </a>
+              <p className="text-[10px] text-center text-gray-400 uppercase font-bold tracking-widest pt-2">
+                Disponible las 24 horas
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="chat-header">
         <div className="flex items-center justify-between w-full pr-4">
           <div className="flex items-center gap-2">

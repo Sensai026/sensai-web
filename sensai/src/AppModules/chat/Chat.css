@@ -52,3 +52,12 @@
   @apply p-3 rounded-xl bg-brain-purple text-white hover:bg-leaf-dark 
          disabled:opacity-50 disabled:bg-gray-300 transition-all active:scale-95;
 }
+
+.animate-pulse-subtle {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}

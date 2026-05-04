@@ -33,3 +33,37 @@
   /* La barrita decorativa inferior ahora es lila */
   @apply mt-6 w-10 h-1 bg-brain-purple/30 group-hover:w-20 group-hover:bg-brain-purple transition-all rounded-full;
 }
+
+/* Contenedor de notificaciones */
+.notification-bell-container {
+  @apply relative p-3 rounded-2xl bg-[var(--bg-primary)] border-2 border-[var(--border)] 
+         hover:border-brain-orange transition-all cursor-pointer;
+}
+
+.notification-badge {
+  @apply absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] 
+         font-black flex items-center justify-center rounded-full border-2 border-[var(--bg-primary)]
+         animate-bounce;
+}
+
+.notifications-panel {
+  @apply absolute right-0 mt-4 w-72 bg-white rounded-3xl shadow-2xl border-2 border-[var(--border)] 
+         z-50 overflow-hidden;
+  /* Animación nativa */
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notif-item {
+  @apply p-4 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors;
+}
