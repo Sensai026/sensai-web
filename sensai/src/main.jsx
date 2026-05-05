@@ -8,12 +8,3 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
-
-// REGISTRO DEL SERVICE WORKER PARA PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW activo para SENSAI:', reg.scope))
-      .catch(err => console.warn('Error al registrar el SW:', err));
-  });
-}

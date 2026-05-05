@@ -17,7 +17,7 @@ import {
 import './Landing.css'; 
 import SensaiLogo from '../assets/sensai-logo.png'; 
 
-// Icono personalizado para TikTok (ya que no está en Lucide por defecto)
+// Icono personalizado para TikTok
 const TikTokIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
@@ -38,7 +38,7 @@ export default function Landing({ onLogin }) {
   const modules = [
     { Icon: MessageCircle, title: "Chat IA", description: "Conversación libre y expresión emocional adaptada a tu perfil." },
     { Icon: Dumbbell, title: "Ejercicios", description: "Herramientas de regulación emocional y descarga cognitiva." },
-    { Icon: Layout, title: "Multimedia", description: "Recursos visuales sobre psicología para comprender tus procesos." },
+    { Icon: Layout, title: "Cuidado personal", description: "Gestiona tu energía vital y hábitos diarios para un bienestar pleno." },
     { Icon: Gamepad2, title: "Juegos", description: "Retos de lógica como alternativa al consumo pasivo." },
     { Icon: Users2, title: "Comunidad", description: "Espacio moderado para compartir sin invalidación emocional." },
     { Icon: Stethoscope, title: "Profesionales", description: "Directorio para canalización a especialistas de la salud." },
@@ -54,7 +54,7 @@ export default function Landing({ onLogin }) {
         </p>
       </div>
 
-      {/* Header - Logo Aumentado */}
+      {/* Header */}
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 px-6 py-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <img 
@@ -86,7 +86,7 @@ export default function Landing({ onLogin }) {
           </div>
         </section>
 
-        {/* Info Section - Logo Aumentado */}
+        {/* Info Section */}
         <section className="section-highlight flex flex-col md:grid md:grid-cols-2 gap-12 items-center mb-32">
           <div className="text-center md:text-left">
             <h2 className="text-4xl md:text-6xl font-black text-[#16572a] leading-tight">Espacio para la diversidad.</h2>
@@ -109,7 +109,7 @@ export default function Landing({ onLogin }) {
         </section>
       </main>
 
-      {/* Footer Reforzado */}
+      {/* Footer */}
       <footer className="bg-white border-t border-gray-100 pt-20 pb-10 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 text-center md:text-left">
           
@@ -131,7 +131,13 @@ export default function Landing({ onLogin }) {
               <a href="#" className="p-3 bg-gray-50 rounded-full text-gray-400 hover:text-[#16572a] hover:bg-[#9cd6b7]/20 transition-all">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="p-3 bg-gray-50 rounded-full text-gray-400 hover:text-[#16572a] hover:bg-[#9cd6b7]/20 transition-all">
+              {/* ENLACE TIKTOK ACTUALIZADO */}
+              <a 
+                href="https://www.tiktok.com/@sensai_web?_r=1&_t=ZS-965xIrVck56" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 bg-gray-50 rounded-full text-gray-400 hover:text-[#16572a] hover:bg-[#9cd6b7]/20 transition-all"
+              >
                 <TikTokIcon />
               </a>
               <a href="#" className="p-3 bg-gray-50 rounded-full text-gray-400 hover:text-[#16572a] hover:bg-[#9cd6b7]/20 transition-all">
@@ -143,14 +149,15 @@ export default function Landing({ onLogin }) {
           {/* Columna 3: Contacto */}
           <div>
             <h4 className="text-[#16572a] font-black uppercase tracking-widest text-sm mb-6">Contacto Directo</h4>
+            {/* CORREO ACTUALIZADO */}
             <a 
-              href="mailto:contacto.sensai@gmail.com" 
+              href="mailto:sensaiproject026@gmail.com" 
               className="inline-flex items-center gap-3 text-gray-600 hover:text-[#16572a] transition-colors font-medium"
             >
               <div className="p-2 bg-[#e99d72]/10 rounded-lg text-[#e99d72]">
                 <Mail size={20} />
               </div>
-              contacto.sensai@gmail.com
+              sensaiproject026@gmail.com
             </a>
           </div>
         </div>

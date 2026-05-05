@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   MessageCircle, 
   Activity, 
-  Layout, 
   Gamepad2, 
   Users, 
   Stethoscope, 
   Settings,
   LogOut,
   Bell,
-  AlertTriangle
+  AlertTriangle,
+  HeartPulse // Icono representativo para Cuidado Personal
 } from 'lucide-react';
 import { subscribeToCrisisAlerts } from '../../services/crisis.service';
 import './Dashboard.css';
@@ -29,7 +29,6 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
   const [alerts, setAlerts] = useState([]);
   const [showNotifs, setShowNotifs] = useState(false);
 
-  // Suscripción permanente a alertas de crisis en la nube
   useEffect(() => {
     if (user?.uid) {
       const unsubscribe = subscribeToCrisisAlerts(user.uid, (newAlerts) => {
@@ -39,10 +38,11 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
     }
   }, [user?.uid]);
 
+  // Lista de módulos con "Cuidado Personal" reemplazando Multimedia y Hábitos
   const modules = [
     { id: 'chat', icon: MessageCircle, title: "Chat IA", description: "Acompañamiento emocional en tiempo real con IA ética." },
     { id: 'exercises', icon: Activity, title: "Ejercicios", description: "Regulación emocional y descarga cognitiva personalizada." },
-    { id: 'info', icon: Layout, title: "Infografías", description: "Aprende sobre tus procesos mentales de forma visual." },
+    { id: 'self-care', icon: HeartPulse, title: "Cuidado personal", description: "Gestiona tu energía vital y hábitos diarios para un bienestar pleno." },
     { id: 'games', icon: Gamepad2, title: "Juegos", description: "Retos de memoria y estimulación cognitiva para tu bienestar." },
     { id: 'community', icon: Users, title: "Comunidad", description: "Comparte experiencias en un entorno seguro y moderado." },
     { id: 'profesionales', icon: Stethoscope, title: "Especialistas", description: "Directorio para canalización con expertos en salud mental." },
@@ -61,7 +61,6 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
             </div>
           </div>
 
-          {/* CONTENEDOR DE NOTIFICACIONES */}
           <div className="relative">
             <button 
               className="notification-bell-container"
@@ -75,7 +74,6 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
               )}
             </button>
 
-            {/* PANEL DESPLEGABLE */}
             {showNotifs && (
               <div className="notifications-panel">
                 <div className="p-4 bg-slate-50 border-b border-gray-100">

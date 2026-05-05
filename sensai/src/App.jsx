@@ -10,20 +10,21 @@ import GamesModule from './AppModules/games/GamesModule'
 import ExercisesModule from './AppModules/exercises/ExercisesModule';
 import Community from './AppModules/community/Community';
 
+// 1. IMPORTAR EL NUEVO HUB DE CUIDADO PERSONAL
+import SelfCareHub from './AppModules/self-care/SelfCareHub';
+
 export default function App() {
   const [user, setUser] = useState(null)
   const [view, setView] = useState('landing')
   const [loading, setLoading] = useState(true) 
 
   // --- LÓGICA DE NAVEGACIÓN GLOBAL ---
-  
-  // 1. Escuchar el botón físico/gesto de "atrás"
   useEffect(() => {
     const handlePopState = (event) => {
       if (event.state && event.state.view) {
-        setView(event.state.view); // Cambiamos la vista según el historial
+        setView(event.state.view);
       } else if (user) {
-        setView('dashboard'); // Si no hay estado previo y hay usuario, vamos al Dashboard
+        setView('dashboard');
       } else {
         setView('landing');
       }
@@ -33,7 +34,6 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [user]);
 
-  // 2. Función para cambiar de vista y actualizar el historial
   const navigateTo = (newView) => {
     if (newView !== view) {
       window.history.pushState({ view: newView }, '', '');
@@ -47,7 +47,6 @@ export default function App() {
       setLoading(false) 
       
       if (currentUser) {
-        // Al iniciar sesión, establecemos el estado base en el historial
         const initialView = (view === 'landing' || view === 'auth') ? 'dashboard' : view;
         window.history.replaceState({ view: initialView }, '', '');
         setView(initialView);
@@ -58,15 +57,10 @@ export default function App() {
     return () => unsubscribe()
   }, [])
 
-const applySavedTheme = () => {
+  const applySavedTheme = () => {
     try {
-      // Obtenemos el tema guardado o usamos 'light' por defecto
       const savedTheme = localStorage.getItem('sensai-theme') || 'light';
-      
-      // Aplicamos la clase al elemento raíz (html o body)
       document.documentElement.setAttribute('data-theme', savedTheme);
-      
-      // Opcional: Si usas clases de Tailwind directamente
       if (savedTheme === 'dark') {
         document.documentElement.classList.add('dark');
       } else {
@@ -78,7 +72,6 @@ const applySavedTheme = () => {
   };
 
   useEffect(() => {
-    // 2. Ejecutamos la aplicación del tema al montar la App
     applySavedTheme();
   }, []);
 
@@ -95,7 +88,7 @@ const applySavedTheme = () => {
     navigateTo('landing')
   }
 
-  if (loading) return <div className="h-screen flex items-center justify-center font-bold">Cargando SENSAI...</div>
+  if (loading) return <div className="h-screen flex items-center justify-center font-bold text-leaf-dark">Cargando SENSAI...</div>
 
   // --- 1. FLUJO SIN USUARIO ---
   if (!user) {
@@ -105,29 +98,29 @@ const applySavedTheme = () => {
 
   // --- 2. FLUJO CON USUARIO ---
   
-  // Módulo de Chat
   if (view === 'chat') {
     return <Chat user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
-  // Módulo de Configuración
   if (view === 'settings') {
     return <Settings user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
-  // Módulo de Comunidad
   if (view === 'community') {
     return <Community user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
-  // Módulo de Juegos 
   if (view === 'games') {
     return <GamesModule user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
-  // Módulo de Ejercicios
   if (view === 'exercises') {
     return <ExercisesModule user={user} onBack={() => navigateTo('dashboard')} />;
+  }
+
+  // --- 2.1 NUEVO MÓDULO: CUIDADO PERSONAL ---
+  if (view === 'self-care') {
+    return <SelfCareHub onBack={() => navigateTo('dashboard')} />;
   }
 
   // --- 3. VISTA POR DEFECTO (DASHBOARD) ---

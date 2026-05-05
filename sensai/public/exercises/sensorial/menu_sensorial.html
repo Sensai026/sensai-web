@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulación Sensorial - SENSAI</title>
+    <link rel="stylesheet" href="css/sensorial_global.css">
+    <script src="js/audio_sintetizador.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header fade-in">
+            <h1>🧘‍♀️ Regulación Sensorial</h1>
+            <p>Herramientas interactivas para el bienestar emocional y la regulación sensorial</p>
+        </header>
+
+        <main>
+            <div id="categoriesContainer">
+                <!-- Las categorías se generarán dinámicamente aquí -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Contenedor para ejercicios en pantalla completa -->
+    <div class="fullscreen-container" id="fullscreenContainer">
+        <button class="back-button" id="backButton" title="Volver al menú">
+            ←
+        </button>
+        <iframe id="exerciseFrame" src=""></iframe>
+    </div>
+
+    <script>
+        // Configuración dinámica de herramientas por categorías
+        const categorias = {
+            'tactil': {
+                titulo: 'BRISA RELAJANTE',
+                descripcion: 'Herramientas de levedad y sonidos de naturaleza',
+                herramientas: [
+                    {
+                        id: 'burbujas-arcoiris',
+                        nombre: 'Burbujas de Arcoíris',
+                        categoria: 'Descarga Táctil',
+                        archivo: 'herramientas/burbujas_arcoiris.html',
+                        icono: '🫧'
+                    },
+                    {
+                        id: 'petalos-seda',
+                        nombre: 'Pétalos de Seda',
+                        categoria: 'BRISA RELAJANTE',
+                        archivo: 'herramientas/petalos_seda_v2.html',
+                        icono: '🌸'
+                    },
+                    {
+                        id: 'arena-cinetica',
+                        nombre: 'Arena Cinética',
+                        categoria: 'Descarga Táctil',
+                        archivo: 'herramientas/arena_cinetica.html',
+                        icono: '🏖️'
+                    }
+                ]
+            },
+            'movimiento': {
+                titulo: 'Fluidez y Movimiento',
+                descripcion: 'Ejercicios de flujo suave y movimiento rítmico',
+                herramientas: [
+                    {
+                        id: 'olas-mar',
+                        nombre: 'Olas del Mar',
+                        categoria: 'Fluidez y Movimiento',
+                        archivo: 'herramientas/olas_mar.html',
+                        icono: '🌊'
+                    },
+                    {
+                        id: 'particulas-estela',
+                        nombre: 'Partículas con Estela',
+                        categoria: 'Fluidez y Movimiento',
+                        archivo: 'herramientas/particulas_estela.html',
+                        icono: '✨'
+                    },
+                    {
+                        id: 'pintura-fluida',
+                        nombre: 'Pintura Fluida',
+                        categoria: 'Fluidez y Movimiento',
+                        archivo: 'herramientas/pintura_fluida.html',
+                        icono: '🎨'
+                    }
+                ]
+            },
+            'geometria': {
+                titulo: 'Geometría y Orden',
+                descripcion: 'Herramientas de precisión, simetría y construcción estructural',
+                herramientas: [
+                    {
+                        id: 'geometria-zen',
+                        nombre: 'Geometría Zen',
+                        categoria: 'Orden y Calma',
+                        archivo: 'herramientas/geometria_zen.html',
+                        icono: '🧘'
+                    },
+                    {
+                        id: 'pulso-geometrico',
+                        nombre: 'Pulso Geométrico',
+                        categoria: 'Ritmo y Estructura',
+                        archivo: 'herramientas/pulso.html',
+                        icono: '〰️'
+                    },
+                    {
+                        id: 'patrones-orden',
+                        nombre: 'Patrones de Orden',
+                        categoria: 'Figuras en Equilibrio',
+                        archivo: 'herramientas/patrones_geometricos.html',
+                        icono: '🔷'
+                    }
+                ]
+            }
+        };
+
+        // Clase para gestionar el menú de herramientas
+        class MenuSensorial {
+            constructor() {
+                this.container = document.getElementById('categoriesContainer');
+                this.fullscreenContainer = document.getElementById('fullscreenContainer');
+                this.exerciseFrame = document.getElementById('exerciseFrame');
+                this.backButton = document.getElementById('backButton');
+                
+                this.init();
+            }
+
+            init() {
+                this.renderCategories();
+                this.setupEventListeners();
+                this.addAnimations();
+                this.initAudio();
+            }
+
+            renderCategories() {
+                this.container.innerHTML = '';
+                let cardIndex = 0;
+                
+                Object.entries(categorias).forEach(([key, categoria]) => {
+                    const section = this.createCategorySection(categoria, cardIndex);
+                    this.container.appendChild(section);
+                    cardIndex += categoria.herramientas.length;
+                });
+            }
+
+            createCategorySection(categoria, startIndex) {
+                const section = document.createElement('div');
+                section.className = 'category-section fade-in';
+                section.style.animationDelay = `${startIndex * 0.05}s`;
+                
+                // Header de categoría
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <h2 class="category-title">${categoria.titulo}</h2>
+                    <p class="category-description">${categoria.descripcion}</p>
+                `;
+                
+                // Grid de herramientas
+                const grid = document.createElement('div');
+                grid.className = 'category-grid';
+                
+                categoria.herramientas.forEach((herramienta, index) => {
+                    const card = this.createToolCard(herramienta, startIndex + index);
+                    grid.appendChild(card);
+                });
+                
+                section.appendChild(header);
+                section.appendChild(grid);
+                
+                return section;
+            }
+
+            createToolCard(herramienta, index) {
+                const card = document.createElement('div');
+                card.className = 'tool-card glass-card fade-in';
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.dataset.herramientaId = herramienta.id;
+                
+                card.innerHTML = `
+                    <div class="tool-icon">${herramienta.icono}</div>
+                    <h3 class="tool-title">${herramienta.nombre}</h3>
+                    <p class="tool-category">${herramienta.categoria}</p>
+                `;
+                
+                card.addEventListener('click', () => {
+                    this.playClickSound();
+                    this.openTool(herramienta);
+                });
+                
+                return card;
+            }
+
+            openTool(herramienta) {
+                try {
+                    // Mostrar contenedor con animación
+                    this.fullscreenContainer.classList.add('active');
+                    
+                    // Cargar el ejercicio
+                    this.exerciseFrame.src = herramienta.archivo;
+                    
+                    // Guardar referencia para estadísticas (opcional)
+                    this.logToolUsage(herramienta);
+                    
+                } catch (error) {
+                    console.error('Error al abrir la herramienta:', error);
+                    this.showError('No se pudo cargar la herramienta seleccionada');
+                }
+            }
+
+            closeTool() {
+                // Ocultar contenedor con animación
+                this.fullscreenContainer.classList.remove('active');
+                
+                // Limpiar iframe después de la animación
+                setTimeout(() => {
+                    this.exerciseFrame.src = '';
+                }, 500);
+            }
+
+            setupEventListeners() {
+                // Botón de volver
+                this.backButton.addEventListener('click', () => this.closeTool());
+                
+                // Tecla ESC para cerrar
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.fullscreenContainer.classList.contains('active')) {
+                        this.closeTool();
+                    }
+                });
+                
+                // Prevenir navegación del iframe
+                this.exerciseFrame.addEventListener('load', () => {
+                    try {
+                        const iframeDoc = this.exerciseFrame.contentDocument || this.exerciseFrame.contentWindow.document;
+                        iframeDoc.addEventListener('keydown', (e) => {
+                            if (e.key === 'Escape') {
+                                this.closeTool();
+                            }
+                        });
+                    } catch (error) {
+                        // Cross-origin restrictions - ignorar
+                        console.log('No se puede acceder al contenido del iframe (cross-origin)');
+                    }
+                });
+            }
+
+            initAudio() {
+                // Inicializar audio sintetizador si está disponible
+                if (typeof initAudio === 'function') {
+                    try {
+                        initAudio();
+                    } catch (error) {
+                        console.log('Audio no disponible:', error);
+                    }
+                }
+            }
+
+            playClickSound() {
+                // Reproducir sonido de click suave
+                if (typeof playSound === 'function') {
+                    try {
+                        playSound('bell', { frequency: 600, volume: 0.1 });
+                    } catch (error) {
+                        console.log('No se pudo reproducir sonido de click:', error);
+                    }
+                }
+            }
+
+            addAnimations() {
+                // Animación de entrada para las tarjetas
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('fade-in');
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                });
+
+                document.querySelectorAll('.tool-card').forEach(card => {
+                    observer.observe(card);
+                });
+            }
+
+            logToolUsage(herramienta) {
+                // Guardar estadísticas de uso en localStorage
+                const stats = JSON.parse(localStorage.getItem('sensorial_stats') || '{}');
+                if (!stats[herramienta.id]) {
+                    stats[herramienta.id] = {
+                        name: herramienta.nombre,
+                        category: herramienta.categoria,
+                        uses: 0,
+                        firstUsed: new Date().toISOString(),
+                        lastUsed: new Date().toISOString()
+                    };
+                }
+                stats[herramienta.id].uses++;
+                stats[herramienta.id].lastUsed = new Date().toISOString();
+                localStorage.setItem('sensorial_stats', JSON.stringify(stats));
+            }
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message glass-card';
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    padding: 20px 30px;
+                    background: rgba(255, 0, 0, 0.1);
+                    border: 1px solid rgba(255, 0, 0, 0.3);
+                    color: white;
+                    z-index: 2000;
+                    border-radius: 15px;
+                    text-align: center;
+                `;
+                errorDiv.textContent = message;
+                document.body.appendChild(errorDiv);
+                
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 3000);
+            }
+
+            // Método para agregar nuevas herramientas dinámicamente
+            addHerramienta(nuevaHerramienta) {
+                listaHerramientas.push(nuevaHerramienta);
+                this.renderTools();
+                this.addAnimations();
+            }
+
+            // Método para obtener estadísticas
+            getEstadisticas() {
+                return JSON.parse(localStorage.getItem('sensorial_stats') || '{}');
+            }
+        }
+
+        // Inicializar el menú cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            window.menuSensorial = new MenuSensorial();
+            
+            // API global para que los ejercicios puedan comunicarse
+            window.sensorialAPI = {
+                closeExercise: () => {
+                    window.menuSensorial.closeTool();
+                },
+                playSound: (type, params = {}) => {
+                    // Comunicarse con el iframe para reproducir sonidos
+                    try {
+                        window.menuSensorial.exerciseFrame.contentWindow.playSound?.(type, params);
+                    } catch (error) {
+                        console.log('No se pudo acceder al API de sonido del ejercicio');
+                    }
+                }
+            };
+        });
+
+        // Manejo de errores globales
+        window.addEventListener('error', (e) => {
+            console.error('Error en la aplicación:', e.error);
+        });
+
+        // Prevenir recarga accidental
+        window.addEventListener('beforeunload', (e) => {
+            if (document.getElementById('fullscreenContainer').classList.contains('active')) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

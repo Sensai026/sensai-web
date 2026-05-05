@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olas del Mar - Regulación Sensorial</title>
+    <!-- <link rel="stylesheet" href="../css/sensorial_global.css"> -->
+    <script src="../js/audio_sintetizador.js"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            background: #000000 !important;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            color: #FFFFFF;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #FFFFFF;
+            z-index: 10;
+            max-width: 90%;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .header-titulo {
+            font-family: 'Outfit', sans-serif;
+            color: #FFFFFF;
+            position: absolute;
+            top: clamp(40px, 8vh, 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+            margin: 0;
+            max-width: 90%;
+        }
+
+        .barra-controles-delgada {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            backdrop-filter: none;
+            box-shadow: none;
+            z-index: 1000;
+            will-change: transform;
+            max-width: 95vw;
+        }
+
+        .control-btn-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .control-btn-delgado:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .control-btn-delgado.active {
+            background: #000000;
+            color: white;
+        }
+
+        .control-btn-delgado span:first-child {
+            font-size: 1.1rem;
+        }
+
+        .contador-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #1E293B;
+            border-radius: 20px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #1E293B;
+            min-width: 44px;
+            min-height: 44px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de Regreso -->
+    <a href="#" class="back-button" id="backButton" title="Volver al menú">
+        ←
+    </a>
+
+    <!-- Indicador de Progreso Minimalista -->
+    <div class="progress-indicator" id="progressIndicator">
+        <span id="waveCount">0</span> olas
+    </div>
+
+    <!-- Título de la Herramienta -->
+    <h1 class="header-titulo">🌊 Olas del Mar</h1>
+
+    <!-- Barra de Controles Inferior -->
+    <div class="barra-controles-delgada">
+        <button class="control-btn-delgado" id="soundToggle">
+            <span>🔊</span>
+            <span>Sonido ON</span>
+        </button>
+        <button class="control-btn-delgado" id="speedBtn">
+            <span>⚡</span>
+            <span>Velocidad Normal</span>
+        </button>
+        <button class="control-btn-delgado" id="waveBtn">
+            <span>🌊</span>
+            <span>Ola Grande</span>
+        </button>
+    </div>
+
+    <!-- Área Interactiva -->
+    <canvas id="wavesCanvas" class="area-interactiva-maximizada"></canvas>
+
+    <script src="../js/audio_sintetizador.js"></script>
+    <script>
+        // Bloqueo de menús del navegador para inmersión total
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+        
+        // Ajuste de pantalla responsivo
+        function resizeCanvas() {
+            const canvas = document.getElementById('wavesCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        
+        // Inicializar canvas responsivo
+        resizeCanvas();
+        
+        
+        class Wave {
+            constructor(x, canvas, waveType, speedMultiplier) {
+                this.x = x;
+                this.canvas = canvas;
+                this.waveType = waveType; // 'normal' o 'big'
+                this.speedMultiplier = speedMultiplier; // 0.5, 1, o 2
+                
+                // Amplitud significativa para Ola Grande
+                this.amplitude = waveType === 'big' ? 120 : 40; // 3x más grande
+                
+                // Velocidad base según tipo
+                this.baseSpeed = waveType === 'big' ? 0.025 : 0.015;
+                this.speed = this.baseSpeed * this.speedMultiplier;
+                
+                // Frecuencia de oscilación
+                this.frequency = 0.02;
+                this.phase = 0;
+                
+                this.opacity = 1;
+                this.color = this.generateWaveColor();
+                this.lineWidth = waveType === 'big' ? 5 : 3;
+                this.points = [];
+                this.maxRadius = 400;
+                this.currentRadius = 0;
+            }
+
+            generateWaveColor() {
+                // Gradientes azules suaves y semitransparentes
+                const colors = [
+                    'rgba(59, 130, 246, 0.4)',  // Azul claro
+                    'rgba(37, 99, 235, 0.4)',  // Azul medio
+                    'rgba(29, 78, 216, 0.4)',  // Azul oscuro
+                    'rgba(96, 165, 250, 0.3)',  // Azul cielo
+                    'rgba(147, 197, 253, 0.3)', // Azul muy claro
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.phase += this.speed;
+                this.currentRadius += 3;
+                
+                if (this.currentRadius > this.maxRadius) {
+                    this.opacity -= 0.02;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                // Crear gradiente para la ola
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.canvas.height / 2, 0,
+                    this.x, this.canvas.height / 2, this.currentRadius + this.amplitude
+                );
+                
+                // Gradiente azul suave y semitransparente
+                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.6)');
+                gradient.addColorStop(0.5, 'rgba(96, 165, 250, 0.4)');
+                gradient.addColorStop(1, 'rgba(147, 197, 253, 0.2)');
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = this.lineWidth;
+                
+                // Dibujar la ola con más puntos para mayor fluidez
+                ctx.beginPath();
+                
+                for (let angle = 0; angle <= Math.PI * 2; angle += 0.05) {
+                    const waveOffset = Math.sin(angle * 6 + this.phase) * this.amplitude;
+                    const radius = this.currentRadius + waveOffset;
+                    const x = this.x + Math.cos(angle) * radius;
+                    const y = this.canvas.height / 2 + Math.sin(angle) * radius * 0.4;
+                    
+                    if (angle === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Efecto de brillo sutil
+                ctx.shadowColor = 'rgba(59, 130, 246, 0.3)';
+                ctx.shadowBlur = 15;
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+
+            isDead() {
+                return this.opacity <= 0;
+            }
+        }
+
+        class OceanWaves {
+            constructor() {
+                this.canvas = document.getElementById('wavesCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.waves = [];
+                this.soundEnabled = true;
+                this.speedMultiplier = 1;
+                this.waveType = 'normal'; // 'normal' o 'big'
+                this.waveCount = 0;
+                this.time = 0;
+                this.lastWaveTime = 0;
+                
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.setupEventListeners();
+                this.animate();
+            }
+
+            resizeCanvas() {
+                const oldWidth = this.canvas.width;
+                const oldHeight = this.canvas.height;
+                
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // Recenter existing waves when canvas resizes
+                const scaleX = this.canvas.width / oldWidth;
+                const scaleY = this.canvas.height / oldHeight;
+                
+                for (const wave of this.waves) {
+                    wave.x = wave.x * scaleX;
+                    wave.canvas = this.canvas; // Update canvas reference
+                }
+            }
+
+            
+            setupEventListeners() {
+                // Canvas click - ahora permite tocar en toda la pantalla
+                this.canvas.addEventListener('click', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.createWave(x);
+                });
+                
+                // Touch events para dispositivos móviles
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const rect = this.canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    
+                    this.createWave(x);
+                });
+                
+
+                // Control buttons
+                document.getElementById('soundToggle').addEventListener('click', () => {
+                    this.soundEnabled = !this.soundEnabled;
+                    const btn = document.getElementById('soundToggle');
+                    btn.innerHTML = this.soundEnabled ? 
+                        '<span>🔊</span><span>Sonido ON</span>' : 
+                        '<span>🔇</span><span>Sonido OFF</span>';
+                });
+
+                document.getElementById('speedBtn').addEventListener('click', () => {
+                    // Ciclar entre Lenta, Normal, Rápida
+                    if (this.speedMultiplier === 1) {
+                        this.speedMultiplier = 2; // Rápida
+                    } else if (this.speedMultiplier === 2) {
+                        this.speedMultiplier = 0.5; // Lenta
+                    } else {
+                        this.speedMultiplier = 1; // Normal
+                    }
+                    
+                    const btn = document.getElementById('speedBtn');
+                    const speedText = this.speedMultiplier === 1 ? 'Normal' : 
+                                    this.speedMultiplier === 2 ? 'Rápida' : 'Lenta';
+                    btn.innerHTML = `<span>⚡</span><span>Velocidad ${speedText}</span>`;
+                });
+
+                document.getElementById('waveBtn').addEventListener('click', () => {
+                    // Alternar entre Ola Normal y Ola Grande
+                    this.waveType = this.waveType === 'normal' ? 'big' : 'normal';
+                    const btn = document.getElementById('waveBtn');
+                    const waveText = this.waveType === 'normal' ? 'Normal' : 'Grande';
+                    btn.innerHTML = `<span>🌊</span><span>Ola ${waveText}</span>`;
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+
+                // Back button
+                document.getElementById('backButton').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.parent && window.parent.sensorialAPI) {
+                        window.parent.sensorialAPI.closeExercise();
+                    } else {
+                        window.history.back();
+                    }
+                });
+                
+                // Update progress indicator
+                this.updateProgressIndicator();
+            }
+
+            createWave(x, type = null) {
+                // Usar el tipo seleccionado actualmente si no se especifica
+                const waveType = type || this.waveType;
+                const wave = new Wave(x, this.canvas, waveType, this.speedMultiplier);
+                this.waves.push(wave);
+                this.waveCount++;
+                this.updateProgressIndicator();
+                
+                // Sonido de ola
+                if (this.soundEnabled && window.playSound) {
+                    window.playSound('wave', { duration: 0.5, volume: 0.2 });
+                }
+            }
+
+            updateProgressIndicator() {
+                const indicator = document.getElementById('waveCount');
+                if (indicator) {
+                    indicator.textContent = this.waves.length;
+                }
+            }
+
+            
+            animate() {
+                // Limpiar canvas completamente
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Actualizar y dibujar olas interactivas
+                for (let i = this.waves.length - 1; i >= 0; i--) {
+                    const wave = this.waves[i];
+                    wave.update();
+                    wave.draw(this.ctx);
+                    
+                    if (wave.isDead()) {
+                        this.waves.splice(i, 1);
+                    }
+                }
+                
+                this.updateProgressIndicator();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Iniciar el juego cuando se carga la página
+        window.addEventListener('load', () => {
+            new OceanWaves();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partículas con Estela - Regulación Sensorial</title>
+    <!-- <link rel="stylesheet" href="../css/sensorial_global.css"> -->
+    <script src="../js/audio_sintetizador.js"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            background: #000000 !important;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            color: #FFFFFF;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            cursor: crosshair;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #FFFFFF;
+            z-index: 10;
+            max-width: 90%;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .header-titulo {
+            font-family: 'Outfit', sans-serif;
+            color: #FFFFFF;
+            position: absolute;
+            top: clamp(40px, 8vh, 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+            margin: 0;
+            max-width: 90%;
+        }
+
+        .barra-controles-delgada {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            background: transparent !important;
+            padding: 0;
+            border: none !important;
+            border-radius: 0;
+            backdrop-filter: none;
+            box-shadow: none;
+            z-index: 1000;
+            will-change: transform;
+            max-width: 95vw;
+        }
+
+        .control-btn-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #FFFFFF;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .control-btn-delgado:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+
+        .control-btn-delgado.active {
+            background: #000000;
+            color: white;
+        }
+
+        .control-btn-delgado span:first-child {
+            font-size: 1.1rem;
+        }
+
+        .contador-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #FFFFFF;
+            min-width: 44px;
+            min-height: 44px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de Regreso -->
+    <a href="#" class="back-button" id="backButton" title="Volver al menú">
+        ←
+    </a>
+
+    <!-- Indicador de Progreso Minimalista -->
+    <div class="progress-indicator" id="progressIndicator">
+        <span id="particleCount">0</span> partículas
+    </div>
+
+    <!-- Título de la Herramienta -->
+    <h1 class="header-titulo">✨ Partículas con Estela</h1>
+
+    <!-- Barra de Controles Inferior -->
+    <div class="barra-controles-delgada">
+        <button class="control-btn-delgado" id="trailBtn">
+            <span>🌟</span>
+            <span>Estela Normal</span>
+        </button>
+        <button class="control-btn-delgado" id="colorBtn">
+            <span>🎨</span>
+            <span>Cambiar Color</span>
+        </button>
+    </div>
+
+    <!-- Área Interactiva -->
+    <canvas id="trailCanvas" class="area-interactiva-maximizada"></canvas>
+
+    <script src="../js/audio_sintetizador.js"></script>
+    <script>
+        // Bloqueo de menús del navegador para inmersión total
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+        
+        // Ajuste de pantalla responsivo
+        function resizeCanvas() {
+            const canvas = document.getElementById('trailCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        
+        // Inicializar canvas responsivo
+        resizeCanvas();
+        
+        
+        class TrailParticle {
+            constructor(x, y, canvas, trailMode) {
+                this.x = x;
+                this.y = y;
+                this.canvas = canvas;
+                this.trailMode = trailMode; // 'normal', 'larga', 'extralarga'
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4;
+                this.radius = this.getParticleSize(); // Tamaño según modo
+                this.color = this.generateColor();
+                this.life = 1;
+                this.decay = 0.01;
+                this.trail = [];
+                
+                // Configurar longitud de estela según el modo
+                this.maxTrailLength = this.getTrailLength();
+            }
+            
+            getTrailLength() {
+                switch(this.trailMode) {
+                    case 'normal': return 80;     // 300% más largo (20 * 4)
+                    case 'larga': return 120;    // 300% más largo (30 * 4)
+                    case 'extralarga': return 160; // 300% más largo (40 * 4)
+                    default: return 80;
+                }
+            }
+            
+            getParticleSize() {
+                switch(this.trailMode) {
+                    case 'normal': return 6;     // Tamaño normal
+                    case 'larga': return 10;     // 66% más grande
+                    case 'extralarga': return 14; // 133% más grande
+                    default: return 6;
+                }
+            }
+
+            generateColor() {
+                const colors = [
+                    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
+                    '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
+                    '#FF69B4', '#00CED1', '#FFD700', '#FF1493'
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                // Agregar posición actual a la estela antes de mover (efecto arrastre)
+                this.trail.push({ x: this.x, y: this.y, life: this.life });
+                
+                // Limitar longitud de la estela
+                if (this.trail.length > this.maxTrailLength) {
+                    this.trail.shift();
+                }
+                
+                // Actualizar posición (movimiento real)
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Aplicar fricción reducida para mayor arrastre
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+                
+                // Decremento de vida más lento para estela más larga
+                this.life -= this.decay;
+                
+                // Rebote en bordes
+                if (this.x - this.radius < 0 || this.x + this.radius > this.canvas.width) {
+                    this.vx = -this.vx * 0.8;
+                    this.x = Math.max(this.radius, Math.min(this.canvas.width - this.radius, this.x));
+                }
+                
+                if (this.y - this.radius < 0 || this.y + this.radius > this.canvas.height) {
+                    this.vy = -this.vy * 0.8;
+                    this.y = Math.max(this.radius, Math.min(this.canvas.height - this.radius, this.y));
+                }
+            }
+
+            draw(ctx) {
+                // Dibujar estela limpia con gradiente de opacidad
+                if (this.trail.length > 1) {
+                    ctx.save();
+                    ctx.strokeStyle = this.color;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    
+                    for (let i = 1; i < this.trail.length; i++) {
+                        const prevPoint = this.trail[i - 1];
+                        const currPoint = this.trail[i];
+                        
+                        // Gradiente de opacidad: inicio 1, final 0
+                        const opacity = (i / this.trail.length) * this.life;
+                        const lineWidth = this.radius * (i / this.trail.length) * 0.8;
+                        
+                        ctx.globalAlpha = opacity;
+                        ctx.lineWidth = lineWidth;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(prevPoint.x, prevPoint.y);
+                        ctx.lineTo(currPoint.x, currPoint.y);
+                        ctx.stroke();
+                    }
+                    
+                    ctx.restore();
+                }
+                
+                // Dibujar partícula principal
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                
+                // Gradiente radial
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius
+                );
+                gradient.addColorStop(0, this.lightenColor(this.color, 30));
+                gradient.addColorStop(1, this.color);
+                
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Efecto de brillo principal
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            lightenColor(color, percent) {
+                const num = parseInt(color.replace("#", ""), 16);
+                const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) + amt;
+                const G = (num >> 8 & 0x00FF) + amt;
+                const B = (num & 0x0000FF) + amt;
+                return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                    (B < 255 ? B < 1 ? 0 : B : 255))
+                    .toString(16).slice(1);
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        class TrailSystem {
+            constructor() {
+                this.canvas = document.getElementById('trailCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.trailMode = 'normal'; // 'normal', 'larga', 'extralarga'
+                this.maxParticles = 50; // Límite máximo para evitar sobrecarga
+                this.isMouseDown = false;
+                this.lastMouseX = 0;
+                this.lastMouseY = 0;
+                
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.setupEventListeners();
+                this.animate();
+            }
+
+            resizeCanvas() {
+                const oldWidth = this.canvas.width;
+                const oldHeight = this.canvas.height;
+                
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // Recenter existing particles when canvas resizes
+                const scaleX = this.canvas.width / oldWidth;
+                const scaleY = this.canvas.height / oldHeight;
+                
+                for (const particle of this.particles) {
+                    particle.x = particle.x * scaleX;
+                    particle.y = particle.y * scaleY;
+                    particle.canvas = this.canvas; // Update canvas reference
+                    
+                    // Also update trail positions
+                    for (const trailPoint of particle.trail) {
+                        trailPoint.x = trailPoint.x * scaleX;
+                        trailPoint.y = trailPoint.y * scaleY;
+                    }
+                }
+            }
+
+            setupEventListeners() {
+                // Mouse events
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isMouseDown = true;
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.lastMouseX = e.clientX - rect.left;
+                    this.lastMouseY = e.clientY - rect.top;
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    if (this.isMouseDown) {
+                        this.createParticle(x, y);
+                    }
+                    
+                    this.lastMouseX = x;
+                    this.lastMouseY = y;
+                });
+
+                this.canvas.addEventListener('mouseup', () => {
+                    this.isMouseDown = false;
+                });
+
+                this.canvas.addEventListener('mouseleave', () => {
+                    this.isMouseDown = false;
+                });
+
+                // Touch events
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.isMouseDown = true;
+                    const rect = this.canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    this.lastMouseX = touch.clientX - rect.left;
+                    this.lastMouseY = touch.clientY - rect.top;
+                });
+
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (this.isMouseDown) {
+                        const rect = this.canvas.getBoundingClientRect();
+                        const touch = e.touches[0];
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                        
+                        this.createParticle(x, y);
+                        
+                        this.lastMouseX = x;
+                        this.lastMouseY = y;
+                    }
+                });
+
+                this.canvas.addEventListener('touchend', () => {
+                    this.isMouseDown = false;
+                });
+
+                
+                document.getElementById('trailBtn').addEventListener('click', () => {
+                    // Ciclar entre Normal → Larga → Extralarga
+                    if (this.trailMode === 'normal') {
+                        this.trailMode = 'larga';
+                    } else if (this.trailMode === 'larga') {
+                        this.trailMode = 'extralarga';
+                    } else {
+                        this.trailMode = 'normal';
+                    }
+                    
+                    const btn = document.getElementById('trailBtn');
+                    const modeText = this.trailMode === 'normal' ? 'Normal' :
+                                   this.trailMode === 'larga' ? 'Larga' : 'Extralarga';
+                    btn.innerHTML = `<span>🌟</span><span>Estela ${modeText}</span>`;
+                    
+                    // Aplicar estado activo en negro absoluto para Extralarga
+                    if (this.trailMode === 'extralarga') {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                    
+                    // Ajustar longitud de estela y tamaño de partícula para las existentes
+                    for (let particle of this.particles) {
+                        particle.trailMode = this.trailMode;
+                        particle.maxTrailLength = particle.getTrailLength();
+                        particle.radius = particle.getParticleSize(); // Actualizar tamaño de cabeza
+                        
+                        // Ajustar tasa de desvanecimiento según el modo
+                        if (this.trailMode === 'larga') {
+                            particle.decay = 0.005;
+                        } else if (this.trailMode === 'extralarga') {
+                            particle.decay = 0.003; // Más lento para extralarga
+                        } else {
+                            particle.decay = 0.01; // Normal
+                        }
+                    }
+                });
+
+                document.getElementById('colorBtn').addEventListener('click', () => {
+                    this.changeColors();
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+
+                // Back button
+                document.getElementById('backButton').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.parent && window.parent.sensorialAPI) {
+                        window.parent.sensorialAPI.closeExercise();
+                    } else {
+                        window.history.back();
+                    }
+                });
+                
+                // Update progress indicator
+                this.updateProgressIndicator();
+            }
+
+            createParticle(x, y) {
+                // Sistema FIFO: si hay 50 o más partículas, eliminar la más antigua
+                if (this.particles.length >= this.maxParticles) {
+                    this.particles.shift(); // Eliminar la primera (más antigua)
+                }
+                
+                // Crear nueva partícula con el modo de estela actual
+                const particle = new TrailParticle(x, y, this.canvas, this.trailMode);
+                
+                // Ajustar tasa de desvanecimiento según el modo
+                if (this.trailMode === 'larga') {
+                    particle.decay = 0.005;
+                } else if (this.trailMode === 'extralarga') {
+                    particle.decay = 0.003; // Más lento para extralarga
+                } else {
+                    particle.decay = 0.01; // Normal
+                }
+                
+                this.particles.push(particle);
+                
+                                
+                this.updateProgressIndicator();
+            }
+
+            changeColors() {
+                for (let particle of this.particles) {
+                    particle.color = particle.generateColor();
+                }
+            }
+
+            updateProgressIndicator() {
+                const indicator = document.getElementById('particleCount');
+                if (indicator) {
+                    indicator.textContent = this.particles.length;
+                }
+            }
+
+            animate() {
+                // Limpieza completa del canvas cada frame
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Actualizar y dibujar partículas
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const particle = this.particles[i];
+                    particle.update();
+                    particle.draw(this.ctx);
+                    
+                    // Eliminar partícula cuando su opacidad llega a cero (ciclo de vida exacto)
+                    if (particle.life <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+                
+                this.updateProgressIndicator();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Iniciar el juego cuando se carga la página
+        window.addEventListener('load', () => {
+            new TrailSystem();
+        });
+    </script>
+</body>
+</html>

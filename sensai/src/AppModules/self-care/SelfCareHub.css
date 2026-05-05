@@ -1,0 +1,33 @@
+@import "../../index.css";
+
+@utility self-care-hub-container {
+  @apply min-h-screen bg-slate-50 p-4 md:p-8;
+}
+
+@utility back-button-sensai {
+  /* Usamos brain-purple para mantener la línea visual del Dashboard */
+  @apply flex items-center gap-2 px-6 py-2 border-2 border-brain-purple text-brain-purple 
+         rounded-full font-black text-xs uppercase tracking-widest 
+         hover:bg-brain-purple hover:text-white transition-all duration-300;
+}
+
+@utility hub-card-interactive {
+  /* Aplicamos el diseño de tarjetas del Dashboard pero adaptado al Hub */
+  @apply bg-white p-8 rounded-[2.5rem] shadow-md border border-gray-100 
+         flex items-center gap-6 cursor-pointer transition-all duration-300
+         hover:shadow-xl hover:-translate-y-2 hover:border-brain-orange/40;
+}
+
+@utility hub-icon-box {
+  @apply p-4 rounded-2xl transition-all duration-300;
+}
+
+/* Animación de entrada para que se sienta fluido */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

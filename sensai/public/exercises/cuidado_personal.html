@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cuidado personal</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial;
+    background:#0b0f14;
+    color:white;
+    display:flex;
+}
+
+.izquierda{
+    flex:2;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+/* 🌱 PLANTA */
+.planta{
+    font-size:120px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* 🌿 HOJAS */
+#hojas{
+    display:inline-block;
+    animation: hojasMove 3s ease-in-out infinite;
+}
+
+@keyframes hojasMove{
+    0%{ transform: rotate(0deg); }
+    25%{ transform: rotate(-5deg); }
+    50%{ transform: rotate(0deg); }
+    75%{ transform: rotate(5deg); }
+    100%{ transform: rotate(0deg); }
+}
+
+/* crecimiento */
+.nivel1{ transform: scale(0.7); opacity:0.4; }
+.nivel2{ transform: scale(0.9); opacity:0.6; }
+.nivel3{ transform: scale(1.1); opacity:0.8; }
+.nivel4{ transform: scale(1.3); opacity:1; }
+
+/* brillo */
+.brillo1{ filter: drop-shadow(0 0 5px #4ade80); }
+.brillo2{ filter: drop-shadow(0 0 10px #4ade80); }
+.brillo3{ filter: drop-shadow(0 0 15px #4ade80); }
+.brillo4{ filter: drop-shadow(0 0 25px #22c55e); }
+
+.energia-container{
+    margin-top:20px;
+}
+
+#energia{
+    font-size:40px;
+    color:#39ff14;
+}
+
+#info{
+    margin-top:10px;
+    font-size:18px;
+}
+
+.derecha{
+    flex:1;
+    background:#111827;
+    padding:20px;
+}
+
+button, input{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
+    border:none;
+}
+
+.agua{ background:#00cfff; }
+.comida{ background:#ffaa00; }
+.ejercicio{ background:#00ff88; }
+
+.input-group{
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="izquierda">
+
+    <div id="planta" class="planta">
+        <span id="hojas">🌱</span>
+    </div>
+
+    <div class="energia-container">
+        <div id="energia">0/12</div>
+    </div>
+
+    <div id="info">💧 0/8 | 🍽️ 0/3 | 🏃 0/1</div>
+
+</div>
+
+<div class="derecha">
+    <h2>💚 Cuidado personal</h2>
+
+    <button class="agua" onclick="sumar('agua')">💧 Agua</button>
+    <button class="comida" onclick="sumar('comida')">🍽️ Comida</button>
+    <button class="ejercicio" onclick="sumar('ejercicio')">🏃 Ejercicio</button>
+
+    <h3>⏰ Alarmas</h3>
+
+    <div class="input-group">
+        💧 <input id="aguaInput" placeholder="8:30am, 10:00am">
+    </div>
+
+    <div class="input-group">
+        🍽️ <input id="comidaInput" placeholder="9:00am, 2:00pm">
+    </div>
+
+    <div class="input-group">
+        🏃 <input id="ejercicioInput" placeholder="6:00pm">
+    </div>
+
+    <button onclick="guardarHorarios()">💾 Guardar</button>
+
+    <button onclick="reiniciar()">🔄 Reiniciar día</button>
+</div>
+
+<script>
+let energia = parseInt(localStorage.getItem("energia")) || 0;
+let completados = JSON.parse(localStorage.getItem("completados")) || {
+    agua:0,
+    comida:0,
+    ejercicio:0
+};
+
+let horasAgua = JSON.parse(localStorage.getItem("agua")) || [];
+let horasComida = JSON.parse(localStorage.getItem("comida")) || [];
+let horasEjercicio = JSON.parse(localStorage.getItem("ejercicio")) || [];
+
+let ultimaAlarma="";
+
+// 🔥 REINICIO AUTOMÁTICO
+function verificarReinicioAutomatico(){
+    let hoy = new Date().toDateString();
+    let ultimoDia = localStorage.getItem("ultimoDia");
+
+    if(ultimoDia !== hoy){
+        energia = 0;
+        completados = {agua:0, comida:0, ejercicio:0};
+
+        localStorage.setItem("ultimoDia", hoy);
+        guardar();
+    }
+}
+
+// guardar datos
+function guardar(){
+    localStorage.setItem("energia", energia);
+    localStorage.setItem("completados", JSON.stringify(completados));
+}
+
+// convertir hora
+function convertirHora(str){
+    str=str.toLowerCase();
+    let pm=str.includes("pm");
+    str=str.replace("am","").replace("pm","");
+    let [h,m]=str.split(":");
+    h=parseInt(h); m=parseInt(m);
+    if(pm && h!=12) h+=12;
+    return {hora:h,minuto:m};
+}
+
+// guardar horarios
+function guardarHorarios(){
+    horasAgua=document.getElementById("aguaInput").value.split(",").map(x=>convertirHora(x));
+    horasComida=document.getElementById("comidaInput").value.split(",").map(x=>convertirHora(x));
+    horasEjercicio=document.getElementById("ejercicioInput").value.split(",").map(x=>convertirHora(x));
+
+    localStorage.setItem("agua", JSON.stringify(horasAgua));
+    localStorage.setItem("comida", JSON.stringify(horasComida));
+    localStorage.setItem("ejercicio", JSON.stringify(horasEjercicio));
+
+    alert("Guardado");
+}
+
+// notificación
+function notificar(msg){
+    alert(msg);
+}
+
+// sumar
+function sumar(tipo){
+    if(tipo=="agua" && completados.agua<8){ completados.agua++; energia++; }
+    if(tipo=="comida" && completados.comida<3){ completados.comida++; energia++; }
+    if(tipo=="ejercicio" && completados.ejercicio<1){ completados.ejercicio++; energia++; }
+
+    guardar();
+    actualizar();
+}
+
+// actualizar UI
+function actualizar(){
+    document.getElementById("energia").innerText=energia+"/12";
+    document.getElementById("info").innerText=
+    "💧 "+completados.agua+"/8 | 🍽️ "+completados.comida+"/3 | 🏃 "+completados.ejercicio+"/1";
+
+    let planta=document.getElementById("planta");
+    let hojas=document.getElementById("hojas");
+
+    planta.className="planta";
+
+    if(energia>=1) planta.classList.add("nivel1","brillo1");
+    if(energia>=4) planta.classList.add("nivel2","brillo2");
+    if(energia>=7) planta.classList.add("nivel3","brillo3");
+
+    if(energia>=12){
+        planta.classList.add("nivel4","brillo4");
+        hojas.innerText="🌳";
+        hojas.style.animation="none";
+    } else{
+        hojas.innerText="🌱";
+        hojas.style.animation="hojasMove 3s ease-in-out infinite";
+    }
+}
+
+// reiniciar manual
+function reiniciar(){
+    energia=0;
+    completados={agua:0, comida:0, ejercicio:0};
+    guardar();
+    actualizar();
+}
+
+// alarmas
+function revisarHora(){
+    let a=new Date();
+    let h=a.getHours(), m=a.getMinutes();
+    let clave=h+":"+m;
+    if(clave==ultimaAlarma) return;
+
+    function check(lista,msg){
+        lista.forEach(t=>{
+            if(t.hora==h && t.minuto==m){
+                notificar(msg);
+                ultimaAlarma=clave;
+            }
+        });
+    }
+
+    check(horasAgua,"💧 Agua");
+    check(horasComida,"🍽️ Comer");
+    check(horasEjercicio,"🏃 Ejercicio");
+}
+
+setInterval(revisarHora,60000);
+
+// 🔥 INICIO
+verificarReinicioAutomatico();
+actualizar();
+</script>
+
+</body>
+</html>

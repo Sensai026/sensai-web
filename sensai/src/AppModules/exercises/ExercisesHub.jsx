@@ -1,10 +1,10 @@
 // src/AppModules/exercises/ExercisesHub.jsx
 import React from 'react';
-import { ArrowLeft, Sparkles, Target, Zap, Activity, Brain } from 'lucide-react';
+import { ArrowLeft, Sparkles, Target, Zap, Activity, Brain, Waves } from 'lucide-react';
 import './ExercisesHub.css';
 
 const ExerciseCard = ({ title, description, icon: Icon, color, onClick }) => (
-  <div className="game-option-card group relative" onClick={onClick}>
+  <div className="game-option-card group relative cursor-pointer" onClick={onClick}>
     <div 
       className="game-icon-wrapper transition-transform group-hover:scale-110 duration-300" 
       style={{ backgroundColor: `${color}33`, color: color }} 
@@ -33,6 +33,13 @@ export default function ExercisesHub({ onSelectExercise, onBack }) {
       color: '#0A7A62' 
     },
     {
+      id: 'mente-sana',
+      title: 'Mente Sana',
+      description: 'Regulación emocional y equilibrio mental a través de ejercicios prácticos.',
+      icon: Waves,
+      color: '#16572a'
+    },
+    {
       id: 'atencion-plena',
       title: 'Atención Plena',
       description: 'Próximamente: Ejercicios de enfoque y reducción del ruido mental.',
@@ -50,7 +57,6 @@ export default function ExercisesHub({ onSelectExercise, onBack }) {
 
   return (
     <div className="games-hub-layout animate-in fade-in duration-500">
-      {/* HEADER CENTRADO Y RESPONSIVO */}
       <header className="hub-header flex flex-col items-center text-center gap-6 mb-12">
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-3">
@@ -66,7 +72,6 @@ export default function ExercisesHub({ onSelectExercise, onBack }) {
           </p>
         </div>
 
-        {/* EL NUEVO BOTÓN: Estilo consistente con Configuración/Comunidad */}
         <button 
           onClick={onBack} 
           className="flex items-center gap-2 px-8 py-3 border-2 border-slate-800 text-slate-800 rounded-full font-black hover:bg-slate-800 hover:text-white transition-all w-full sm:w-auto justify-center uppercase tracking-tighter text-sm shadow-sm"

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pintura Fluida - Regulación Sensorial</title>
+    <link rel="stylesheet" href="../css/sensorial_global.css">
+    <script src="../js/audio_sintetizador.js"></script>
+    <script>
+        // Bloqueo de menús del navegador para inmersión total
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+        
+        // Ajuste de pantalla responsivo
+        function resizeCanvas() {
+            const canvas = document.getElementById('fluidCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        
+        // Inicializar canvas responsivo
+        resizeCanvas();
+    </script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0FDF4 50%, #FAF5FF 100%);
+            position: relative;
+            margin: 0;
+            padding: 0;
+            color: #1E293B;
+            width: 100vw;
+            height: 100vh;
+            user-select: none; 
+            -webkit-touch-callout: none;
+        }
+
+        canvas {
+            display: block;
+            cursor: crosshair;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #1E293B;
+            z-index: 10;
+            max-width: 90%;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .header-titulo {
+            font-family: 'Outfit', sans-serif;
+            color: #1E293B;
+            position: absolute;
+            top: clamp(40px, 8vh, 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+            margin: 0;
+            max-width: 90%;
+        }
+
+        .barra-controles-delgada {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            background: transparent !important;
+            padding: 0;
+            border: none !important;
+            border-radius: 0;
+            backdrop-filter: none;
+            box-shadow: none;
+            z-index: 1000;
+            will-change: transform;
+            max-width: 95vw;
+        }
+
+        .control-btn-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #1E293B;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .control-btn-delgado:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .control-btn-delgado.active {
+            background: #000000;
+            color: white;
+        }
+
+        .control-btn-delgado span:first-child {
+            font-size: 1.1rem;
+        }
+
+        .contador-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #1E293B;
+            border-radius: 20px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #1E293B;
+            min-width: 44px;
+            min-height: 44px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <!-- Botón de Regreso -->
+    <a href="#" class="back-button" id="backButton" title="Volver al menú">
+        ←
+    </a>
+
+    <!-- Indicador de Progreso Minimalista -->
+    <div class="progress-indicator" id="progressIndicator">
+        <span id="strokeCount">0</span> trazos
+    </div>
+
+    <!-- Título de la Herramienta -->
+    <h1 class="header-titulo">🎨 Pintura Fluida</h1>
+
+    <!-- Barra de Controles Inferior -->
+    <div class="barra-controles-delgada">
+        <button class="control-btn-delgado" id="soundToggle">
+            <span>🔊</span>
+            <span>Sonido ON</span>
+        </button>
+        <button class="control-btn-delgado" id="brushBtn">
+            <span>🖌️</span>
+            <span>Pincel Normal</span>
+        </button>
+        <button class="control-btn-delgado" id="clearBtn">
+            <span>🗑️</span>
+            <span>Limpiar</span>
+        </button>
+    </div>
+
+    <!-- Área Interactiva -->
+    <canvas id="fluidCanvas" class="area-interactiva-maximizada" oncontextmenu="return false;"></canvas>
+
+    <script>
+        // Variables globales
+        let canvas, ctx;
+        let stains = [];
+        let isDrawing = false;
+        let currentColor = '#FF00FF';
+        let brushMode = 'normal';
+        let strokeCount = 0;
+        let soundEnabled = true;
+        let colorHistory = [];
+        const MIN_COLORS_BEFORE_REPEAT = 18; // Mínimo 18 colores diferentes antes de repetir
+
+        // Colores cálidos y fuertes - Máxima variedad expandida
+        const COLORS = [
+            // COLORES ESPECÍFICOS SOLICITADOS
+            '#FFFF00', // Amarillo canario
+            '#32FF32', // Verde limón
+            '#FF0080', // Rosa mexicano
+            
+            // AMARILLOS Y NARANJAS ENCENDIDOS - EXPANDIDO
+            '#FFD700', '#FFA500', '#FF8C00', '#FF6347', '#FF4500', '#FF0000',
+            '#FFFF00', '#FFEA00', '#FFD700', '#FFC700', '#FFB300', '#FF9800',
+            '#FF7F00', '#FF6F00', '#FF5F00', '#FF4F00', '#FF3F00', '#FF2F00',
+            '#FFE500', '#FFD200', '#FFBF00', '#FFAC00', '#FF9900', '#FF8600',
+            '#FFAA00', '#FF8800', '#FF6600', '#FF4400', '#FF2200', '#FF1100',
+            '#FFCC00', '#FFBB00', '#FF9900', '#FF7700', '#FF5500', '#FF3300',
+            '#FFEE00', '#FFDD00', '#FFCC00', '#FFBB00', '#FFAA00', '#FF9900',
+            
+            // VERDES Y LIMAS VIBRANTES - EXPANDIDO
+            '#00FF00', '#00FF41', '#00FF80', '#32FF32', '#64FF64', '#96FF96',
+            '#00FA9A', '#00E676', '#00C853', '#39FF14', '#4CFF17', '#5FFF1A',
+            '#72FF1D', '#85FF20', '#98FF23', '#7FFF00', '#ADFF2F', '#9ACD32',
+            '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FFB300',
+            '#00FF11', '#00FF22', '#00FF33', '#00FF44', '#00FF55', '#00FF66',
+            '#11FF00', '#22FF00', '#33FF00', '#44FF00', '#55FF00', '#66FF00',
+            '#00FF77', '#00FF88', '#00FF99', '#00FFAA', '#00FFBB', '#00FFCC',
+            '#77FF00', '#88FF00', '#99FF00', '#AAFF00', '#BBFF00', '#CCFF00',
+            
+            // ROSAS Y MAGENTAS INTENSOS - EXPANDIDO
+            '#FF0080', '#FF0099', '#FF00B3', '#FF00CC', '#FF00E6', '#FF00FF',
+            '#E91E63', '#FF1744', '#F50057', '#D500F9', '#C51162', '#AD1457',
+            '#FF1493', '#FF69B4', '#FF6EC7', '#FF8A80', '#FFAB91', '#FFCCBC',
+            '#FF4081', '#F48FB1', '#F06292', '#EC407A', '#E91E63', '#D81B60',
+            '#FF0011', '#FF0022', '#FF0033', '#FF0044', '#FF0055', '#FF0066',
+            '#FF0077', '#FF0088', '#FF0099', '#FF00AA', '#FF00BB', '#FF00CC',
+            '#FF1100', '#FF2200', '#FF3300', '#FF4400', '#FF5500', '#FF6600',
+            '#FF7700', '#FF8800', '#FF9900', '#FFAA00', '#FFBB00', '#FFCC00',
+            
+            // ROJOS Y NARANJAS TROPICALES - EXPANDIDO
+            '#FF6B35', '#F77B71', '#EE6C4D', '#C95A49', '#E74C3C', '#F39C12',
+            '#E67E22', '#D35400', '#E74C3C', '#C0392B', '#A04000', '#8D6E63',
+            '#FF5722', '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#FF5722',
+            '#FF7043', '#FFAB40', '#FFB74D', '#FFCC80', '#FFE082', '#FFF176',
+            '#FF1100', '#FF2200', '#FF3300', '#FF4400', '#FF5500', '#FF6600',
+            '#FF7700', '#FF8800', '#FF9900', '#FFAA00', '#FFBB00', '#FFCC00',
+            '#FFDD00', '#FFEE00', '#FFFF00', '#FFEE11', '#FFDD22', '#FFCC33',
+            '#FFBB44', '#FFAA55', '#FF9966', '#FF8877', '#FF7788', '#FF6699',
+            
+            // MORADOS Y VIOLETAS CÁLIDOS - EXPANDIDO
+            '#8A2BE2', '#9C27B0', '#673AB7', '#512DA8', '#4527A0', '#311B92',
+            '#B388FF', '#9575CD', '#7E57C2', '#673AB7', '#5E35B1', '#512DA8',
+            '#D500F9', '#AA00FF', '#E040FB', '#D500F9', '#AA00FF', '#6200EA',
+            '#651FFF', '#7C4DFF', '#B388FF', '#D1C4E9', '#EDE7F6', '#F3E5F5',
+            '#FF00FF', '#FF11FF', '#FF22FF', '#FF33FF', '#FF44FF', '#FF55FF',
+            '#FF66FF', '#FF77FF', '#FF88FF', '#FF99FF', '#FFAAFF', '#FFBBFF',
+            '#FFCCFF', '#FFDDFF', '#FFEEFF', '#FFFFEE', '#FFFFDD', '#FFFFCC',
+            '#FF00AA', '#FF00BB', '#FF00CC', '#FF00DD', '#FF00EE', '#FF00FF',
+            
+            // COLORES FLUORESCENTES CÁLIDOS - EXPANDIDO
+            '#CCFF00', '#FF00FF', '#FF00AA', '#FFFF33', '#33FF33', '#FF3366',
+            '#66FF33', '#FF6633', '#FF33FF', '#00FF00', '#FF0000', '#FFFF00',
+            '#FF00FF', '#FF1493', '#FFD700', '#FF69B4', '#BA55D3', '#7FFF00',
+            '#FF006E', '#FB5607', '#FFBE0B', '#8338EC', '#3A86FF', '#06FFB4',
+            '#FF4365', '#00F5FF', '#FE6B35', '#C77DFF', '#7209B7', '#560BAD',
+            '#FF00AA', '#FF00BB', '#FF00CC', '#FF00DD', '#FF00EE', '#FF00FF',
+            '#FFAA00', '#FFBB00', '#FFCC00', '#FFDD00', '#FFEE00', '#FFFF00',
+            '#00FFAA', '#00FFBB', '#00FFCC', '#00FFDD', '#00FFEE', '#00FFFF',
+            '#AA00FF', '#BB00FF', '#CC00FF', '#DD00FF', '#EE00FF', '#FF00FF',
+            
+            // COLORES ADICIONALES VIBRANTES
+            '#FF0040', '#FF0080', '#FF00C0', '#FF40FF', '#FF80FF', '#FFC0FF',
+            '#40FF00', '#80FF00', '#C0FF00', '#FFFF00', '#FFFF80', '#FFFFC0',
+            '#00FF40', '#00FF80', '#00FFC0', '#80FFFF', '#C0FFFF', '#E0FFFF',
+            '#FF4000', '#FF8000', '#FFC000', '#FFE040', '#FFE080', '#FFE0C0',
+            '#4000FF', '#8000FF', '#C000FF', '#E040FF', '#E080FF', '#E0C0FF',
+            '#FF0066', '#FF0099', '#FF00CC', '#FF33FF', '#FF66FF', '#FF99FF',
+            '#66FF00', '#99FF00', '#CCFF00', '#FFFF33', '#FFFF66', '#FFFF99',
+            '#00FF66', '#00FF99', '#00FFCC', '#33FFFF', '#66FFFF', '#99FFFF'
+        ];
+
+        // Clase PaintStain con formas irregulares
+        class PaintStain {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = Math.random() * 20 + 15;
+                this.points = this.generateStainShape();
+                this.life = 1.0;
+                // No hay decay - las manchas son persistentes
+            }
+
+            generateStainShape() {
+                const points = [];
+                const numPoints = 6 + Math.floor(Math.random() * 8); // 6-14 puntos
+                
+                for (let i = 0; i < numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI * 2;
+                    const radiusVariation = 0.6 + Math.random() * 0.8; // Variación de radio
+                    const radius = this.size * radiusVariation;
+                    
+                    points.push({
+                        x: Math.cos(angle) * radius,
+                        y: Math.sin(angle) * radius
+                    });
+                }
+                
+                return points;
+            }
+
+            update() {
+                // Las manchas no desaparecen - son persistentes
+                // Solo reducen tamaño muy lentamente si es necesario
+                if (this.size > 5) {
+                    this.size *= 0.999;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = 0.9; // Opacidad constante
+                
+                // Dibujar mancha irregular
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                
+                // Crear forma orgánica con curvas bezier
+                for (let i = 0; i < this.points.length; i++) {
+                    const point = this.points[i];
+                    const nextPoint = this.points[(i + 1) % this.points.length];
+                    
+                    if (i === 0) {
+                        ctx.moveTo(this.x + point.x, this.y + point.y);
+                    }
+                    
+                    // Puntos de control para curva bezier suave
+                    const cp1x = this.x + point.x + (nextPoint.x - point.x) * 0.3;
+                    const cp1y = this.y + point.y + (nextPoint.y - point.y) * 0.3;
+                    const cp2x = this.x + nextPoint.x - (nextPoint.x - point.x) * 0.3;
+                    const cp2y = this.y + nextPoint.y - (nextPoint.y - point.y) * 0.3;
+                    
+                    ctx.bezierCurveTo(
+                        cp1x, cp1y,
+                        cp2x, cp2y,
+                        this.x + nextPoint.x, this.y + nextPoint.y
+                    );
+                }
+                
+                ctx.closePath();
+                ctx.fill();
+                
+                // Efecto de textura con salpicaduras pequeñas
+                ctx.globalAlpha = 0.3;
+                for (let j = 0; j < 4; j++) {
+                    const splashX = this.x + (Math.random() - 0.5) * this.size * 1.2;
+                    const splashY = this.y + (Math.random() - 0.5) * this.size * 1.2;
+                    const splashSize = Math.random() * 3 + 1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(splashX, splashY, splashSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+
+            isDead() {
+                // Las manchas nunca mueren - son persistentes
+                return false;
+            }
+        }
+
+        // Función para obtener color con regla de 18-20 turnos sin repetición
+        function getRandomColor() {
+            // Si tenemos menos de 18 colores en el historial, filtrar solo los usados
+            if (colorHistory.length < MIN_COLORS_BEFORE_REPEAT) {
+                const availableColors = COLORS.filter(color => !colorHistory.includes(color));
+                const selectedColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+                colorHistory.push(selectedColor);
+                return selectedColor;
+            }
+            
+            // Si tenemos 18 o más colores, permitir repetición de los más antiguos
+            // pero no de los 10 más recientes
+            const recentColors = colorHistory.slice(-10); // Últimos 10 colores
+            const availableColors = COLORS.filter(color => !recentColors.includes(color));
+            
+            // Si por alguna razón no hay colores disponibles (muy improbable con 360 colores)
+            if (availableColors.length === 0) {
+                // Reset completo pero mantener los últimos 10 colores
+                colorHistory = colorHistory.slice(-10);
+                const newAvailableColors = COLORS.filter(color => !colorHistory.includes(color));
+                const selectedColor = newAvailableColors[Math.floor(Math.random() * newAvailableColors.length)];
+                colorHistory.push(selectedColor);
+                return selectedColor;
+            }
+            
+            // Seleccionar un color aleatorio de los disponibles
+            const selectedColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+            
+            // Agregar al historial
+            colorHistory.push(selectedColor);
+            
+            // Mantener el historial a un tamaño razonable (máximo 30 colores)
+            if (colorHistory.length > 30) {
+                colorHistory = colorHistory.slice(-30);
+            }
+            
+            return selectedColor;
+        }
+
+        // Función para crear manchas de pintura
+        function createPaintStain(x, y) {
+            // Aumentar límite a 5000 manchas para permitir pintura extendida
+            if (stains.length < 5000) {
+                const stain = new PaintStain(x, y, currentColor);
+                
+                // Ajustar tamaño según modo de pincel
+                if (brushMode === 'thick') {
+                    stain.size *= 2.0;
+                } else if (brushMode === 'thin') {
+                    stain.size *= 0.5;
+                }
+                
+                stains.push(stain);
+            }
+        }
+
+        // Función para reproducir sonido de salpicadura
+        function playSplashSound() {
+            if (!soundEnabled) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800 + Math.random() * 400, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (error) {
+                console.log('Error en sonido:', error);
+            }
+        }
+
+        // Función para limpiar canvas
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stains = [];
+            strokeCount = 0;
+            colorHistory = [];
+            updateProgressIndicator();
+        }
+
+        // Función para actualizar indicador de progreso
+        function updateProgressIndicator() {
+            const indicator = document.getElementById('strokeCount');
+            if (indicator) {
+                indicator.textContent = strokeCount;
+            }
+        }
+
+        // Función de animación - con persistencia
+        function animate() {
+            // No limpiar canvas para mantener trazos persistentes
+            // Solo dibujar nuevas manchas sobre las existentes
+            
+            // Actualizar y dibujar manchas
+            for (let i = 0; i < stains.length; i++) {
+                const stain = stains[i];
+                stain.update();
+                stain.draw(ctx);
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Función para inicializar
+        function init() {
+            canvas = document.getElementById('fluidCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Configurar tamaño del canvas
+            function resizeCanvas() {
+                const oldWidth = canvas.width;
+                const oldHeight = canvas.height;
+                
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // Recenter existing stains when canvas resizes
+                const scaleX = canvas.width / oldWidth;
+                const scaleY = canvas.height / oldHeight;
+                
+                for (const stain of stains) {
+                    stain.x = stain.x * scaleX;
+                    stain.y = stain.y * scaleY;
+                    
+                    // Also update stain points
+                    for (const point of stain.points) {
+                        point.x = point.x * scaleX;
+                        point.y = point.y * scaleY;
+                    }
+                }
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Eventos de mouse
+            let lastX = 0, lastY = 0;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                currentColor = getRandomColor();
+                strokeCount++;
+                updateProgressIndicator();
+                playSplashSound();
+                
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+                createPaintStain(lastX, lastY);
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDrawing) {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Crear múltiples manchas a lo largo del trayecto
+                    const dx = x - lastX;
+                    const dy = y - lastY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const steps = Math.max(1, Math.floor(distance / 15));
+                    
+                    for (let i = 0; i < steps; i++) {
+                        const t = i / steps;
+                        const px = lastX + dx * t;
+                        const py = lastY + dy * t;
+                        createPaintStain(px, py);
+                    }
+                    
+                    lastX = x;
+                    lastY = y;
+                }
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                isDrawing = false;
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                isDrawing = false;
+            });
+            
+            // Eventos de touch
+            let touchLastX = 0, touchLastY = 0;
+            
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                currentColor = getRandomColor();
+                strokeCount++;
+                updateProgressIndicator();
+                playSplashSound();
+                
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                touchLastX = touch.clientX - rect.left;
+                touchLastY = touch.clientY - rect.top;
+                createPaintStain(touchLastX, touchLastY);
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (isDrawing) {
+                    const rect = canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    
+                    // Crear múltiples manchas a lo largo del trayecto
+                    const dx = x - touchLastX;
+                    const dy = y - touchLastY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const steps = Math.max(1, Math.floor(distance / 15));
+                    
+                    for (let i = 0; i < steps; i++) {
+                        const t = i / steps;
+                        const px = touchLastX + dx * t;
+                        const py = touchLastY + dy * t;
+                        createPaintStain(px, py);
+                    }
+                    
+                    touchLastX = x;
+                    touchLastY = y;
+                }
+            });
+            
+            canvas.addEventListener('touchend', () => {
+                isDrawing = false;
+            });
+            
+            // Eventos de botones
+            const soundToggle = document.getElementById('soundToggle');
+            if (soundToggle) {
+                soundToggle.addEventListener('click', () => {
+                    soundEnabled = !soundEnabled;
+                    soundToggle.innerHTML = soundEnabled ? 
+                        '<span>🔊</span><span>Sonido ON</span>' : 
+                        '<span>🔇</span><span>Sonido OFF</span>';
+                });
+            }
+            
+            const brushBtn = document.getElementById('brushBtn');
+            if (brushBtn) {
+                brushBtn.addEventListener('click', () => {
+                    const modes = ['normal', 'thick', 'thin'];
+                    const currentIndex = modes.indexOf(brushMode);
+                    brushMode = modes[(currentIndex + 1) % modes.length];
+                    
+                    const modeText = {
+                        'normal': 'Pincel Normal',
+                        'thick': 'Pincel Grueso',
+                        'thin': 'Pincel Fino'
+                    };
+                    
+                    brushBtn.innerHTML = `<span>🖌️</span><span>${modeText[brushMode]}</span>`;
+                });
+            }
+            
+            const clearBtn = document.getElementById('clearBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearCanvas);
+            }
+            
+            const backButton = document.getElementById('backButton');
+            if (backButton) {
+                backButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.parent && window.parent.sensorialAPI) {
+                        window.parent.sensorialAPI.closeExercise();
+                    } else {
+                        window.history.back();
+                    }
+                });
+            }
+            
+            // Iniciar animación
+            animate();
+        }
+
+        // Iniciar cuando se carga la página
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

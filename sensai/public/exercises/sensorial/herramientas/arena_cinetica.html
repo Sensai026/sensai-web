@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Cinética - Regulación Sensorial</title>
+    <link rel="stylesheet" href="../css/sensorial_global.css">
+    <script src="../js/audio_sintetizador.js"></script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0FDF4 50%, #FAF5FF 100%);
+            position: relative;
+            margin: 0;
+            padding: 0;
+            color: #1E293B;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            cursor: grab;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        canvas:active {
+            cursor: grabbing;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #1E293B;
+            z-index: 10;
+            max-width: 90%;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .header-titulo {
+            font-family: 'Outfit', sans-serif;
+            color: #1E293B;
+            position: absolute;
+            top: clamp(40px, 8vh, 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+            margin: 0;
+            max-width: 90%;
+        }
+
+        .barra-controles-delgada {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            background: transparent !important;
+            padding: 0;
+            border: none !important;
+            border-radius: 0;
+            backdrop-filter: none;
+            box-shadow: none;
+            z-index: 1000;
+            will-change: transform;
+            max-width: 95vw;
+        }
+
+        .control-btn-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(30, 41, 59, 0.1);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #1E293B;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .control-btn-delgado:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .control-btn-delgado.active {
+            background: #000000;
+            color: white;
+        }
+
+        .control-btn-delgado span:first-child {
+            font-size: 1.1rem;
+        }
+
+        .contador-delgado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(4px, 1vw, 8px);
+            padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #1E293B;
+            border-radius: 20px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #1E293B;
+            min-width: 44px;
+            min-height: 44px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de Regreso -->
+    <a href="#" class="back-button" id="backButton" title="Volver al menú">
+        ←
+    </a>
+
+    <!-- Indicador de Progreso Minimalista -->
+    <div class="progress-indicator" id="progressIndicator">
+        <span id="particleCount">0</span> partículas
+    </div>
+
+    <!-- Título de la Herramienta -->
+    <h1 class="header-titulo">🏖️ Arena Cinética</h1>
+
+    <!-- Barra de Controles Inferior -->
+    <div class="barra-controles-delgada">
+        <button class="control-btn-delgado" id="gravityBtn">
+            <span>🌍</span>
+            <span>Gravedad OFF</span>
+        </button>
+        <button class="control-btn-delgado" id="clearBtn">
+            <span>🗑️</span>
+            <span>Limpiar</span>
+        </button>
+        <button class="control-btn-delgado" id="colorBtn">
+            <span>🎨</span>
+            <span>Cambiar Color</span>
+        </button>
+    </div>
+
+    <!-- Área Interactiva -->
+    <canvas id="kineticCanvas" class="area-interactiva-maximizada"></canvas>
+
+    <script src="../js/audio_sintetizador.js"></script>
+    <script>
+        // Bloqueo de menús del navegador para inmersión total
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+        
+        // Ajuste de pantalla responsivo
+        function resizeCanvas() {
+            const canvas = document.getElementById('kineticCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        
+        // Inicializar canvas responsivo
+        resizeCanvas();
+        
+        
+        class SandParticle {
+            constructor(x, y, canvas) {
+                this.x = x;
+                this.y = y;
+                this.canvas = canvas;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.radius = Math.random() * 3 + 1;
+                this.color = this.generateSandColor();
+                this.gravity = 0.1;
+                this.friction = 0.98;
+                this.bounce = 0.7;
+                // Sin sistema de vida - las partículas son permanentes
+            }
+
+            generateSandColor() {
+                const colors = [
+                    '#F4E4C1', '#E8D4B0', '#D4A574', '#C19A6B',
+                    '#E5D4A1', '#D2B48C', '#DEB887', '#F5DEB3'
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update(gravityEnabled) {
+                if (gravityEnabled) {
+                    this.vy += this.gravity;
+                } else {
+                    // Sin gravedad: la arena se queda fija casi completamente
+                    this.vx *= 0.95;  // Fricción alta cuando no hay gravedad
+                    this.vy *= 0.95;
+                }
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Rebote en los bordes laterales
+                if (this.x - this.radius < 0 || this.x + this.radius > this.canvas.width) {
+                    this.vx = -this.vx * this.bounce;
+                    this.x = Math.max(this.radius, Math.min(this.canvas.width - this.radius, this.x));
+                }
+                
+                // Comportamiento en suelo (para amontonamiento)
+                if (this.y + this.radius > this.canvas.height) {
+                    this.y = this.canvas.height - this.radius;
+                    
+                    if (gravityEnabled) {
+                        // Con gravedad: rebote suave
+                        this.vy = -this.vy * 0.2;  // Rebote muy suave
+                        this.vx *= 0.8;  // Fricción para movimiento
+                    } else {
+                        // Sin gravedad: se detiene completamente
+                        this.vy = 0;
+                        this.vx = 0;
+                    }
+                }
+                
+                // Borde superior
+                if (this.y - this.radius < 0) {
+                    this.y = this.radius;
+                    this.vy = Math.abs(this.vy) * 0.5;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Sombra sutil
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+                ctx.shadowBlur = 2;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class KineticSand {
+            constructor() {
+                this.canvas = document.getElementById('kineticCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.gravityEnabled = false;
+                this.isMouseDown = false;
+                this.lastMouseX = 0;
+                this.lastMouseY = 0;
+                this.maxParticles = 500;
+                
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.setupEventListeners();
+                this.animate();
+            }
+
+            resizeCanvas() {
+                const oldWidth = this.canvas.width;
+                const oldHeight = this.canvas.height;
+                
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                
+                // Recenter existing particles when canvas resizes
+                const scaleX = this.canvas.width / oldWidth;
+                const scaleY = this.canvas.height / oldHeight;
+                
+                for (const particle of this.particles) {
+                    particle.x = particle.x * scaleX;
+                    particle.y = particle.y * scaleY;
+                    particle.canvas = this.canvas; // Update canvas reference
+                }
+            }
+
+            setupEventListeners() {
+                // Mouse events
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isMouseDown = true;
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.lastMouseX = e.clientX - rect.left;
+                    this.lastMouseY = e.clientY - rect.top;
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    if (this.isMouseDown) {
+                        const rect = this.canvas.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // Crear partículas de arena
+                        this.createSandParticles(x, y, this.lastMouseX, this.lastMouseY);
+                        
+                        this.lastMouseX = x;
+                        this.lastMouseY = y;
+                    }
+                });
+
+                this.canvas.addEventListener('mouseup', () => {
+                    this.isMouseDown = false;
+                });
+
+                this.canvas.addEventListener('mouseleave', () => {
+                    this.isMouseDown = false;
+                });
+
+                // Touch events
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.isMouseDown = true;
+                    const rect = this.canvas.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    this.lastMouseX = touch.clientX - rect.left;
+                    this.lastMouseY = touch.clientY - rect.top;
+                });
+
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (this.isMouseDown) {
+                        const rect = this.canvas.getBoundingClientRect();
+                        const touch = e.touches[0];
+                        const x = touch.clientX - rect.left;
+                        const y = touch.clientY - rect.top;
+                        
+                        this.createSandParticles(x, y, this.lastMouseX, this.lastMouseY);
+                        
+                        this.lastMouseX = x;
+                        this.lastMouseY = y;
+                    }
+                });
+
+                this.canvas.addEventListener('touchend', () => {
+                    this.isMouseDown = false;
+                });
+
+                // Control buttons
+                document.getElementById('gravityBtn').addEventListener('click', () => {
+                    this.gravityEnabled = !this.gravityEnabled;
+                    const btn = document.getElementById('gravityBtn');
+                    btn.innerHTML = this.gravityEnabled ? 
+                        '<span>🌍</span><span>Gravedad ON</span>' : 
+                        '<span>🌍</span><span>Gravedad OFF</span>';
+                });
+
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    this.clearAllSand();
+                });
+
+                document.getElementById('colorBtn').addEventListener('click', () => {
+                    this.changeColors();
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+
+                // Back button
+                document.getElementById('backButton').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.parent && window.parent.sensorialAPI) {
+                        window.parent.sensorialAPI.closeExercise();
+                    } else {
+                        window.history.back();
+                    }
+                });
+                
+                // Update progress indicator
+                this.updateProgressIndicator();
+            }
+
+            createSandParticles(x, y, lastX, lastY) {
+                const dx = x - lastX;
+                const dy = y - lastY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const steps = Math.max(1, Math.floor(distance / 5));
+                
+                for (let i = 0; i < steps; i++) {
+                    const t = i / steps;
+                    const px = lastX + dx * t;
+                    const py = lastY + dy * t;
+                    
+                    // Crear múltiples partículas por punto - ahora ilimitado
+                    for (let j = 0; j < 3; j++) {
+                        const offsetX = (Math.random() - 0.5) * 10;
+                        const offsetY = (Math.random() - 0.5) * 10;
+                        this.particles.push(new SandParticle(px + offsetX, py + offsetY, this.canvas));
+                    }
+                    
+                    // Sin sonido por partícula - ahora es continuo
+                }
+                
+                this.updateProgressIndicator();
+            }
+
+            clearAllSand() {
+                // Eliminar toda la arena de la pantalla
+                this.particles = [];
+                this.updateProgressIndicator();
+            }
+            
+            updateProgressIndicator() {
+                const indicator = document.getElementById('particleCount');
+                if (indicator) {
+                    indicator.textContent = this.particles.length;
+                }
+            }
+
+            changeColors() {
+                for (let particle of this.particles) {
+                    particle.color = particle.generateSandColor();
+                }
+            }
+
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Actualizar y dibujar partículas (sin eliminación)
+                for (let particle of this.particles) {
+                    particle.update(this.gravityEnabled);
+                    particle.draw(this.ctx);
+                }
+                
+                this.updateProgressIndicator();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Iniciar el juego cuando se carga la página
+        window.addEventListener('load', () => {
+            new KineticSand();
+        });
+    </script>
+</body>
+</html>
