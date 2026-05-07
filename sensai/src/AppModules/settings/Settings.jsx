@@ -17,8 +17,13 @@ import './Settings.css';
 export default function Settings({ user, onBack }) {
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null); 
-  
+
+  // ✅ CAMBIO 1: reemplaza deferredPrompt por isInstallable
+  // Se inicializa leyendo si ya existe el prompt global (capturado en main.jsx)
+  const [isInstallable, setIsInstallable] = useState(
+    () => !!window.__pwaInstallPrompt
+  );
+
   const [settings, setSettings] = useState({
     lenguaje: 'neutro',
     profundidad: 'adaptable',
@@ -26,30 +31,43 @@ export default function Settings({ user, onBack }) {
   });
 
   const temasDisponibles = [
-    { id: 'light', nombre: 'Natural', color: '#16572a' },
-    { id: 'dark', nombre: 'Noche', color: '#0f172a' },
-    { id: 'ocean', nombre: 'Océano', color: '#0c4a6e' },
-    { id: 'sunset', nombre: 'Atardecer', color: '#78350f' },
-    { id: 'cyber', nombre: 'Cyber', color: '#ff00ff' },
-    { id: 'forest', nombre: 'Bosque', color: '#1a2e05' },
-    { id: 'potro', nombre: 'Potro', color: '#1e3a8a' },
-    { id: 'lavender', nombre: 'Lavanda', color: '#4c1d95' }
+    { id: 'light',    nombre: 'Natural',    color: '#16572a' },
+    { id: 'dark',     nombre: 'Noche',      color: '#0f172a' },
+    { id: 'ocean',    nombre: 'Océano',     color: '#0c4a6e' },
+    { id: 'sunset',   nombre: 'Atardecer',  color: '#78350f' },
+    { id: 'cyber',    nombre: 'Cyber',      color: '#ff00ff' },
+    { id: 'forest',   nombre: 'Bosque',     color: '#1a2e05' },
+    { id: 'potro',    nombre: 'Potro',      color: '#1e3a8a' },
+    { id: 'lavender', nombre: 'Lavanda',    color: '#4c1d95' }
   ];
 
   useEffect(() => {
-    // Escuchar el evento de instalación de PWA
+    // ✅ CAMBIO 2: verifica si el prompt ya llegó antes de montar este componente
+    if (window.__pwaInstallPrompt) {
+      setIsInstallable(true);
+    }
+
+    // Por si el evento llega mientras Settings está abierto
     const handler = (e) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      window.__pwaInstallPrompt = e;
+      setIsInstallable(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
 
+    // Detecta si el usuario ya instaló la app
+    const onInstalled = () => {
+      window.__pwaInstallPrompt = null;
+      setIsInstallable(false);
+    };
+    window.addEventListener('appinstalled', onInstalled);
+
+    // Cargar configuración del usuario
     const loadData = async () => {
       if (user?.uid) {
         const data = await getUserSettings(user.uid);
         if (data) {
           setSettings(data);
-          // Aplicar el tema guardado al cargar
           if (data.tema) {
             document.documentElement.setAttribute('data-theme', data.tema);
           }
@@ -58,22 +76,22 @@ export default function Settings({ user, onBack }) {
     };
     loadData();
 
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
   }, [user]);
 
   const handleThemeChange = (themeId) => {
     setSettings({ ...settings, tema: themeId });
     document.documentElement.setAttribute('data-theme', themeId);
-    // Guardado rápido en local para feedback inmediato
     localStorage.setItem('sensai-theme', themeId);
   };
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      // Persistencia en la nube para sincronizar Nexo 120 entre dispositivos
       const success = await saveUserSettings(user.uid, settings);
-      
       if (success) {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
@@ -85,15 +103,18 @@ export default function Settings({ user, onBack }) {
     }
   };
 
+  // ✅ CAMBIO 3: lee el prompt desde window.__pwaInstallPrompt
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      alert("Si estás en iPhone: pulsa 'Compartir' y luego 'Añadir a pantalla de inicio'. En Android, asegúrate de usar Chrome.");
+    const prompt = window.__pwaInstallPrompt;
+    if (!prompt) {
+      alert("Si estás en iPhone: pulsa 'Compartir' → 'Añadir a pantalla de inicio'. En Android, usa Chrome.");
       return;
     }
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+    prompt.prompt();
+    const { outcome } = await prompt.userChoice;
     if (outcome === 'accepted') {
-      setDeferredPrompt(null);
+      window.__pwaInstallPrompt = null;
+      setIsInstallable(false);
     }
   };
 
@@ -155,17 +176,20 @@ export default function Settings({ user, onBack }) {
             <Download className="text-brain-orange" size={22} />
             <h3 className="font-bold text-leaf-dark text-lg">App Nativa</h3>
           </div>
-          <p className="text-sm text-gray-500 text-center mb-4">Lleva a SENSAI en tu pantalla de inicio para acceso inmediato.</p>
+          <p className="text-sm text-gray-500 text-center mb-4">
+            Lleva a SENSAI en tu pantalla de inicio para acceso inmediato.
+          </p>
+          {/* ✅ CAMBIO 4: usa isInstallable en lugar de deferredPrompt */}
           <button 
             onClick={handleInstallClick}
             className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all ${
-              deferredPrompt 
+              isInstallable
                 ? 'bg-brain-orange text-white hover:scale-[1.02]' 
-                : 'bg-gray-100 text-gray-400'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
             <Download size={20} />
-            {deferredPrompt ? 'INSTALAR AHORA' : 'SITIO YA INSTALADO'}
+            {isInstallable ? 'INSTALAR AHORA' : 'YA INSTALADA'}
           </button>
         </section>
 
@@ -218,9 +242,13 @@ export default function Settings({ user, onBack }) {
               saved ? 'bg-green-500 scale-95' : 'bg-leaf-dark hover:scale-[1.02] active:scale-95'
             }`}
           >
-            {loading ? 'GUARDANDO...' : saved ? <><CheckCircle2 size={24}/> ¡LISTO!</> : <><Save size={24}/> GUARDAR TODO</>}
+            {loading ? 'GUARDANDO...' : saved 
+              ? <><CheckCircle2 size={24}/> ¡LISTO!</> 
+              : <><Save size={24}/> GUARDAR TODO</>
+            }
           </button>
         </div>
+
       </div>
     </div>
   );

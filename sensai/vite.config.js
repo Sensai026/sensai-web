@@ -5,19 +5,26 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
-    react(), 
+    react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        injectRegister: 'auto',      
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        cleanupOutdatedCaches: true,
+      },
       manifest: {
         name: 'SENSAI - Bienestar Integral',
         short_name: 'SENSAI',
         description: 'Tecnología ética aplicada a la salud mental',
         theme_color: '#16572a',
         background_color: '#ffffff',
-        display: 'standalone', // ESTO OCULTA LA BARRA DE NAVEGACIÓN
+        display: 'standalone',
         orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'icons/icon-192x192.png',
@@ -29,12 +36,19 @@ export default defineConfig({
             src: 'icons/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'maskable' // REQUERIDO PARA ANDROID
+            purpose: 'maskable'
           },
           {
             src: 'icons/icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       }
