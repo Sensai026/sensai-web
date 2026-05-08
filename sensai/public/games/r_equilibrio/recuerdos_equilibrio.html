@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Recuerdos en Equilibrio - SENSAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Juego digital de memoria con enfoque emocional para adolescentes.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Elementos flotantes de recuerdos y equilibrio -->
+<div class="memory-element" style="left: 5%; animation-delay: 0s;">🧠</div>
+<div class="memory-element" style="left: 15%; animation-delay: 3s;">💭</div>
+<div class="memory-element" style="left: 25%; animation-delay: 6s;">⚖️</div>
+<div class="memory-element" style="left: 35%; animation-delay: 9s;">🌟</div>
+<div class="memory-element" style="left: 45%; animation-delay: 12s;">💫</div>
+<div class="memory-element" style="left: 55%; animation-delay: 15s;">🎯</div>
+<div class="memory-element" style="left: 65%; animation-delay: 18s;">🌈</div>
+<div class="memory-element" style="left: 75%; animation-delay: 21s;">💎</div>
+<div class="memory-element" style="left: 85%; animation-delay: 24s;">🔄</div>
+<div class="memory-element" style="left: 95%; animation-delay: 27s;">✨</div>
+
+<div class="main-container">
+  <header>
+    <h1>🧠 Recuerdos en Equilibrio</h1>
+    <p class="subtitle">Juego de memoria con apoyo emocional</p>
+  </header>
+
+  <div class="game-area">
+    <section class="controls">
+      <label for="levelSelect">Nivel:</label>
+      <select id="levelSelect">
+        <option value="1">Nivel 1 – Calma</option>
+        <option value="2">Nivel 2 – Emociones básicas</option>
+        <option value="3">Nivel 3 – Autorregulación</option>
+        <option value="4">Nivel 4 – Resiliencia</option>
+        <option value="5">Nivel 5 – Bienestar integral</option>
+      </select>
+      <button id="startBtn">Iniciar</button>
+    </section>
+
+    <main>
+      <div id="game-board"></div>
+    </main>
+  </div>
+
+  <!-- Panel lateral -->
+  <div class="sidebar">
+    <!-- Panel de estadísticas -->
+    <div class="stats-panel">
+      <h3 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--color-green); margin-bottom: var(--space-md);">📊 Estadísticas</h3>
+      <div class="stat-item">
+        <span class="stat-label">🏆 Puntuación</span>
+        <span class="stat-value" id="puntuacion">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">🎯 Intentos</span>
+        <span class="stat-value" id="intentos">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">⚡ Racha</span>
+        <span class="stat-value" id="racha">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">⭐ Nivel</span>
+        <span class="stat-value" id="nivel-actual">1</span>
+      </div>
+    </div>
+
+    <!-- Power-ups -->
+    <div class="powerup-container">
+      <button class="powerup-btn" onclick="usarPowerup('revelar')" id="btn-revelar">
+        👁️ Revelar
+        <span class="powerup-count" id="count-revelar">3</span>
+      </button>
+      <button class="powerup-btn" onclick="usarPowerup('tiempo')" id="btn-tiempo">
+        ⏰ +30s
+        <span class="powerup-count" id="count-tiempo">2</span>
+      </button>
+      <button class="powerup-btn" onclick="usarPowerup('pista')" id="btn-pista">
+        💡 Pista
+        <span class="powerup-count" id="count-pista">1</span>
+      </button>
+    </div>
+
+    <!-- Logros -->
+    <div class="achievements-panel">
+      <h3 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--color-amber); margin-bottom: var(--space-md);">🏆 Logros</h3>
+      <div class="achievement-badge" id="logro-primero">🌱 Primer Recuerdo</div>
+      <div class="achievement-badge" id="logro-perfecto">💎 Memoria Perfecta</div>
+      <div class="achievement-badge" id="logro-rapido">⚡ Veloz</div>
+      <div class="achievement-badge" id="logro-experto">🧠 Experto</div>
+      <div class="achievement-badge" id="logro-maestro">🏆 Maestro del Equilibrio</div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal personalizado -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h2 class="modal-title" id="modal-title">🎉 ¡Recuerdo Encontrado!</h2>
+    <p class="modal-message" id="modal-message">Has encontrado un recuerdo positivo.</p>
+    <button class="modal-button" onclick="cerrarModal()">Continuar</button>
+  </div>
+</div>
+
+<footer>
+  <p>Proyecto profesional · Uso educativo y psicológico · Sin fines diagnósticos</p>
+</footer>
+
+<script src="js/levels.js"></script>
+<script src="js/tracking.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

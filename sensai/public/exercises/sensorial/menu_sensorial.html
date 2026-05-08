@@ -147,6 +147,7 @@
             createCategorySection(categoria, startIndex) {
                 const section = document.createElement('div');
                 section.className = 'category-section fade-in';
+                section.setAttribute('data-category', Object.keys(categorias).find(key => categorias[key] === categoria));
                 section.style.animationDelay = `${startIndex * 0.05}s`;
                 
                 // Header de categoría
