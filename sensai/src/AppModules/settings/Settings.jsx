@@ -194,19 +194,21 @@ export default function Settings({ user, onBack }) {
         </section>
 
         {/* MODO DE LENGUAJE */}
-        <section className="settings-card bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-50">
+        {/* --- SECCIÓN MODO DE LENGUAJE --- */}
+        <section className="settings-card">
           <div className="flex items-center gap-3 mb-4">
             <Languages className="text-brain-purple" size={20} />
             <h3 className="font-bold text-leaf-dark">Modo de Lenguaje</h3>
           </div>
           <select 
-            className="w-full p-4 rounded-2xl bg-gray-50 border-none font-bold text-leaf-dark focus:ring-2 focus:ring-brain-purple transition-all"
+            /* CAMBIO: bg-bg-primary y text-leaf-dark para que cambie con el tema */
+            className="w-full p-4 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border)] font-bold text-[var(--leaf-dark)] focus:ring-2 focus:ring-brain-purple transition-all"
             value={settings.lenguaje}
             onChange={(e) => setSettings({...settings, lenguaje: e.target.value})}
           >
-            <option value="neutro">Equilibrado (Recomendado)</option>
-            <option value="directo">Directo y Conciso</option>
-            <option value="explicativo">Explicativo y Didáctico</option>
+            <option value="neutro" className="bg-[var(--bg-primary)]">Equilibrado (Recomendado)</option>
+            <option value="directo" className="bg-[var(--bg-primary)]">Directo y Conciso</option>
+            <option value="explicativo" className="bg-[var(--bg-primary)]">Explicativo y Didáctico</option>
           </select>
         </section>
 
@@ -238,8 +240,9 @@ export default function Settings({ user, onBack }) {
           <button 
             onClick={handleSave}
             disabled={loading}
+            /* CAMBIO: bg-brain-orange para que siempre sea visible, pero con texto que contraste */
             className={`w-full py-5 rounded-[2rem] font-black text-white shadow-xl flex items-center justify-center gap-2 transition-all ${
-              saved ? 'bg-green-500 scale-95' : 'bg-leaf-dark hover:scale-[1.02] active:scale-95'
+              saved ? 'bg-green-500 scale-95' : 'bg-[var(--brain-orange)] hover:brightness-110 active:scale-95'
             }`}
           >
             {loading ? 'GUARDANDO...' : saved 

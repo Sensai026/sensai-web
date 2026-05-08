@@ -45,15 +45,16 @@ export const checkForCrisis = (text) => {
  */
 export const registerCrisisAlert = async (userId, userName, message) => {
   try {
-    await addDoc(collection(db, 'alerts'), {
+    const docRef = await addDoc(collection(db, 'alerts'), {
       userId,
       userName,
       message: message || "Se ha detectado un indicador de riesgo en el chat.",
       status: 'active',
-      timestamp: serverTimestamp()
+      timestamp: serverTimestamp() // Usa la hora del servidor, no la del celular
     });
+    console.log("Alerta sincronizada en la nube con ID:", docRef.id);
   } catch (error) {
-    console.error("Error al registrar alerta en la nube:", error);
+    console.error("Error al registrar alerta:", error);
   }
 };
 
@@ -63,22 +64,39 @@ export const registerCrisisAlert = async (userId, userName, message) => {
 export const subscribeToCrisisAlerts = (userId, callback) => {
   if (!userId) return () => {};
 
+  // Referencia a la colección
+  const alertsRef = collection(db, 'alerts');
+
+  // Consulta: Si falla el orderBy por falta de índice, 
+  // quita el orderBy temporalmente para probar.
   const q = query(
-    collection(db, 'alerts'),
+    alertsRef,
     where('userId', '==', userId),
     where('status', '==', 'active'),
-    orderBy('timestamp', 'desc')
+    orderBy('timestamp', 'desc') 
   );
 
-  return onSnapshot(q, (snapshot) => {
-    const alerts = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      // Formateo de fecha para la UI del Dashboard
-      timestamp: doc.data().timestamp?.toDate().toLocaleString('es-MX') || 'Reciente'
-    }));
-    callback(alerts);
-  });
+  return onSnapshot(q, 
+    (snapshot) => {
+      const alerts = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          // ✅ MEJORA: Manejo más robusto del tiempo para evitar errores entre dispositivos
+          timestamp: data.timestamp 
+            ? data.timestamp.toDate().toLocaleString('es-MX', { hour12: true }) 
+            : 'Sincronizando...'
+        };
+      });
+      callback(alerts);
+    },
+    (error) => {
+      // ⚠️ IMPORTANTE: Si ves este error en la consola del navegador, 
+      // te dará un LINK para crear el índice automáticamente.
+      console.error("Error en suscripción de alertas:", error);
+    }
+  );
 };
 
 export const CRISIS_RESOURCES = {

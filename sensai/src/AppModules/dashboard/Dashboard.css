@@ -67,3 +67,85 @@
 .notif-item {
   @apply p-4 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors;
 }
+.dashboard-layout {
+  transition: background-color 0.5s ease;
+}
+
+.module-card-dash {
+  /* En lugar de bg-white, usamos una transparencia sutil que se adapte al fondo */
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  border-radius: 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card-dash:hover {
+  transform: translateY(-8px);
+  background-color: rgba(255, 255, 255, 0.05); /* Brillo sutil */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border-color: var(--brain-purple);
+}
+
+.icon-container {
+  background-color: var(--brain-purple);
+  color: white;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.module-card-dash:hover .icon-container {
+  transform: scale(1.1) rotate(-5deg);
+  background-color: var(--brain-orange);
+}
+
+/* Panel de notificaciones adaptado */
+.notifications-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  border-radius: 1.5rem;
+  z-index: 100;
+  margin-top: 1rem;
+}
+.notifications-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  z-index: 100;
+  /* El fondo se hereda de la variable del tema */
+  background-color: var(--bg-primary);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el scrollbar dentro de las notificaciones en temas oscuros */
+.notifications-panel div::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notifications-panel div::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+.notif-item {
+  transition: all 0.2s ease;
+}
+
+/* Evitamos que el texto se vuelva negro puro en temas oscuros */
+.notif-item p {
+  color: var(--leaf-dark);
+}

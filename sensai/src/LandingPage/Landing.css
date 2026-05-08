@@ -1,37 +1,57 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brain-purple: #a67cc2;
-  --color-brain-orange: #e99d72;
-  --color-monitor-mint: #9cd6b7;
-  --color-leaf-dark: #16572a;
+  /* Paleta Extraída del Logo SENSAI */
+  --color-sensai-blue: #2B59FF;    /* Azul del inicio del degradado */
+  --color-sensai-purple: #8B5CF6;  /* Violeta medio */
+  --color-sensai-green: #00B876;   /* Verde del ala izquierda */
+  --color-sensai-orange: #FF6B00;  /* Naranja de acción */
+  --color-sensai-yellow: #FFB800;  /* Amarillo del ala inferior */
+  --color-sensai-dark: #0A0F29;    /* Azul marino muy profundo para contraste */
+
+  /* Mapeo para tus utilidades existentes */
+  --color-brain-purple: var(--sensai-purple);
+  --color-brain-orange: var(--sensai-orange);
+  --color-monitor-mint: #D1FAE5;   /* Versión light del verde del logo */
+  --color-leaf-dark: var(--sensai-green);
 }
 
-@utility landing-container {
-  /* En móviles el padding es menor (p-4), en escritorio aumenta (md:p-8) */
-  @apply min-h-screen bg-white text-slate-800 font-sans p-4 md:p-0;
+/* Banner Superior: Ahora con el degradado real del logo */
+@utility banner-urgent {
+  @apply bg-gradient-to-r from-[#2B59FF] via-[#8B5CF6] to-[#FF6B00] text-white py-3 px-6 
+         text-center font-bold shadow-md relative z-[60];
 }
 
+/* Footer: Usaremos el Azul Marino Profundo del texto del logo para que el logo "viva" ahí */
+@utility footer-sensai {
+  @apply bg-[#0A0F29] text-white pt-20 pb-10 px-6 relative overflow-hidden;
+}
+
+/* Tarjeta de Aviso Médico: Estilo limpio pero imposible de ignorar */
+@utility medical-warning-card {
+  @apply bg-white rounded-[2.5rem] p-8 border-l-[10px] border-[#FF6B00] shadow-2xl;
+}
+/* BOTÓN PRINCIPAL (NARANJA SENSAI) */
 @utility btn-primary {
-  /* El botón es más pequeño en móvil para que no ocupe toda la pantalla */
-  @apply bg-brain-orange text-white px-6 py-3 md:px-8 md:py-4 rounded-2xl md:rounded-3xl 
-         font-bold hover:brightness-110 transition-all shadow-lg text-base md:text-lg cursor-pointer;
+  @apply bg-[#FF6B00] text-white px-8 py-4 rounded-[1.5rem] 
+         font-black uppercase tracking-widest text-sm
+         hover:bg-[#FF8533] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(255,107,0,0.3)]
+         active:scale-95 transition-all cursor-pointer shadow-lg
+         flex items-center justify-center gap-2;
 }
 
+/* BOTÓN SECUNDARIO (CONTORNO / VIOLETA) */
 @utility btn-secondary {
-  @apply bg-white text-leaf-dark px-6 py-3 md:px-8 md:py-4 rounded-2xl md:rounded-3xl 
-         font-bold hover:bg-gray-100 transition-all border border-monitor-mint/50 
-         text-base md:text-lg cursor-pointer;
+  @apply bg-white text-[#8B5CF6] px-8 py-4 rounded-[1.5rem] 
+         font-black uppercase tracking-widest text-sm
+         border-2 border-[#8B5CF6]/20 hover:border-[#8B5CF6]
+         hover:bg-[#8B5CF6]/5 transition-all cursor-pointer
+         flex items-center justify-center gap-2;
 }
 
-@utility module-card {
-  /* Ajustamos el padding para que en pantallas pequeñas no se vea apretado */
-  @apply bg-white p-5 md:p-8 rounded-[2rem] shadow-lg border border-monitor-mint/30 
-         hover:shadow-xl transition-all hover:-translate-y-1 h-full;
-}
-
-@utility section-highlight {
-  /* Bordes más suaves en móvil */
-  @apply bg-brain-purple/10 p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] 
-         shadow-xl border border-brain-purple/30;
+/* AJUSTE PARA EL BOTÓN DEL HEADER (MÁS PEQUEÑO) */
+@utility btn-header {
+  @apply bg-[#FF6B00] text-white px-6 py-2.5 rounded-xl 
+         font-bold text-sm hover:brightness-110 transition-all 
+         cursor-pointer shadow-md flex items-center gap-2;
 }

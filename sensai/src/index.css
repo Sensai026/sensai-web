@@ -1,22 +1,43 @@
 @import "tailwindcss";
 
 @theme {
+  /* Mapeo de variables a clases de Tailwind */
   --color-brain-purple: var(--brain-purple);
   --color-brain-orange: var(--brain-orange);
   --color-monitor-mint: var(--monitor-mint);
   --color-leaf-dark: var(--leaf-dark);
   --color-bg-primary: var(--bg-primary);
+  --color-brand-ai: var(--color-ai);
+  
+  /* Agregamos los nuevos gradientes para usarlos en el Landing */
+  --background-image-gradient-sensai: linear-gradient(135deg, #7B3FCE, #FF6820, #FFBB00);
+  --background-image-gradient-wellness: linear-gradient(135deg, #00B876, #00CCFF);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--leaf-dark); /* Color de texto base que también se adapta */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-h-screen: 100vh;
 }
 
 :root {
-  /* 1. NATURALEZA (Original) */
-  --brain-purple: #a67cc2;
-  --brain-orange: #e99d72;
-  --monitor-mint: #9cd6b7;
-  --leaf-dark: #16572a;
-  --bg-primary: #ffffff;
-  --border: #e2e8f0;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  /* 1. NATURALEZA (Design System v2.0 - Actualizado) */
+  --brain-purple: #7B3FCE;    /* Violeta Primario */
+  --brain-orange: #FF6820;    /* Naranja Acción */
+  --monitor-mint: #E0F7EE;    /* Verde Esmeralda Light */
+  --leaf-dark: #008A56;       /* Verde Esmeralda Dark */
+  --bg-primary: #F5F4FF;      /* Fondo con tinte violeta */
+  --border: #C8C2E8;          /* Borde sutil violeta */
+  
+  /* Nuevas variables del sistema v2.0 */
+  --color-ai: #00CCFF;        /* Cian IA */
+  --color-amber: #FFBB00;     /* Ámbar Acento */
 }
+
+/* --- Mantenemos tus otros temas abajo sin cambios --- */
 
 /* 2. NOCHE PROFUNDA */
 [data-theme='dark'] {
@@ -86,4 +107,16 @@
   --leaf-dark: #4c1d95;
   --bg-primary: #f5f3ff;
   --border: #ddd6fe;
+}
+/* Ajuste automático para las tarjetas de configuración y dashboard */
+.settings-card, .dashboard-card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border) !important;
+  color: var(--leaf-dark) !important;
+}
+
+/* En temas oscuros, si quieres que las tarjetas sean un poquito más claras que el fondo 
+   para que se note la división, puedes hacer esto: */
+[data-theme='dark'] .settings-card {
+  background-color: rgba(255,255,255,0.05) !important;
 }
