@@ -9,14 +9,17 @@ import Settings from './AppModules/settings/Settings'
 import GamesModule from './AppModules/games/GamesModule'
 import ExercisesModule from './AppModules/exercises/ExercisesModule';
 import Community from './AppModules/community/Community';
-
-// 1. IMPORTAR EL NUEVO HUB DE CUIDADO PERSONAL
 import SelfCareHub from './AppModules/self-care/SelfCareHub';
+import Specialists from './AppModules/specialists/Specialists';
+import { getUserSettings } from './services/user.service'; // Ajusta la ruta a tu estructura
+import InitialSetup from './Auth/InitialSetup'; // Importa el componente que acabamos de crear
 
 export default function App() {
+  
   const [user, setUser] = useState(null)
   const [view, setView] = useState('landing')
   const [loading, setLoading] = useState(true) 
+  const [hasSettings, setHasSettings] = useState(true);
 
   // --- LÓGICA DE NAVEGACIÓN GLOBAL ---
   useEffect(() => {
@@ -42,20 +45,31 @@ export default function App() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-      setLoading(false) 
-      
-      if (currentUser) {
-        const initialView = (view === 'landing' || view === 'auth') ? 'dashboard' : view;
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setUser(currentUser);
+
+    if (currentUser) {
+      // Comprobamos directamente en la base de datos si ya tiene configuraciones guardadas
+      const dbSettings = await getUserSettings(currentUser.uid);
+
+      if (!dbSettings) {
+        // Si retorna null o undefined significa que es su primera vez absoluta
+        setHasSettings(false);
+        setView('initial-setup');
+      } else {
+        setHasSettings(true);
+        const initialView = (view === 'landing' || view === 'auth' || view === 'initial-setup') ? 'dashboard' : view;
         window.history.replaceState({ view: initialView }, '', '');
         setView(initialView);
-      } else {
-        setView('landing')
       }
-    })
-    return () => unsubscribe()
-  }, [])
+    } else {
+      setView('landing');
+      setHasSettings(true); // Reseteamos al cerrar sesión
+    }
+    setLoading(false);
+  });
+  return () => unsubscribe();
+}, []);
 
   const applySavedTheme = () => {
     try {
@@ -97,6 +111,18 @@ export default function App() {
   }
 
   // --- 2. FLUJO CON USUARIO ---
+
+  if (view === 'initial-setup' || !hasSettings) {
+    return (
+      <InitialSetup 
+        user={user} 
+        onSetupComplete={(savedSettings) => {
+          setHasSettings(true);
+          navigateTo('dashboard');
+        }} 
+      />
+    );
+  }
   
   if (view === 'chat') {
     return <Chat user={user} onBack={() => navigateTo('dashboard')} />;
@@ -118,9 +144,12 @@ export default function App() {
     return <ExercisesModule user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
-  // --- 2.1 NUEVO MÓDULO: CUIDADO PERSONAL ---
   if (view === 'self-care') {
     return <SelfCareHub onBack={() => navigateTo('dashboard')} />;
+  }
+
+  if (view === 'specialists') {
+    return <Specialists user={user} onBack={() => navigateTo('dashboard')} />;
   }
 
   // --- 3. VISTA POR DEFECTO (DASHBOARD) ---

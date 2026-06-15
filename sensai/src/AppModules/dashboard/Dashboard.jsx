@@ -9,9 +9,11 @@ import {
   LogOut,
   Bell,
   AlertTriangle,
-  HeartPulse 
+  HeartPulse,
+  Star 
 } from 'lucide-react';
 import { subscribeToCrisisAlerts } from '../../services/crisis.service';
+import FeedbackModal from '../../Feedback/FeedbackModal';
 import './Dashboard.css';
 
 // Componente de Tarjeta Adaptable
@@ -30,6 +32,7 @@ const ModuleCard = ({ id, icon: Icon, title, description, onSelect }) => (
 export default function Dashboard({ user, onLogout, onModuleSelect = () => {} }) {
   const [alerts, setAlerts] = useState([]);
   const [showNotifs, setShowNotifs] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   useEffect(() => {
     if (user?.uid) {
@@ -46,7 +49,7 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
     { id: 'self-care', icon: HeartPulse, title: "Cuidado personal", description: "Gestiona tu energía vital y hábitos diarios para un bienestar pleno." },
     { id: 'games', icon: Gamepad2, title: "Juegos", description: "Retos de memoria y estimulación cognitiva para tu bienestar." },
     { id: 'community', icon: Users, title: "Comunidad", description: "Comparte experiencias en un entorno seguro y moderado." },
-    { id: 'profesionales', icon: Stethoscope, title: "Especialistas", description: "Directorio para canalización con expertos en salud mental." },
+    { id: 'specialists', icon: Stethoscope, title: "Especialistas", description: "Directorio para canalización con expertos en salud mental." },
     { id: 'settings', icon: Settings, title: "Configuración", description: "Personaliza el lenguaje, tonos y temas de tu SENSAI." }
   ];
 
@@ -126,10 +129,25 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
           </div>
         </div>
 
-        <button onClick={onLogout} className="flex items-center gap-2 text-xs font-black text-red-500/70 hover:text-red-500 uppercase tracking-widest transition-all">
-          <LogOut size={16} />
-          Cerrar Sesión
-        </button>
+        {/* CONTENEDOR DE ACCIONES EN EL HEADER */}
+        <div className="flex items-center gap-6">
+          {/* Botón para Calificar la plataforma */}
+          <button 
+            onClick={() => setIsFeedbackOpen(true)}
+            className="flex items-center gap-1.5 text-xs font-black text-[var(--brain-orange)] hover:brightness-110 uppercase tracking-widest transition-all"
+          >
+            <Star size={16} fill="currentColor" />
+            Calificar
+          </button>
+
+          <button 
+            onClick={onLogout} 
+            className="flex items-center gap-2 text-xs font-black text-red-500/70 hover:text-red-500 uppercase tracking-widest transition-all"
+          >
+            <LogOut size={16} />
+            Cerrar Sesión
+          </button>
+        </div>
       </header>
 
       <main className="max-w-7xl mx-auto mt-12 md:mt-20 px-6 pb-20">
@@ -146,6 +164,13 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
           ))}
         </div>
       </main>
+
+      {/* COMPONENTE FEEDBACK MODAL INTEGRADO */}
+      <FeedbackModal 
+        user={user}
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
     </div>
   );
 }

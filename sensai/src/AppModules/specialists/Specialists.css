@@ -1,0 +1,28 @@
+/* Custom Scrollbar responsiva al tema */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 184, 118, 0.2);
+  border-radius: 10px;
+}
+
+/* En modo oscuro cambiamos sutilmente el color del scrollbar */
+:root[data-theme='dark'] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 184, 118, 0.5);
+}
+
+@media (max-width: 767px) {
+  iframe {
+    height: 100%;
+  }
+}
