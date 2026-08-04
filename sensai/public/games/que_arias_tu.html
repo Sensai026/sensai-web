@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¿Qué harías tú? - Situaciones de la Vida Cotidiana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(1.4rem, 4.5vw, 2.3rem);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .description {
+            max-width: 700px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+            line-height: 1.5;
+            color: #555;
+            border-left: 4px solid #667eea;
+            text-align: left;
+        }
+
+        .description strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .game-area {
+            margin-top: 16px;
+        }
+
+        /* Estadísticas totalmente adaptables */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            color: #667eea;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            flex: 1 1 auto;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .stat-box span {
+            font-size: 1.1rem;
+            margin-right: 4px;
+        }
+
+        .situation-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 18px 14px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .situation-number {
+            font-size: clamp(0.75rem, 2vw, 0.88rem);
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .situation-text {
+            font-size: clamp(1rem, 3.2vw, 1.3rem);
+            color: #333;
+            font-weight: 600;
+            line-height: 1.45;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .option-card {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .option-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
+        }
+
+        .option-letter {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            font-size: clamp(0.85rem, 2.4vw, 1rem);
+            color: #333;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .option-card.correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+            animation: correctPulse 0.4s ease-out;
+        }
+
+        .option-card.correct .option-letter {
+            background: white;
+            color: #10b981;
+        }
+
+        .option-card.correct .option-text { color: white; }
+
+        .option-card.incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #ef4444;
+            animation: shake 0.4s ease-out;
+        }
+
+        .option-card.incorrect .option-letter {
+            background: white;
+            color: #ef4444;
+        }
+
+        .option-card.incorrect .option-text { color: white; }
+
+        .option-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .feedback {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            font-size: clamp(0.85rem, 2.4vw, 1rem);
+            line-height: 1.5;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            text-align: left;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .feedback strong {
+            font-weight: 700;
+            font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn, .restart-btn {
+            display: inline-block;
+            width: 100%;
+            max-width: 320px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            margin-top: 10px;
+        }
+
+        .next-btn:active, .restart-btn:active {
+            transform: scale(0.97);
+        }
+
+        .congratulations {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 24px 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .hidden { display: none !important; }
+
+        @media (min-width: 600px) {
+            .main-container { padding: 36px 30px; }
+            .situation-card { padding: 24px 20px; }
+            .option-card { padding: 16px 20px; }
+            .next-btn, .restart-btn { width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>🤔 ¿Qué harías tú?</h1>
+        <p class="subtitle">Situaciones de la vida cotidiana</p>
+        
+        <div class="description">
+            <p>
+                Este juego te presenta <strong>situaciones cotidianas</strong> para tomar decisiones 
+                y desarrollar tu <strong>inteligencia emocional</strong> con estrategias saludables.
+            </p>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="stats">
+                <div class="stat-box">
+                    <span>✅</span> <span id="correctCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>💡</span> <span id="incorrectCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>🎯</span> <span id="situationCount">1</span>/10
+                </div>
+            </div>
+
+            <div class="situation-card">
+                <div class="situation-number" id="situationNumber">Situación 1 de 10</div>
+                <div class="situation-text" id="situationText"></div>
+            </div>
+
+            <div class="options-container" id="optionsContainer"></div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <button class="next-btn hidden" id="nextBtn" onclick="nextSituation()">
+                Siguiente Situación ➡️
+            </button>
+        </div>
+
+        <div class="congratulations hidden" id="congratulations">
+            <h2>🎉 ¡Has completado todas las situaciones!</h2>
+            <p style="font-size: 1.1rem; margin-top: 12px;">
+                Buenas decisiones: <span id="finalScore">0</span>/10
+            </p>
+            <button class="restart-btn" onclick="restartGame()" style="margin-top: 16px;">
+                🔄 Jugar de Nuevo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const situations = [
+            {
+                situation: "Estás muy estresado porque tienes un examen mañana y sientes que no puedes concentrarte. ¿Qué harías?",
+                options: [
+                    { text: "Seguir estudiando sin descansar.", correct: false },
+                    { text: "Tomar unos minutos para respirar, organizar lo que necesitas estudiar y continuar.", correct: true },
+                    { text: "Dejar todo y no hacer nada.", correct: false }
+                ],
+                explanation: "Tomarte unos minutos para respirar y organizar tus tareas te ayuda a afrontar la situación con calma."
+            },
+            {
+                situation: "Un amigo te cuenta que está pasando por un momento difícil y parece muy triste. ¿Qué harías?",
+                options: [
+                    { text: "Escucharlo activamente sin juzgar y ofrecer mi apoyo.", correct: true },
+                    { text: "Decirle que no se preocupe, que todo va a estar bien.", correct: false },
+                    { text: "Cambiar de tema porque me incomoda la tristeza.", correct: false }
+                ],
+                explanation: "Escuchar activamente y ofrecer apoyo genuino es valioso. A veces solo se necesita ser escuchado."
+            },
+            {
+                situation: "En el trabajo, un compañero te critica delante de todos por un error que cometiste. ¿Qué harías?",
+                options: [
+                    { text: "Gritarle y defenderme agresivamente.", correct: false },
+                    { text: "Escuchar la crítica, asumir la responsabilidad si es válida y hablar en privado después.", correct: true },
+                    { text: "Ignorarlo y no decir nada.", correct: false }
+                ],
+                explanation: "Mantener la calma y hablar en privado demuestra madurez y asertividad."
+            },
+            {
+                situation: "Te sientes muy solo y sin ganas de salir de casa. ¿Qué harías?",
+                options: [
+                    { text: "Quedarme en casa aislándome más.", correct: false },
+                    { text: "Llamar a un amigo o familiar de confianza para hablar.", correct: true },
+                    { text: "Distraerme con redes sociales sin interactuar con nadie.", correct: false }
+                ],
+                explanation: "Conectar con alguien de confianza ayuda a combatir la soledad y sentirse acompañado."
+            },
+            {
+                situation: "Tienes una discusión con tu pareja y ambos están muy enojados. ¿Qué harías?",
+                options: [
+                    { text: "Seguir discutiendo hasta ganar la razón.", correct: false },
+                    { text: "Proponer una pausa para calmarnos y continuar la conversación más tarde.", correct: true },
+                    { text: "Irme de la casa sin decir nada.", correct: false }
+                ],
+                explanation: "Hacer una pausa cuando las emociones son intensas evita decir cosas hirientes."
+            },
+            {
+                situation: "Te ofrecen una oportunidad de trabajo buena, pero tendrías que mudarte de ciudad. ¿Qué harías?",
+                options: [
+                    { text: "Aceptar inmediatamente sin pensar.", correct: false },
+                    { text: "Evaluar los pros y contras, hablar con mi familia y tomar una decisión informada.", correct: true },
+                    { text: "Rechazarlo por miedo al cambio.", correct: false }
+                ],
+                explanation: "Las decisiones importantes requieren reflexión previa y considerar distintas perspectivas."
+            },
+            {
+                situation: "Un compañero de grupo no está haciendo su parte del trabajo. ¿Qué harías?",
+                options: [
+                    { text: "Hacer su trabajo yo mismo y no decir nada.", correct: false },
+                    { text: "Hablar con él de manera respetuosa para entender qué pasa y buscar solución.", correct: true },
+                    { text: "Quejarme con el profesor sin hablar con él primero.", correct: false }
+                ],
+                explanation: "La comunicación directa y respetuosa resuelve los conflictos de forma efectiva."
+            },
+            {
+                situation: "Te sientes muy cansado y tienes muchas tareas pendientes. ¿Qué harías?",
+                options: [
+                    { text: "Trabajar hasta terminar todo sin descansar.", correct: false },
+                    { text: "Priorizar lo más urgente, descansar un poco y continuar mañana.", correct: true },
+                    { text: "Abandonar todas las tareas.", correct: false }
+                ],
+                explanation: "Priorizar y descansar mejora el rendimiento y cuida tu salud mental."
+            },
+            {
+                situation: "Alguien te pide que hagas algo que va en contra de tus valores. ¿Qué harías?",
+                options: [
+                    { text: "Hacerlo para no perder la amistad.", correct: false },
+                    { text: "Expresar mis límites con respeto y explicar por qué no puedo hacerlo.", correct: true },
+                    { text: "Cortar la relación inmediatamente.", correct: false }
+                ],
+                explanation: "Mantenerse fiel a los valores propios es clave. Expresar límites fortalece las relaciones de forma sana."
+            },
+            {
+                situation: "Cometes un error importante en un proyecto. ¿Qué harías?",
+                options: [
+                    { text: "Ocultarlo y esperar que nadie se dé cuenta.", correct: false },
+                    { text: "Asumir la responsabilidad, informar a los involucrados y buscar cómo solucionarlo.", correct: true },
+                    { text: "Culpar a otra persona.", correct: false }
+                ],
+                explanation: "Asumir la responsabilidad demuestra integridad y permite resolver la situación."
+            }
+        ];
+
+        let currentSituation = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let hasAnswered = false;
+        let shuffledSituations = [];
+        const totalSituations = 10;
+
+        function initGame() {
+            currentSituation = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            hasAnswered = false;
+            
+            shuffledSituations = [...situations].sort(() => Math.random() - 0.5).slice(0, totalSituations);
+            
+            document.getElementById('congratulations').classList.add('hidden');
+            document.getElementById('gameArea').classList.remove('hidden');
+            
+            updateStats();
+            renderSituation();
+        }
+
+        function renderSituation() {
+            const situation = shuffledSituations[currentSituation];
+            
+            document.getElementById('situationNumber').textContent = `Situación ${currentSituation + 1} de ${totalSituations}`;
+            document.getElementById('situationText').textContent = situation.situation;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            const shuffledOptions = [...situation.options].map((option, originalIndex) => ({
+                ...option,
+                originalIndex
+            })).sort(() => Math.random() - 0.5);
+            
+            const letters = ['A', 'B', 'C'];
+            shuffledOptions.forEach((option, displayIndex) => {
+                const optionCard = document.createElement('div');
+                optionCard.className = 'option-card';
+                optionCard.innerHTML = `
+                    <div class="option-letter">${letters[displayIndex]}</div>
+                    <div class="option-text">${option.text}</div>
+                `;
+                optionCard.onclick = () => checkAnswer(option.originalIndex, optionCard);
+                optionsContainer.appendChild(optionCard);
+            });
+            
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            hasAnswered = false;
+        }
+
+        function checkAnswer(selectedIndex, cardElement) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            
+            const situation = shuffledSituations[currentSituation];
+            const selectedOption = situation.options[selectedIndex];
+            const allCards = document.querySelectorAll('.option-card');
+            
+            allCards.forEach(card => card.classList.add('disabled'));
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (selectedOption.correct) {
+                correctAnswers++;
+                cardElement.classList.add('correct');
+                feedback.innerHTML = `<strong><span>✅</span> Buena elección</strong>${situation.explanation}`;
+                feedback.className = 'feedback';
+            } else {
+                incorrectAnswers++;
+                cardElement.classList.add('incorrect');
+                
+                allCards.forEach((card, index) => {
+                    if (situation.options[index].correct) {
+                        card.classList.add('correct');
+                        card.classList.remove('disabled');
+                    }
+                });
+                
+                feedback.innerHTML = `<strong><span>💡</span> Opción recomendada</strong>${situation.explanation}`;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.classList.remove('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            updateStats();
+        }
+
+        function nextSituation() {
+            currentSituation++;
+            if (currentSituation >= totalSituations) {
+                endGame();
+                return;
+            }
+            updateStats();
+            renderSituation();
+        }
+
+        function updateStats() {
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('incorrectCount').textContent = incorrectAnswers;
+            document.getElementById('situationCount').textContent = Math.min(currentSituation + 1, totalSituations);
+        }
+
+        function endGame() {
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('congratulations').classList.remove('hidden');
+            document.getElementById('finalScore').textContent = correctAnswers;
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

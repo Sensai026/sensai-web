@@ -468,54 +468,62 @@ h1{
   font-weight: 700;
 }
 
-/* Responsive para móvil */
+/* Responsive para móvil (Corregido) */
 @media (max-width: 768px) {
   .game-container {
-    padding: var(--space-md);
+    padding: var(--space-xs);
     max-width: 100%;
+    overflow-x: hidden;
   }
   
   h1 {
-    font-size: 1.8rem;
-    margin-bottom: var(--space-md);
+    font-size: 1.6rem;
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-xs);
   }
   
   .descripcion {
-    font-size: 14px;
-    padding: var(--space-md);
+    font-size: 13px;
+    padding: var(--space-sm);
   }
   
   .info {
-    font-size: 16px;
-    padding: var(--space-md);
-    flex-direction: column;
-    gap: var(--space-sm);
+    font-size: 14px;
+    padding: var(--space-sm);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-sm);
   }
-  
+
+  /* Ajuste responsivo de cartas */
   .carta {
-    width: 70px;
-    height: 70px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
   }
   
   .frente, .atras {
-    font-size: 24px;
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
   }
   
   #tablero {
-    grid-template-columns: repeat(auto-fit, 70px) !important;
-    gap: var(--space-sm);
-    max-width: 600px;
-    padding: 0 var(--space-sm);
+    /* Mantiene máximo 4 columnas flexibles que entran perfecto en el celular */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)) !important;
+    gap: var(--space-xs);
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: var(--space-md) auto;
   }
   
   .modal-content {
-    padding: var(--space-xl);
+    padding: var(--space-lg);
   }
   
   button {
-    min-height: 44px;
-    padding: var(--space-md) var(--space-lg);
-    font-size: 16px;
+    min-height: 40px;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 14px;
   }
 }
 

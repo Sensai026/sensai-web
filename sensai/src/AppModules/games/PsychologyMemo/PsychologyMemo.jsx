@@ -19,12 +19,12 @@ const PsychologyMemo = ({ onBack }) => {
           <ArrowLeft size={16} /> REGRESAR
         </button>
         <span className="text-[10px] font-black uppercase tracking-widest text-[var(--leaf-dark)] opacity-40">
-          Recuerdos en Equilibrio
+          Memorama Cognitivo
         </span>
       </div>
       <div className="flex-grow overflow-hidden bg-white">
         <iframe
-          src="/games/r_equilibrio/recuerdos_equilibrio.html"
+          src="/games/memorama_psicologia.html" 
           title="Recuerdos en Equilibrio"
           className="w-full h-full border-none"
           allow="autoplay; fullscreen"

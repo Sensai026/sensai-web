@@ -6,6 +6,9 @@ import PsychologyMemo from './PsychologyMemo/PsychologyMemo';
 import HiddenWord from './HiddenWord/HiddenWord';
 import TetrisGame from './Tetris/TetrisGame';
 import MissionBrain from './MissionBrain/MissionBrain';
+import SopaLetras from './SopaLetras/SopaLetras';
+import QueAriasTu from './QueAriasTu/QueAriasTu';
+import Emociones from './Emociones/Emociones';
 
 export default function GamesModule({ user, onBack }) {
   const [activeGame, setActiveGame] = useState(null);
@@ -21,8 +24,10 @@ export default function GamesModule({ user, onBack }) {
     'psycho-memo': <PsychologyMemo onBack={() => setActiveGame(null)} />,
     'hidden-word': <HiddenWord onBack={() => setActiveGame(null)} />,
     'tetris': <TetrisGame onBack={() => setActiveGame(null)} />,
+    'sopa-letras': <SopaLetras onBack={() => setActiveGame(null)} />,
+    'que-arias-tu': <QueAriasTu onBack={() => setActiveGame(null)} />,
+    'emociones': <Emociones onBack={() => setActiveGame(null)} />,
     'mission-brain': <MissionBrain onBack={() => setActiveGame(null)} />,
-    // Aquí agregarás los siguientes 2 juegos que te pasaron
   };
 
   return games[activeGame] || (

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Encuentra la Emoción - Juego de Inteligencia Emocional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .description {
+            max-width: 700px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+            line-height: 1.5;
+            color: #555;
+            border-left: 4px solid #667eea;
+            text-align: left;
+        }
+
+        .description strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .game-area {
+            margin-top: 16px;
+        }
+
+        /* Estadísticas totalmente adaptables */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            color: #667eea;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            flex: 1 1 auto;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .stat-box span {
+            font-size: 1.1rem;
+            margin-right: 4px;
+        }
+
+        .question {
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            color: #333;
+            margin-bottom: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 14px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* GRID ADAPTATIVO: 2 columnas en móviles, 4 en pantallas grandes */
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .emoji-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .emoji-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
+        }
+
+        .emoji-card .emoji {
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            display: block;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .emoji-card .emotion-name {
+            font-size: clamp(0.75rem, 2.2vw, 0.9rem);
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .emoji-card.correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+            animation: correctPulse 0.4s ease-out;
+        }
+
+        .emoji-card.correct .emotion-name { color: white; }
+
+        .emoji-card.incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #ef4444;
+            animation: shake 0.4s ease-out;
+        }
+
+        .emoji-card.incorrect .emotion-name { color: white; }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .feedback {
+            font-size: clamp(0.9rem, 2.8vw, 1.15rem);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .next-btn, .restart-btn {
+            display: inline-block;
+            width: 100%;
+            max-width: 320px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+            margin-top: 10px;
+        }
+
+        .next-btn:active, .restart-btn:active {
+            transform: scale(0.97);
+        }
+
+        .congratulations {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 24px 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .hidden { display: none !important; }
+
+        /* Media Queries para Tablets y Escritorio (pantallas > 600px) */
+        @media (min-width: 600px) {
+            .main-container { padding: 36px 30px; }
+            .emoji-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+            .emoji-card { padding: 20px 12px; }
+            .next-btn, .restart-btn { width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>😊 Encuentra la Emoción</h1>
+        <p class="subtitle">Desarrolla tu inteligencia emocional</p>
+        
+        <div class="description">
+            <p>
+                Este juego te ayuda a mejorar tu <strong>inteligencia emocional</strong> y 
+                <strong>reconocimiento emocional</strong>. Identifica la emoción correcta 
+                entre las opciones mostradas.
+            </p>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="stats">
+                <div class="stat-box">
+                    <span>✅</span> <span id="correctCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>❌</span> <span id="incorrectCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span>🎯</span> <span id="roundCount">1</span>/10
+                </div>
+            </div>
+
+            <div class="question" id="question">
+                ¿Qué emoción representa este emoji?
+            </div>
+
+            <div class="emoji-grid" id="emojiGrid"></div>
+
+            <div class="feedback hidden" id="feedback"></div>
+
+            <button class="next-btn hidden" id="nextBtn" onclick="nextRound()">
+                Siguiente Ronda ➡️
+            </button>
+        </div>
+
+        <div class="congratulations hidden" id="congratulations">
+            <h2>🎉 ¡Felicidades!</h2>
+            <p style="margin-top: 6px;">Has completado todas las rondas</p>
+            <p style="font-size: 1.1rem; margin-top: 12px;">
+                Puntuación final: <span id="finalScore">0</span>/10
+            </p>
+            <button class="restart-btn" onclick="restartGame()" style="margin-top: 16px;">
+                🔄 Jugar de Nuevo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const emotions = [
+            { emoji: "😊", name: "ALEGRÍA" },
+            { emoji: "😢", name: "TRISTEZA" },
+            { emoji: "😨", name: "MIEDO" },
+            { emoji: "😠", name: "ENOJO" },
+            { emoji: "😰", name: "ANSIEDAD" },
+            { emoji: "😓", name: "ESTRÉS" },
+            { emoji: "🌿", name: "CALMA" },
+            { emoji: "❤️", name: "AMOR" },
+            { emoji: "🤝", name: "EMPATÍA" },
+            { emoji: "🌟", name: "FELICIDAD" },
+            { emoji: "😔", name: "CULPA" },
+            { emoji: "😳", name: "VERGÜENZA" },
+            { emoji: "🌈", name: "ESPERANZA" },
+            { emoji: "🛡️", name: "CONFIANZA" },
+            { emoji: "🙏", name: "GRATITUD" },
+            { emoji: "✨", name: "AUTOESTIMA" },
+            { emoji: "💪", name: "RESILIENCIA" },
+            { emoji: "🌸", name: "BIENESTAR" },
+            { emoji: "🔥", name: "MOTIVACIÓN" },
+            { emoji: "🧠", name: "TERAPIA" },
+            { emoji: "⚖️", name: "EQUILIBRIO" },
+            { emoji: "🧘", name: "RELAJACIÓN" },
+            { emoji: "💗", name: "AUTOCUIDADO" },
+            { emoji: "👁️", name: "CONCIENCIA" },
+            { emoji: "🎯", name: "AUTOCONTROL" },
+            { emoji: "🤲", name: "ACEPTACIÓN" },
+            { emoji: "🏆", name: "SUPERACIÓN" },
+            { emoji: "💡", name: "INTELIGENCIA" },
+            { emoji: "🎨", name: "CREATIVIDAD" },
+            { emoji: "🧩", name: "COGNICIÓN" }
+        ];
+
+        let currentRound = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let currentEmotion = null;
+        let currentOptions = [];
+        let hasAnswered = false;
+        const totalRounds = 10;
+
+        function initGame() {
+            currentRound = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            hasAnswered = false;
+            
+            document.getElementById('congratulations').classList.add('hidden');
+            document.getElementById('gameArea').classList.remove('hidden');
+            
+            updateStats();
+            nextRound();
+        }
+
+        function generateOptions() {
+            const correctEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+            currentEmotion = correctEmotion;
+            
+            const incorrectOptions = emotions
+                .filter(e => e.name !== correctEmotion.name)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+            
+            currentOptions = [correctEmotion, ...incorrectOptions].sort(() => Math.random() - 0.5);
+            return currentOptions;
+        }
+
+        function renderRound() {
+            const options = generateOptions();
+            const emojiGrid = document.getElementById('emojiGrid');
+            const question = document.getElementById('question');
+            
+            question.innerHTML = `¿Qué emoción representa ${currentEmotion.emoji}?`;
+            emojiGrid.innerHTML = '';
+            
+            options.forEach(option => {
+                const card = document.createElement('div');
+                card.className = 'emoji-card';
+                card.innerHTML = `
+                    <span class="emoji">${option.emoji}</span>
+                    <span class="emotion-name">${option.name}</span>
+                `;
+                card.onclick = () => checkAnswer(option, card);
+                emojiGrid.appendChild(card);
+            });
+            
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            hasAnswered = false;
+        }
+
+        function checkAnswer(selectedOption, cardElement) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            
+            const feedback = document.getElementById('feedback');
+            const allCards = document.querySelectorAll('.emoji-card');
+            
+            if (selectedOption.name === currentEmotion.name) {
+                correctAnswers++;
+                cardElement.classList.add('correct');
+                feedback.innerHTML = `✅ ¡Correcto! ${currentEmotion.emoji} es ${currentEmotion.name}`;
+                feedback.className = 'feedback correct';
+            } else {
+                incorrectAnswers++;
+                cardElement.classList.add('incorrect');
+                
+                allCards.forEach(card => {
+                    if (card.querySelector('.emotion-name').textContent === currentEmotion.name) {
+                        card.classList.add('correct');
+                    }
+                });
+                
+                feedback.innerHTML = `❌ Incorrecto. Era ${currentEmotion.name}`;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.classList.remove('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            updateStats();
+        }
+
+        function nextRound() {
+            currentRound++;
+            if (currentRound > totalRounds) {
+                endGame();
+                return;
+            }
+            updateStats();
+            renderRound();
+        }
+
+        function updateStats() {
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('incorrectCount').textContent = incorrectAnswers;
+            document.getElementById('roundCount').textContent = Math.min(currentRound, totalRounds);
+        }
+
+        function endGame() {
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('congratulations').classList.remove('hidden');
+            document.getElementById('finalScore').textContent = correctAnswers;
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

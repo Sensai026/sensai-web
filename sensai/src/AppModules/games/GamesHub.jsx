@@ -30,6 +30,9 @@ export default function GamesHub({ onSelectGame, onBack }) {
     { id: 'psycho-memo', title: 'Memorama Cognitivo', description: 'Estimula la atención y memoria a corto plazo con niveles progresivos.', icon: Gamepad2, color: '#8b5cf6' },
     { id: 'hidden-word', title: 'Palabra Oculta', description: 'Fortalece tu léxico y agilidad mental descubriendo conceptos psicológicos.', icon: Type, color: '#60a5fa' },
     { id: 'tetris', title: 'Arquitectura Mental', description: 'Mejora tu toma de decisiones y planificación espacial organizando estructuras.', icon: Layers, color: '#3877ff' },
+    { id: 'sopa-letras', title: 'Sopa de Letras', description: 'Descubre palabras clave que fortalecen tu bienestar emocional y concentración.', icon: Brain, color: '#7c3aed' },
+    { id: 'que-arias-tu', title: '¿Qué harías tú?', description: 'Reflexiona sobre decisiones cotidianas y desarrolla empatía emocional.', icon: Gamepad2, color: '#f97316' },
+    { id: 'emociones', title: 'Encuentra la emoción', description: 'Reconoce emociones y construye una mayor inteligencia emocional.', icon: Type, color: '#ec4899' },
     { id: 'puzzle', title: 'Rompecabezas Mental', description: 'Próximamente: Organiza tus pensamientos de forma visual.', icon: Puzzle, color: '#fbbf24' },
     { id: 'mission-brain', title: 'Cerebro en Misión', description: 'Viaja por diferentes mundos y conquista tus pensamientos.', icon: Compass, color: '#4f46e5' }
   ];

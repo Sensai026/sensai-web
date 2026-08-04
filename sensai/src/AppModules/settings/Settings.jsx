@@ -10,12 +10,15 @@ import {
   Palette, 
   Check,
   Star,
-  HeartHandshake
+  HeartHandshake,
+  AlertTriangle,
+  Trash2
 } from 'lucide-react';
 
-import { saveUserSettings, getUserSettings } from '../../services/user.service';
-import { db } from '../../config/firebase'; // Ajusta la ruta a tu config de Firebase
+import { saveUserSettings, getUserSettings, deleteUserAccountData } from '../../services/user.service';
+import { auth, db } from '../../config/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { deleteUser, reauthenticateWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import './Settings.css';
 
 export default function Settings({ user, onBack }) {
@@ -28,6 +31,10 @@ export default function Settings({ user, onBack }) {
   const [comment, setComment] = useState('');
   const [feedbackLoading, setFeedbackLoading] = useState(false);
   const [feedbackSent, setFeedbackSent] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   // ✅ CAMBIO 1: reemplaza deferredPrompt por isInstallable
   const [isInstallable, setIsInstallable] = useState(
@@ -150,6 +157,47 @@ export default function Settings({ user, onBack }) {
     if (outcome === 'accepted') {
       window.__pwaInstallPrompt = null;
       setIsInstallable(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user?.uid || !auth.currentUser) {
+      setDeleteError('No se pudo identificar tu sesión activa. Intenta iniciar sesión de nuevo.');
+      return;
+    }
+
+    setDeleteLoading(true);
+    setDeleteError('');
+    setDeleteSuccess(false);
+
+    try {
+      const deletedData = await deleteUserAccountData(user.uid);
+      if (!deletedData) {
+        throw new Error('No se pudieron eliminar los datos asociados en Firestore.');
+      }
+
+      try {
+        await deleteUser(auth.currentUser);
+      } catch (error) {
+        if (error?.code === 'auth/requires-recent-login') {
+          await reauthenticateWithPopup(auth.currentUser, new GoogleAuthProvider());
+          await deleteUser(auth.currentUser);
+        } else {
+          throw error;
+        }
+      }
+
+      setDeleteSuccess(true);
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('Error al eliminar la cuenta:', error);
+      setDeleteError(
+        error?.code === 'auth/requires-recent-login'
+          ? 'La eliminación requiere una sesión reciente. Intenta volver a iniciar sesión y repetir el proceso.'
+          : 'No se pudo completar la eliminación de la cuenta. Intenta de nuevo más tarde.'
+      );
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -365,7 +413,76 @@ export default function Settings({ user, onBack }) {
           </button>
         </div>
 
+        {/* ZONA DE PELIGRO */}
+        <section className="border-2 border-rose-300 bg-rose-50/80 rounded-[2rem] p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-3 justify-center">
+            <AlertTriangle className="text-rose-600" size={22} />
+            <h3 className="font-black text-rose-700 text-lg">Zona de Peligro</h3>
+          </div>
+          <p className="text-sm text-rose-700/80 text-center leading-relaxed mb-5">
+            Al eliminar tu cuenta, se borrarán permanentemente tus preferencias, historial de chat, mensajes de comunidad y otras actividades asociadas a tu usuario en SENSAI.
+          </p>
+
+          {deleteSuccess && (
+            <div className="mb-4 rounded-2xl border border-emerald-300 bg-emerald-100 px-4 py-3 text-sm font-semibold text-emerald-700 text-center">
+              Tu cuenta ha sido eliminada correctamente.
+            </div>
+          )}
+
+          {deleteError && (
+            <div className="mb-4 rounded-2xl border border-rose-300 bg-white px-4 py-3 text-sm font-semibold text-rose-700 text-center">
+              {deleteError}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            disabled={deleteLoading}
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-white bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all shadow-lg"
+          >
+            <Trash2 size={18} />
+            {deleteLoading ? 'Procesando...' : 'Eliminar mi cuenta y datos'}
+          </button>
+        </section>
+
       </div>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl border border-rose-200">
+            <div className="flex items-center justify-center mb-4">
+              <div className="rounded-full bg-rose-100 p-3 text-rose-600">
+                <AlertTriangle size={28} />
+              </div>
+            </div>
+            <h3 className="text-center text-xl font-black text-slate-800 mb-3">
+              ¿Estás seguro de que deseas eliminar tu cuenta?
+            </h3>
+            <p className="text-sm leading-relaxed text-slate-600 text-center">
+              Esta acción es irreversible. Se borrarán permanentemente tu perfil, historial de conversaciones en el chat, publicaciones de la comunidad y todas tus preferencias en SENSAI.
+            </p>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 rounded-2xl border border-slate-300 px-4 py-3 font-bold text-slate-700 hover:bg-slate-100 transition-all"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deleteLoading}
+                className="flex-1 rounded-2xl bg-rose-600 px-4 py-3 font-black text-white hover:bg-rose-700 active:scale-95 transition-all"
+              >
+                {deleteLoading ? 'Eliminando...' : 'Sí, eliminar permanentemente'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

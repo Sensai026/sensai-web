@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ExercisesHub from './ExercisesHub';
-import MenteSana from './MenteSana/MenteSana'; // Asegúrate de que la ruta sea correcta
-import MenteClara from './MenteClara/MenteClara'; // El nuevo que apunta a mente_clara.html
+import MenteSana from './MenteSana/MenteSana'; 
+import MenteClara from './MenteClara/MenteClara'; 
 import UnderConstruction from '../exercises/UnderConstruction';
 
 export default function ExercisesModule({ user, onBack }) {
@@ -14,7 +14,7 @@ export default function ExercisesModule({ user, onBack }) {
   // Función para resetear la vista al menú de ejercicios
   const backToHub = () => setActiveExercise(null);
 
-  // Diccionario de ejercicios actualizado
+  // Diccionario de datos actualizdadO
   const exercises = {
     'mente-clara': (
       <MenteClara 

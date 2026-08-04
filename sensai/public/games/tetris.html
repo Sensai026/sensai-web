@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Tetris - SENSAI</title>
+<title>Arquitectura Mental - SENSAI</title>
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -464,6 +464,56 @@ button:focus {
   box-shadow: var(--shadow-focus);
 }
 
+/* Estilos para la botonera táctil */
+.touch-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: var(--space-sm) 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.control-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.btn-touch {
+  flex: 1;
+  min-height: 52px !important;
+  min-width: 70px !important;
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary-dark) !important;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-touch:active {
+  transform: scale(0.95) !important;
+  background: var(--color-primary-dark) !important;
+}
+
+.btn-rotate {
+  background: var(--color-amber) !important;
+  border-color: var(--color-amber-dark) !important;
+  color: var(--color-text-primary) !important;
+  max-width: 160px;
+}
+
+.btn-drop {
+  background: var(--color-orange) !important;
+  border-color: var(--color-orange-dark) !important;
+}
+
 </style>
 
 </head>
@@ -493,11 +543,11 @@ button:focus {
 <div class="tetris-piece type-t" style="left: 52%; animation-delay: 26s;"></div>
 
 <div class="game-container">
-  <h1>🎮 Tetris</h1>
+  <h1>Arquitectura Mental</h1>
 
   <!-- DESCRIPCIÓN -->
   <div class="descripcion">
-  El Tetris es un juego que estimula habilidades cognitivas como la <b>percepción visual</b>, la <b>atención</b> y la <b>toma de decisiones rápidas</b>. 
+  Arquitectura Mental es un juego que estimula habilidades cognitivas como la <b>percepción visual</b>, la <b>atención</b> y la <b>toma de decisiones rápidas</b>. 
   En psicología, se utiliza para mejorar la coordinación visoespacial, la resolución de problemas y la planificación, ya que el jugador debe 
   organizar piezas de manera eficiente bajo presión de tiempo.
   </div>
@@ -508,6 +558,21 @@ button:focus {
   </div>
 
   <canvas id="tetris" width="240" height="400"></canvas>
+
+  <!-- CONTROLES TÁCTILES VIRTUALES -->
+  <div class="touch-controls">
+    <div class="control-row">
+      <button class="btn-touch btn-rotate" onclick="playerRotate()">🔄 Girar</button>
+    </div>
+    <div class="control-row">
+      <button class="btn-touch" onclick="playerMove(-1)">⬅️ Izq</button>
+      <button class="btn-touch btn-drop" onclick="playerDrop()">⬇️ Caer</button>
+      <button class="btn-touch" onclick="playerMove(1)">➡️ Der</button>
+    </div>
+  </div>
+
+  <br>
+  <button onclick="reiniciar()">Reiniciar</button>
 
   <br>
   <button onclick="reiniciar()">Reiniciar</button>
@@ -867,6 +932,14 @@ playerReset();
 updateScore();
 updateLevel();
 update();
+
+// Previene gestos incomodos de zoom táctil al jugar rápido en el celular
+document.querySelectorAll('.btn-touch').forEach(button => {
+  button.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Evita retraso del click en móviles
+    button.click();
+  }, { passive: false });
+});
 
 </script>
 

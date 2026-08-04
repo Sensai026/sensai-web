@@ -19,7 +19,7 @@ const Tetris = ({ onBack }) => {
           <ArrowLeft size={16} /> REGRESAR
         </button>
         <span className="text-[10px] font-black uppercase tracking-widest text-[var(--leaf-dark)] opacity-40">
-          Tetris Bienestar
+          Arquitectura Mental
         </span>
       </div>
       <div className="flex-grow overflow-hidden bg-white">

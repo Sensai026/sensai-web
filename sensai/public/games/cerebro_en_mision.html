@@ -426,44 +426,69 @@
     }
 
     /* Responsive para móvil */
-    @media (max-width: 768px) {
-      .main-container {
-        grid-template-columns: 1fr;
-        padding: var(--space-md);
-        margin: var(--space-md);
-        border-radius: var(--radius-lg);
-      }
-      
-      h1 {
-        font-size: 2rem;
-        margin-bottom: var(--space-md);
-      }
-      
-      .modal-content {
-        padding: var(--space-xl);
-      }
-      
-      .game-board {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-sm);
-      }
-      
-      .memory-card {
-        width: 80px;
-        height: 80px;
-        font-size: 24px;
-      }
-      
-      button {
-        min-height: 44px;
-        padding: var(--space-md) var(--space-lg);
-        font-size: 16px;
-      }
-      
-      .stats-panel, .powerups-panel {
-        padding: var(--space-md);
-      }
-    }
+@media (max-width: 768px) {
+  body {
+    padding: var(--space-xs);
+  }
+
+  .main-container {
+    grid-template-columns: 1fr !important; /* Fuerza una sola columna vertical */
+    padding: var(--space-sm) !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: var(--space-md) !important;
+  }
+  
+  h1 {
+    font-size: 1.6rem !important;
+    margin-bottom: var(--space-xs) !important;
+  }
+  
+  #app {
+    padding: var(--space-md) !important;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr) !important; /* Dos columnas ajustadas */
+    gap: var(--space-xs) !important;
+  }
+
+  .stat-card {
+    padding: var(--space-xs) !important;
+  }
+
+  .stat-number {
+    font-size: 1.4rem !important;
+  }
+
+  .powerup-container {
+    gap: var(--space-xs) !important;
+  }
+
+  .powerup-btn {
+    padding: var(--space-xs) var(--space-sm) !important;
+    font-size: 12px !important;
+  }
+
+  .achievements-panel {
+    padding: var(--space-sm) !important;
+  }
+
+  .achievement-badge {
+    font-size: 12px !important;
+    padding: 4px var(--space-xs) !important;
+  }
+
+  .modal-content {
+    padding: var(--space-lg) !important;
+    width: 95% !important;
+  }
+}
 
     /* Para tablets */
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -567,17 +592,6 @@
       position: relative;
       z-index: 2;
       text-align: center;
-    }
-
-    /* Contenedor principal */
-    .main-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: var(--space-xl);
-      position: relative;
-      z-index: 2;
     }
 
     /* Cuadros decorativos laterales */
