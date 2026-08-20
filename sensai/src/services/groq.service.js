@@ -51,8 +51,8 @@ export const getSensaiResponse = async (history, ajustes = {}) => {
         { role: "system", content: systemPrompt },
         ...lastContext
       ],
-      model: "llama-3.1-8b-instant", 
-      temperature: 0.7, // Subirlo ayuda a evitar la repetición sin aumentar tokens
+      model: "openai/gpt-oss-20b", 
+      temperature: 0.7, // Subirlo ayuda a evitar la repetición sin aumentar tokens llama-3.1-8b-instant
     });
 
     return chatCompletion.choices[0]?.message?.content;
