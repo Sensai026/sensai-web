@@ -11,8 +11,9 @@ import ExercisesModule from './AppModules/exercises/ExercisesModule';
 import Community from './AppModules/community/Community';
 import SelfCareHub from './AppModules/self-care/SelfCareHub';
 import Specialists from './AppModules/specialists/Specialists';
-import { getUserSettings } from './services/user.service'; // Ajusta la ruta a tu estructura
-import InitialSetup from './Auth/InitialSetup'; // Importa el componente que acabamos de crear
+import Pictogram from './AppModules/pictogram/Pictogram'; // <-- Módulo importado
+import { getUserSettings } from './services/user.service'; 
+import InitialSetup from './Auth/InitialSetup'; 
 
 export default function App() {
   
@@ -45,31 +46,30 @@ export default function App() {
   };
 
   useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
 
-    if (currentUser) {
-      // Comprobamos directamente en la base de datos si ya tiene configuraciones guardadas
-      const dbSettings = await getUserSettings(currentUser.uid);
+      if (currentUser) {
+        // Comprobamos directamente en la base de datos si ya tiene configuraciones guardadas
+        const dbSettings = await getUserSettings(currentUser.uid);
 
-      if (!dbSettings) {
-        // Si retorna null o undefined significa que es su primera vez absoluta
-        setHasSettings(false);
-        setView('initial-setup');
+        if (!dbSettings) {
+          setHasSettings(false);
+          setView('initial-setup');
+        } else {
+          setHasSettings(true);
+          const initialView = (view === 'landing' || view === 'auth' || view === 'initial-setup') ? 'dashboard' : view;
+          window.history.replaceState({ view: initialView }, '', '');
+          setView(initialView);
+        }
       } else {
-        setHasSettings(true);
-        const initialView = (view === 'landing' || view === 'auth' || view === 'initial-setup') ? 'dashboard' : view;
-        window.history.replaceState({ view: initialView }, '', '');
-        setView(initialView);
+        setView('landing');
+        setHasSettings(true); // Reseteamos al cerrar sesión
       }
-    } else {
-      setView('landing');
-      setHasSettings(true); // Reseteamos al cerrar sesión
-    }
-    setLoading(false);
-  });
-  return () => unsubscribe();
-}, []);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const applySavedTheme = () => {
     try {
@@ -150,6 +150,10 @@ export default function App() {
 
   if (view === 'specialists') {
     return <Specialists user={user} onBack={() => navigateTo('dashboard')} />;
+  }
+
+  if (view === 'pictogram' || view === 'pictograms') {
+    return <Pictogram onBack={() => navigateTo('dashboard')} />;
   }
 
   // --- 3. VISTA POR DEFECTO (DASHBOARD) ---

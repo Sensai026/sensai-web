@@ -6,6 +6,7 @@ import {
   Gamepad2, 
   Users2, 
   Stethoscope, 
+  Image,
   ArrowRight,
   Sparkles,
   AlertTriangle,
@@ -26,44 +27,36 @@ const TikTokIcon = () => (
 // Componente de Tarjeta de Módulos
 const ModuleCard = ({ Icon, title, description }) => (
   <div className="module-card group">
-    <div className="mb-6 p-4 bg-[#D1FAE5] inline-block rounded-2xl group-hover:bg-[#00B876] group-hover:text-white transition-all duration-300">
+    {/* Contenedor del Icono con el verde del logo */}
+    <div className="mb-6 w-16 h-16 flex items-center justify-center bg-[#00B876]/10 text-[#00B876] rounded-2xl group-hover:bg-[#00B876] group-hover:text-white transition-all duration-300 shadow-inner">
       <Icon size={32} />
     </div>
-    <h3 className="text-xl font-black text-[#0A0F29]">{title}</h3>
-    <p className="text-gray-600 mt-3 text-sm leading-relaxed">{description}</p>
+    
+    {/* Título en azul oscuro */}
+    <h3 className="text-2xl font-black text-[#0A0F29] mb-3 tracking-tight">
+      {title}
+    </h3>
+    
+    {/* Línea divisoria decorativa */}
+    <div className="w-12 h-1 bg-gradient-to-r from-[#2B59FF] to-[#00B876] mb-4 rounded-full opacity-40 group-hover:w-20 transition-all duration-500"></div>
+    
+    {/* Descripción */}
+    <p className="text-gray-500 font-medium leading-relaxed">
+      {description}
+    </p>
   </div>
 );
 
 export default function Landing({ onLogin }) {
   const modules = [
     { Icon: MessageCircle, title: "Chat IA", description: "Conversación libre y expresión emocional adaptada a tu perfil único." },
+    { Icon: Image, title: "Pictogramas", description: "Comunicación visual accesible mediante tableros interactivos e imágenes." },
     { Icon: Dumbbell, title: "Ejercicios", description: "Herramientas de regulación emocional y descarga cognitiva inmediata." },
     { Icon: Layout, title: "Cuidado personal", description: "Gestiona tu energía vital y hábitos para un bienestar pleno." },
     { Icon: Gamepad2, title: "Juegos", description: "Retos de lógica como alternativa saludable al consumo pasivo." },
     { Icon: Users2, title: "Comunidad", description: "Espacio moderado para compartir sin invalidación emocional." },
-    { Icon: Stethoscope, title: "Profesionales", description: "Directorio para canalización a especialistas de la salud mental." },
+    { Icon: Stethoscope, title: "Profesionales", description: "Directorio para canalización a especialistas de la salud mental." }
   ];
-  const ModuleCard = ({ Icon, title, description }) => (
-    <div className="module-card group">
-      {/* Contenedor del Icono con el verde del logo */}
-      <div className="mb-6 w-16 h-16 flex items-center justify-center bg-[#00B876]/10 text-[#00B876] rounded-2xl group-hover:bg-[#00B876] group-hover:text-white transition-all duration-300 shadow-inner">
-        <Icon size={32} />
-      </div>
-      
-      {/* Título en azul oscuro (como el texto del logo) */}
-      <h3 className="text-2xl font-black text-[#0A0F29] mb-3 tracking-tight">
-        {title}
-      </h3>
-      
-      {/* Línea divisoria decorativa corta */}
-      <div className="w-12 h-1 bg-gradient-to-r from-[#2B59FF] to-[#00B876] mb-4 rounded-full opacity-40 group-hover:w-20 transition-all duration-500"></div>
-      
-      {/* Descripción */}
-      <p className="text-gray-500 font-medium leading-relaxed">
-        {description}
-      </p>
-    </div>
-  );
 
   return (
     <div className="landing-container">
@@ -142,8 +135,8 @@ export default function Landing({ onLogin }) {
         </section>
       </main>
 
-      {/* 4. FOOTER SENSAI (DISEÑO ACTUALIZADO) */}
-      <footer className="footer-sensai">
+      {/* 4. FOOTER SENSAI */}
+      <footer className="footer-sensai relative overflow-hidden bg-[#0A0F29] text-white pt-20 pb-12 px-6">
         {/* Luces de fondo decorativas basadas en el logo */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2B59FF]/10 blur-[120px] rounded-full -z-10"></div>
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#00B876]/10 blur-[100px] rounded-full -z-10"></div>
@@ -186,7 +179,7 @@ export default function Landing({ onLogin }) {
             <div className="space-y-8">
               <h4 className="text-[#FFB800] font-black uppercase tracking-[0.2em] text-sm">Contacto Directo</h4>
               <a 
-                href="mailto:sensaiproject026@gmail.com" 
+                href="mailto:contacto@sensai.com.mx" 
                 className="flex items-center gap-5 p-6 bg-white/5 rounded-[2rem] border border-white/10 hover:border-[#FF6B00]/50 transition-all group"
               >
                 <div className="p-3 bg-[#FF6B00] text-white rounded-xl shadow-lg group-hover:rotate-12 transition-transform">
@@ -194,14 +187,14 @@ export default function Landing({ onLogin }) {
                 </div>
                 <div className="text-left">
                   <p className="text-[10px] text-white/40 font-bold uppercase tracking-[0.1em]">Escríbenos</p>
-                  <p className="text-sm font-bold text-white">sensaiproject026@gmail.com</p>
+                  <p className="text-sm font-bold text-white">contacto@sensai.com.mx</p>
                 </div>
               </a>
             </div>
           </div>
 
-          {/* --- AVISO MÉDICO / CRISIS (ÉNFASIS TOTAL) --- */}
-          <div className="medical-warning-card">
+          {/* AVISO MÉDICO / CRISIS */}
+          <div className="medical-warning-card bg-white p-8 rounded-[2.5rem] shadow-2xl">
             <div className="flex flex-col md:grid md:grid-cols-[auto_1fr] items-center gap-8">
               <div className="p-5 bg-[#FF6B00]/10 text-[#FF6B00] rounded-full animate-pulse">
                 <AlertTriangle size={48} />
@@ -218,7 +211,7 @@ export default function Landing({ onLogin }) {
 
           {/* Bottom Bar */}
           <div className="mt-16 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-white/20 text-[10px] font-black tracking-[0.3em] uppercase">
-            <p>© 2026 SENSAI PROJECT • INNOVATEC</p>
+            <p>©SENSAI</p>
             <div className="flex gap-8 tracking-widest">
               <a href="#" className="hover:text-white transition-colors">Privacidad</a>
               <a href="#" className="hover:text-white transition-colors">Términos</a>

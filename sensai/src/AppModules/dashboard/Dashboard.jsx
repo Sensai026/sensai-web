@@ -10,7 +10,8 @@ import {
   Bell,
   AlertTriangle,
   HeartPulse,
-  Star 
+  Star,
+  Image 
 } from 'lucide-react';
 import { subscribeToCrisisAlerts } from '../../services/crisis.service';
 import FeedbackModal from '../../Feedback/FeedbackModal';
@@ -22,7 +23,6 @@ const ModuleCard = ({ id, icon: Icon, title, description, onSelect }) => (
     <div className="icon-container">
       <Icon size={32} strokeWidth={1.5} />
     </div>
-    {/* CAMBIO: text-[var(--leaf-dark)] para que cambie con el tema */}
     <h3 className="text-xl font-bold text-[var(--leaf-dark)] mb-2">{title}</h3>
     <p className="text-[var(--leaf-dark)] opacity-60 text-sm leading-relaxed">{description}</p>
     <div className="module-indicator"></div>
@@ -45,6 +45,7 @@ export default function Dashboard({ user, onLogout, onModuleSelect = () => {} })
 
   const modules = [
     { id: 'chat', icon: MessageCircle, title: "Chat IA", description: "Acompañamiento emocional en tiempo real con IA ética." },
+    { id: 'pictogram', icon: Image, title: "Pictogramas", description: "Comunicación visual mediante tableros e imágenes interactivas." },
     { id: 'exercises', icon: Activity, title: "Ejercicios", description: "Regulación emocional y descarga cognitiva personalizada." },
     { id: 'self-care', icon: HeartPulse, title: "Cuidado personal", description: "Gestiona tu energía vital y hábitos diarios para un bienestar pleno." },
     { id: 'games', icon: Gamepad2, title: "Juegos", description: "Retos de memoria y estimulación cognitiva para tu bienestar." },
